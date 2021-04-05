@@ -1,4 +1,5 @@
 <template>
+    
     <div class="login">
         <div class="container  pt-4 text-center">
             <div class="pb-5">
@@ -26,15 +27,15 @@
                         <div class="tab-pane fade show active" id="pills-login" role="tabpanel"
                             aria-labelledby="pills-login-tab">
                             <div class="placeholder">Username</div>
-                            <form>
+                            <form  v-on:submit.prevent="submitFormLogin">
                                 <div class="form-group">
-                                    <input type="text" name="username" class="form-control" id="username" required
-                                        autofocus />
+                                    <input type="text" name="username" class="form-control" id="username" 
+                                    v-model="loginform.username" required autofocus />
                                 </div>
                                 <div class="placeholder">Password</div>
                                 <div class="form-group">
                                     <input type="password" name="password" class="form-control" id="password"
-                                        required />
+                                        v-model="loginform.password" required />
                                 </div>
 
                                 <div class="text-center pt-4">
@@ -51,25 +52,26 @@
 
                         <div class="tab-pane fade" id="pills-register" role="tabpanel"
                             aria-labelledby="pills-register-tab">
-                            <form>
+                            <form v-on:submit.prevent="submitFormRegister">
                                 <div class="form-group">
                                     <input type="text" name="username" id="name" class="form-control"
-                                        placeholder="Username" required autofocus />
+                                        placeholder="Username" v-model="registerform.username" required autofocus />
                                 </div>
 
                                 <div class="form-group">
                                     <input type="email" name="email" id="email" class="form-control" placeholder="Email"
-                                        required />
+                                    v-model="registerform.email" required />
                                 </div>
 
                                 <div class="form-group">
                                     <input type="password" name="password" id="password" class="form-control"
-                                        placeholder="Set a password" required />
+                                        v-model="registerform.password" placeholder="Set a password" required />
                                 </div>
 
                                 <div class="form-group">
                                     <input type="password" name="password_confirmation" id="password-confirm"
-                                        class="form-control" placeholder="Confirm password" required />
+                                        class="form-control" placeholder="Confirm password" 
+                                        v-model="registerform.password_confirmation" required />
                                 </div>
 
                                 <div class="text-center pt-2 pb-1">
@@ -87,13 +89,45 @@
 </template> 
 
 <script>
+import axios from "axios";
 export default {
-    
-}
+    name: "Login", 
+    data: function(){
+        return{
+            registerform:{
+                username:"",
+                email:"",
+                password:"", 
+                password_confirmation:""
+            },
+            loginform : {
+                username:"", 
+                password:""
+            }
+        }
+    }, 
+    methods:{
+      submitFormLogin: function(){
+        var self = this
+        // aqui va el axios
+        alert(self.loginform.username)
+        //self.$emit('logeado', self.loginform.username)
+      }, 
+      submitFormRegister: function(){
+        var self = this 
+        // aqui va el axios  
+        alert(self.registerform.email) 
+        //self.$emit('logeado', self.registerform.email)
+      }
+    }
+} 
+
+
 </script>
 
 
 <style scoped>
+
 *{
     font-size: 14pt;
 }
