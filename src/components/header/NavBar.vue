@@ -28,9 +28,9 @@
                         </router-link>
                     </li>
                     <li class="nav-item mx-4 ">
-                        <router-link to="/" id="products-link">
+                        
                         <a href="# " class="nav-link btn-menu ">Cerrar Sesión</a>
-                        </router-link>
+                      
                     </li>
                 </ul>
             </div>

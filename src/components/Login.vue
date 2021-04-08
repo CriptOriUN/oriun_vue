@@ -29,7 +29,7 @@
                             <div class="placeholder">Username</div>
                             <form  v-on:submit.prevent="submitFormLogin">
                                 <div class="form-group">
-                                    <input type="text" name="username" class="form-control" id="username" 
+                                    <input type="text" name="user_name" class="form-control" id="username" 
                                     v-model="loginform.username" required autofocus />
                                 </div>
                                 <div class="placeholder">Password</div>
@@ -90,6 +90,14 @@
 
 <script>
 import axios from "axios";
+
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+axios.defaults.headers.common['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, PUT, DELETE';
+axios.create({
+  headers: {
+    "Access-Control-Allow-Origin": "*"
+  }
+})
 export default {
     name: "Login", 
     data: function(){
@@ -108,16 +116,63 @@ export default {
     }, 
     methods:{
       submitFormLogin: function(){
+        //alert(JSON.stringify(this.loginform))
         var self = this
-        // aqui va el axios
-        alert(self.loginform.username)
-        //self.$emit('logeado', self.loginform.username)
+        
+        axios
+          .post("http://localhost:8081/userlog",{
+                params: {
+                    user: self.loginform.username, 
+                    password: self.loginform.password
+                }})
+          .then((result)=>{
+            self.$emit('logeado', self.loginform.username)
+          })
+          .catch((error) => {
+              if (error.response.status == "404")
+                  alert("ERROR 404: Usuario no encontrado.");
+              if (error.response.status == "406")
+                  alert("ERROR 403: Contraseña Erronea.");  
+         });
+         
+         
+         /*
+         axios
+          .post("https://new-ecommerce-api.herokuapp.com/customer/auth",self.loginform)
+          .then((result)=>{
+            self.$emit('logeado', self.loginform.username)
+          })
+          .catch((error) => {
+              if (error.response.status == "404")
+                  alert("ERROR 404: Usuario no encontrado.");
+              if (error.response.status == "403")
+                  alert("ERROR 403: Contraseña Erronea.");  
+         });
+         */
+         
       }, 
       submitFormRegister: function(){
-        var self = this 
-        // aqui va el axios  
-        alert(self.registerform.email) 
-        //self.$emit('logeado', self.registerform.email)
+        var self = this
+        
+        if (self.registerform.password === self.registerform.password_confirmation){
+          axios
+            .post("http://localhost:8081/userreg",{
+                  params: {
+                      user: self.loginform.username, 
+                      password: self.loginform.password
+                  }})
+            .then((result)=>{
+              self.$emit('logeado', self.loginform.username)
+            })
+            .catch((error) => {
+                if (error.response.status == "404")
+                    alert("ERROR 404: Usuario no encontrado.");
+                if (error.response.status == "406")
+                    alert("ERROR 403: Contraseña Erronea.");  
+          });
+        }else{
+          alert("Error de digitacion: Las contraseñas no coinciden");
+        }
       }
     }
 } 

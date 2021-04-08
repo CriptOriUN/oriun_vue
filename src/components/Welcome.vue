@@ -41,10 +41,9 @@ export default {
           events
       }  
     },
-
-    created: function() {
-    this.username = this.$route.params.username;
-  }
+    created: function(){
+        this.username = this.$route.params.username; 
+    }
 }
 </script>>
 
