@@ -91,13 +91,6 @@
 <script>
 import axios from "axios";
 
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-axios.defaults.headers.common['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, PUT, DELETE';
-axios.create({
-  headers: {
-    "Access-Control-Allow-Origin": "*"
-  }
-})
 export default {
     name: "Login", 
     data: function(){
@@ -120,7 +113,7 @@ export default {
         var self = this
         
         axios
-          .post("http://localhost:8081/userlog",{
+          .post("http://localhost:8081/userlog/",{
                 params: {
                     user: self.loginform.username, 
                     password: self.loginform.password
@@ -156,7 +149,7 @@ export default {
         
         if (self.registerform.password === self.registerform.password_confirmation){
           axios
-            .post("http://localhost:8081/userreg",{
+            .post("http://localhost:8081/userreg/",{
                   params: {
                       user: self.loginform.username, 
                       password: self.loginform.password
