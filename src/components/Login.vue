@@ -30,7 +30,7 @@
                             <form  v-on:submit.prevent="submitFormLogin">
                                 <div class="form-group">
                                     <input type="text" name="user_name" class="form-control" id="username" 
-                                    v-model="loginform.username" required autofocus />
+                                    v-model="loginform.user_name" required autofocus />
                                 </div>
                                 <div class="placeholder">Password</div>
                                 <div class="form-group">
@@ -55,7 +55,7 @@
                             <form v-on:submit.prevent="submitFormRegister">
                                 <div class="form-group">
                                     <input type="text" name="username" id="name" class="form-control"
-                                        placeholder="Username" v-model="registerform.username" required autofocus />
+                                        placeholder="Username" v-model="registerform.user_name" required autofocus />
                                 </div>
 
                                 <div class="form-group">
@@ -96,13 +96,13 @@ export default {
     data: function(){
         return{
             registerform:{
-                username:"",
+                user_name:"",
                 email:"",
                 password:"", 
                 password_confirmation:""
             },
             loginform : {
-                username:"", 
+                user_name:"", 
                 password:""
             }
         }
