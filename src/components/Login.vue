@@ -111,7 +111,7 @@ export default {
       submitFormLogin: function(){
         //alert(JSON.stringify(this.loginform))
         var self = this
-        
+        /*
         axios
           .post("http://localhost:8081/userlog/",{
                 params: {
@@ -126,8 +126,19 @@ export default {
                   alert("ERROR 404: Usuario no encontrado.");
               if (error.response.status == "406")
                   alert("ERROR 403: Contraseña Erronea.");  
-         });
+         });*/
          
+         axios
+          .post("http://localhost:8081/userlog/",self.loginform)
+          .then((result)=>{
+            self.$emit('logeado', self.loginform.username)
+          })
+          .catch((error) => {
+              if (error.response.status == "404")
+                  alert("ERROR 404: Usuario no encontrado.");
+              if (error.response.status == "406")
+                  alert("ERROR 403: Contraseña Erronea.");  
+         });
          
          /*
          axios
