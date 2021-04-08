@@ -131,7 +131,7 @@ export default {
          axios
           .post("http://localhost:8081/userlog/",self.loginform)
           .then((result)=>{
-            self.$emit('logeado', self.loginform.username)
+            self.$emit('logeado', self.loginform.user_name)
           })
           .catch((error) => {
               if (error.response.status == "404")
