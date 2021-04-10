@@ -131,13 +131,13 @@ export default {
          axios
           .post("http://localhost:8081/userlog/",self.loginform)
           .then((result)=>{
-            self.$emit('logeado', self.loginform.user_name)
+            self.$emit('logeado', self.loginform.user_name, result.data.ROL_NAME)
           })
           .catch((error) => {
               if (error.response.status == "404")
-                  alert("ERROR 404: Usuario no encontrado.");
+                  alert("ERROR 404:Contraseña Erronea.");
               if (error.response.status == "406")
-                  alert("ERROR 403: Contraseña Erronea.");  
+                  alert("ERROR 403: Usuario no encontrado.");  
          });
          
          /*
@@ -160,19 +160,17 @@ export default {
         
         if (self.registerform.password === self.registerform.password_confirmation){
           axios
-            .post("http://localhost:8081/userreg/",{
+            .post("http://localhost:8081/userreg?user="+self.registerform.user_name+"&password="+self.registerform.password,{
                   params: {
-                      user: self.loginform.username, 
-                      password: self.loginform.password
+                      user: self.registerform.user_name, 
+                      password: self.registerform.password
                   }})
             .then((result)=>{
-              self.$emit('logeado', self.loginform.username)
+              self.$emit('logeado', self.registerform.user_name, result.data.ROL_NAME)
             })
             .catch((error) => {
-                if (error.response.status == "404")
-                    alert("ERROR 404: Usuario no encontrado.");
-                if (error.response.status == "406")
-                    alert("ERROR 403: Contraseña Erronea.");  
+                if (error.response.status == "422")
+                    alert("ERROR 422: El Usuario ya existe.");
           });
         }else{
           alert("Error de digitacion: Las contraseñas no coinciden");

@@ -2,7 +2,9 @@ import vueRouter from 'vue-router'
 import App from './App' 
 import Login from './components/Login'
 import CreateEvent from './components/CreateEvent'
-import Welcome from './components/Welcome'
+import Welcome from './components/Welcome' 
+import Bienestar from './components/Bienestar' 
+import Moderator from './components/Moderator'
 
 const router = new vueRouter({
     mode: 'history',
@@ -26,6 +28,16 @@ const router = new vueRouter({
             path:'/:username/welcome', 
             name:"Welcome", 
             component: Welcome
+        }, 
+        {
+            path:'/:username/moderator',
+            name:"Moderator", 
+            component:Moderator
+        },
+        {
+            path:'/:username/bienestar',
+            name:"Bienestar", 
+            component:Bienestar
         }
     ]
 })

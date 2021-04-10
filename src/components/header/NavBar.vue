@@ -29,7 +29,7 @@
                     </li>
                     <li class="nav-item mx-4 ">
                         
-                        <a href="# " class="nav-link btn-menu ">Cerrar Sesión</a>
+                        <a v-on:click="closeSession" href="#" class="nav-link btn-menu ">Cerrar Sesión</a>
                       
                     </li>
                 </ul>
@@ -41,7 +41,16 @@
 
 <script>
 export default {
-    props:['username']
+    props:['username'],
+
+    methods:{
+        closeSession: function(){
+            var self = this
+            localStorage.removeItem('isAuth')
+            localStorage.removeItem('current_username')
+            self.$router.push({name: "root"})
+        }
+    }
 }
 </script>
 

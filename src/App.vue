@@ -24,30 +24,24 @@ export default {
       if(self.is_auth == false)
         self.$router.push({name: "Login"})
       else{
-        let username = localStorage.getItem("current_username")
-        self.$router.push({name: "Welcome", params:{ username: username }})
+        let username = localStorage.getItem("current_username") 
+        let role = localStorage.getItem('my_role')
+        if (role === "Usuario"){
+          self.$router.push({name: "Welcome", params:{ username: username }})
+        } 
+        else if (role==="Moderador"){
+          self.$router.push({name:"Moderator", params:{username: username}})
+        }
+        else{
+          self.$router.push({name:"Bienestar", params:{username: username}})
+        }
       }  
     },
-     init: function(){
-       let username = localStorage.getItem('current_username');
-       this.$router.push({name: "Welcome", params:{username:username}});
-    },
-     getAll: function(){
-       //if(this.route.name!="products"){
-         //this.count++;
-         //console.log(this.$router.push({name:"products"}))
-         this.$router.push({name:"CreateEvent"})
-       //}
-     }, 
-     closeSession: function(){
-        localStorage.removeItem('isAuth')
-        localStorage.removeItem('current_username')
-        this.updateAuth()
-     },
      // nos lleva al metodo de update 
-     logIn: function(username){
+     logIn: function(username,role){
        
        localStorage.setItem('current_username',username)
+       localStorage.setItem('my_role', role)
        localStorage.setItem('isAuth', true)
        this.updateAuth()
      }
