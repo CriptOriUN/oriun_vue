@@ -11,28 +11,76 @@
 			</button>
 
             <div class="collapse navbar-collapse " id="navbar">
-                <ul class="navbar-nav d-flex justify-content-end">
-                    <li class="nav-item mx-4">
-                        <router-link :to="{ name: 'Welcome', params: { username: this.username }}" id="products-link">
-                        <a href="# " class="nav-link btn-menu">Mi Cuenta<span class="sr-only ">(Actual)</span></a>
-                        </router-link>
-                    </li>
-                    <li class="nav-item mx-4">
-                        <router-link to="/" id="products-link">
-                        <a href="# " class="nav-link btn-menu">Buscador</a>
-                        </router-link>
-                    </li>
-                    <li class="nav-item active mx-4">
-                        <router-link :to="{ name: 'CreateEvent', params: { username: this.username }}" id="products-link">
-                        <a href="#" class="nav-link btn-menu">Crear Evento</a>
-                        </router-link>
-                    </li>
-                    <li class="nav-item mx-4 ">
+      
+                    <ul  v-if="role=='Usuario'" class="navbar-nav d-flex justify-content-end" id="usuario">
+                        <li class="nav-item mx-4">
+                            <router-link :to="{ name: 'Welcome', params: { username: this.username }}">
+                            <a href="# " class="nav-link btn-menu">Mi Cuenta<span class="sr-only ">(Actual)</span></a>
+                            </router-link>
+                        </li>
+                        <li class="nav-item mx-4">
+                            <router-link to="/" >
+                            <a href="# " class="nav-link btn-menu">Buscador</a>
+                            </router-link>
+                        </li>
+                        <li class="nav-item active mx-4">
+                            <router-link :to="{ name: 'CreateEvent', params: { username: this.username }}">
+                            <a href="#" class="nav-link btn-menu">Crear Evento</a>
+                            </router-link>
+                        </li>
+                        <li class="nav-item mx-4 ">
+                            
+                            <a v-on:click="closeSession" href="#" class="nav-link btn-menu ">Cerrar Sesión</a>
                         
-                        <a v-on:click="closeSession" href="#" class="nav-link btn-menu ">Cerrar Sesión</a>
-                      
-                    </li>
-                </ul>
+                        </li>
+                    </ul>
+           
+               
+                    <ul v-if="role=='Moderador'" class="navbar-nav d-flex justify-content-end" id="moderador">
+                        <li class="nav-item mx-4">
+                            <router-link :to="{ name: 'Welcome', params: { username: this.username }}">
+                            <a href="# " class="nav-link btn-menu">Inicio<span class="sr-only ">(Actual)</span></a>
+                            </router-link>
+                        </li>
+                        <li class="nav-item mx-4">
+                            <router-link to="/">
+                            <a href="# " class="nav-link btn-menu">Buscador</a>
+                            </router-link>
+                        </li>
+                        <li class="nav-item active mx-4">
+                            <router-link :to="{ name: 'Moderator', params: { username: this.username }}">
+                            <a href="#" class="nav-link btn-menu">Crear Evento</a>
+                            </router-link>
+                        </li>
+                        <li class="nav-item mx-4 ">
+                            
+                            <a v-on:click="closeSession" href="#" class="nav-link btn-menu ">Cerrar Sesión</a>
+                        
+                        </li>
+                    </ul>
+                
+                
+                    <ul v-if="role=='Bienestar'" class="navbar-nav d-flex justify-content-end" id="bienestar">
+                        <li class="nav-item mx-4">
+                            <router-link :to="{ name: 'Bienestar', params: { username: this.username }}">
+                            <a href="# " class="nav-link btn-menu">Inicio<span class="sr-only ">(Actual)</span></a>
+                            </router-link>
+                        </li>
+                        <li class="nav-item mx-4">
+                            <router-link to="/" id="products-link">
+                            <a href="# " class="nav-link btn-menu">Buscador</a>
+                            </router-link>
+                        </li>
+                        <li class="nav-item active mx-4">
+                            <router-link :to="{ name: 'CreateEvent', params: { username: this.username }}">
+                            <a href="#" class="nav-link btn-menu">Crear Evento</a>
+                            </router-link>
+                        </li>
+                        <li class="nav-item mx-4 ">
+                            <a v-on:click="closeSession" href="#" class="nav-link btn-menu ">Cerrar Sesión</a>
+                        </li>
+                    </ul>
+               
             </div>
         </div>
     </nav>
@@ -42,14 +90,22 @@
 <script>
 export default {
     props:['username'],
-
+    data: function(){
+        return{
+            role: ""
+        }
+    },
     methods:{
         closeSession: function(){
             var self = this
             localStorage.removeItem('isAuth')
             localStorage.removeItem('current_username')
+            localStorage.removeItem('my_role')
             self.$router.push({name: "root"})
         }
+    },
+    created: function(){
+        this.role=localStorage.getItem("my_role")
     }
 }
 </script>
