@@ -27,7 +27,7 @@ export default {
         let username = localStorage.getItem("current_username") 
         let role = localStorage.getItem('my_role')
         if (role === "Usuario"){
-          self.$router.push({name: "Welcome", params:{ username: username }})
+          self.$router.push({name: "User", params:{ username: username }})
         } 
         else if (role==="Moderador"){
           self.$router.push({name:"Moderator", params:{username: username}})
