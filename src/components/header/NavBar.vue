@@ -36,7 +36,7 @@
                     </ul>
            
                
-                    <ul v-if="role=='Moderador'" class="navbar-nav d-flex justify-content-end" id="moderador">
+                    <ul v-else-if="role=='Moderador'" class="navbar-nav d-flex justify-content-end" id="moderador">
                         <li class="nav-item mx-4">
                             <router-link :to="{ name: 'Welcome', params: { username: this.username }}">
                             <a href="# " class="nav-link btn-menu">Inicio<span class="sr-only ">(Actual)</span></a>
@@ -60,7 +60,7 @@
                     </ul>
                 
                 
-                    <ul v-if="role=='Bienestar'" class="navbar-nav d-flex justify-content-end" id="bienestar">
+                    <ul v-else class="navbar-nav d-flex justify-content-end" id="bienestar">
                         <li class="nav-item mx-4">
                             <router-link :to="{ name: 'Bienestar', params: { username: this.username }}">
                             <a href="# " class="nav-link btn-menu">Inicio<span class="sr-only ">(Actual)</span></a>
