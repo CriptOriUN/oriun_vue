@@ -23,7 +23,7 @@
                 <li class="col-5 mt-4 mx-auto nav-item">
                     <a href="#sport-list" class="card nav-link" id="sports-tab" data-toggle="tab">
                         <div class="text-center">
-                            Indumentaria
+                            Locaciones
                         </div>
                     </a>
                 </li>
@@ -33,7 +33,7 @@
 
                 <!-- MODERADORES -->
                 <div class="tab-pane fade mx-auto" id="event-list" role="tabpanel" aria-labelledby="events-tab">
-                    <div class="card card-tables">
+                    <div class="card card-tables text-center">
                         <div class="card-header mx-auto">
                             <h2>Moderadores</h2>
                             <hr>
@@ -46,26 +46,14 @@
                                     class="table table-bordered table-hover table-striped table-options">
                                     <thead class="thead-dark text-center">
                                         <tr>
-                                            <th>CREADOR</th>
-                                            <th>FECHA</th>
-                                            <th>HORA</th>
-                                            <th>LUGAR</th>
+                                            <th>USERNAME</th>
                                             <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Juan David Pinto</td>
-                                            <td>18-03-2021</td>
-                                            <td>18:00</td>
-                                            <td>La playita</td>
-                                            <td class="">
-                                                <button class="btn btn-primary" type="button" data-toggle="collapse"
-                                                    data-target="#details" aria-controls="details" aria-expanded="false"
-                                                    title="Ver detalles">
-                                                    <!-- Ver detalles -->
-                                                    <i class="fa fa-info-circle"></i>
-                                                </button>
+                                        <tr v-for="usuario in usuarios" :key="usuario.id"  id="usuarioslist">
+                                            <td v-if="usuario.rol_NAME=='Moderador'">{{usuario.user_NAME}}</td>
+                                            <td v-if="usuario.rol_NAME=='Moderador'" class="">
                                                 <button class="btn btn-danger" title="Eliminar" data-toggle="modal"
                                                     data-target="#adviseModel">
                                                     <!-- Borrar -->
@@ -74,38 +62,12 @@
                                             </td>
                                         </tr>
 
-                                        <tr class="collapse " id="details">
-                                            <td class="p-3 text-left" colspan='5'>
-                                                <ul class="list-group">
-                                                    <li class="list-group-item py-1">
-                                                        <h6 class="d-inline">Deporte: </h6><span class="">Yoga</span>
-                                                    </li>
-                                                    <li class="list-group-item py-1">
-                                                        <h6 class="d-inline">Descripcion: </h6><span class="">Este es un
-                                                            evento de esparcimiento y en el que se van a hacer diversos
-                                                            ejercicios de relajacion para ttener un equilibrio de cuerpo
-                                                            y mente.</span>
-                                                    </li>
-                                                    <li class="list-group-item py-1">
-                                                        <h6 class="d-inline">Hora Inicio: </h6><span
-                                                            class="">12:00</span>
-                                                    </li>
-                                                    <li class="list-group-item py-1">
-                                                        <h6 class="d-inline">Hora Fin: </h6><span class="">15:00</span>
-                                                    </li>
-                                                    <li class="list-group-item py-1">
-                                                        <h6 class="d-inline">Capacidad: </h6><span class="">20</span>
-                                                    </li>
-                                                </ul>
-
-                                            </td>
-                                        </tr>
-
                                     </tbody>
                                 </table>
                             </div>
-
+                            <a href="#" class="btn btn-primary">Agregar</a>
                         </div>
+
                     </div>
                 </div>
 
@@ -122,7 +84,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                ¿Desea eliminar el evento seleccionado?
+                                ¿Desea eliminar el moderador seleccionado?
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -132,83 +94,120 @@
                     </div>
                 </div>
 
-                <!-- INDUMENTARIA -->
+                <!-- LOCACIONES -->
                 <div class="tab-pane fade mx-auto" id="sport-list" role="tabpanel" aria-labelledby="sport-tab">
-                    <div class="card card-tables">
+                    <div class="card card-tables text-center">
                         <div class="card-header">
-                            <h2>Indumentaria</h2>
+                            <h2>Locaciones</h2>
                             <hr>
                         </div>
 
                         <div class="card-body">
-
-
-                            <!-- Lista de Indumentaria-->
-                            <div class="table-responsive float-left col-5">
-                                <table id="SportsTable" class="table table-bordered table-hover table-striped">
-                                    <thead class="thead-dark text-center">
-                                        <tr>
-                                            <th>REGISTRADOS</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Futbol</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Tenis de Mesa</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div class="table-responsive float-right col-7">
-                                <table id="SugestionsTable"
+                            <!-- Lista de Locaciones-->
+                            <div class="table-responsive">
+                                <table id="LocationsTable"
                                     class="table table-bordered table-hover table-striped table-options">
                                     <thead class="thead-dark text-center">
                                         <tr>
-                                            <th style="width: 60%">SUGERENCIAS</th>
-                                            <th>#</th>
+                                            <th>LOCATION</th>
                                             <th></th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Cartas</td>
-                                            <td>3</td>
+                                    <tbody v-for="locacion in locaciones" :key="locacion.id" >
+                                        <tr id="usuarioslist">
+                                            <td>{{locacion.name_LOCATION}}</td>
                                             <td class="">
-                                                <button class="btn btn-primary" title="Añadir">
-                                                    <i class="fa fa-plus-circle"></i>
+                                                <!--button that call collapse-->
+                                                <button v-on:click="getElements" class="btn btn-primary" type="button" data-toggle="collapse"
+                                                    :data-target="'#details' + locacion.name_LOCATION.replace(/ /g, '')" aria-controls="details" aria-expanded="false"
+                                                    title="Ver detalles">
+                                                    <!-- Ver detalles -->
+                                                    <i class="fa fa-info-circle"></i>
                                                 </button>
-                                                <button class="btn btn-danger" title="Eliminar">
-
+                                                <button class="btn btn-danger" title="Eliminar" data-toggle="modal"
+                                                    data-target="#locationModel">
+                                                    <!-- Borrar -->
                                                     <i class="fa fa-minus-circle"></i>
                                                 </button>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>Estoy probando un nombre de deporte sugerido que es muy largo, espero
-                                                que
-                                                quepa en el campo de la tabla</td>
-                                            <td>0</td>
-                                            <td class="">
-                                                <button class="btn btn-primary" title="Añadir">
-                                                    <i class="fa fa-plus-circle"></i>
-                                                </button>
-                                                <button class="btn btn-danger" title="Eliminar">
+                                        <tr class="collapse " v-bind:id="['details' + locacion.name_LOCATION.replace(/ /g, '')]">
+                                            <td class="p-3 text-left" colspan='5'>
+                                                <table id="IndumentariaTable"
+                                                    class="table table-striped table-options">
+                                                    <thead class="thead-info">
+                                                        <tr>
+                                                            <th>Indumentaria</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr v-for="element in inventario[locacion.name_LOCATION]" :key="element.id"  id="usuarioslist">
+                                                            <td >{{element.element_NAME}}</td>
+                                                            <td class="">
+                                                                <button class="btn btn-danger" title="Eliminar" data-toggle="modal"
+                                                                    data-target="#elementModel">
+                                                                    <!-- Borrar -->
+                                                                    <i class="fa fa-minus-circle"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
 
-                                                    <i class="fa fa-minus-circle"></i>
-                                                </button>
+                                                    </tbody>
+                                                </table>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-
+                            <a href="#" class="btn btn-primary">Agregar</a>
                         </div>
                     </div>
                 </div>
-
+                <!-- Modal -->
+                <div class="modal fade" id="elementModel" tabindex="-1" role="dialog" aria-labelledby="elementModelTitle"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="adviseModalTitle">Advertencia!
+                                </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                ¿Desea eliminar el Elemento seleccionado?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-danger">Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Modal -->
+                <div class="modal fade" id="locationModel" tabindex="-1" role="dialog" aria-labelledby="locationModelTitle"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="locationModalTitle">Advertencia!
+                                </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                ¿Desea eliminar la indumentaria seleccionada?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-danger">Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -224,17 +223,67 @@
 </template> 
 
 <script>
-import NavBar from './header/NavBar'
+import NavBar from './header/NavBar';
+import axios from "axios";
 export default {
     name: 'Bienestar',
     components: {NavBar}, 
     data: function(){
       return{
-          username: "", 
+          usuarios: [], 
+          locaciones:[], 
+          inventario:{},
       }  
     },
+    methods: {
+        /*
+        getElements: function(location_id){
+            let self = this; 
+            axios
+            .get("http://localhost:8081/elntofsibu?name_location="+location_id)
+                .then((result) => {
+                    self.inventario[location_id]=result.data; 
+                }).catch((error) => {
+                    alert("ERROR Servidor");
+                });
+            alert(JSON.stringify(inventario[location_id]))
+        }
+        */
+        getElements: function(location_id){
+            alert(JSON.stringify(inventario))
+        }
+    },
     created: function(){
-        this.username = this.$route.params.username; 
+        this.username = this.$route.params.username;
+        let self = this;
+        axios
+        .get("http://localhost:8081/user")
+            .then((result) => {
+                self.usuarios=result.data; 
+            }).catch((error) => {
+                alert("ERROR Servidor MODERADOR");
+            });
+        axios
+        .get("http://localhost:8081/locationssibu")
+            .then((result) => {
+                self.locaciones=result.data; 
+            }).catch((error) => {
+                alert("ERROR Servidor LOCACION");
+            });
+                        
+        var i 
+        for(i=0 ; i<self.locaciones.length ; i++){
+            axios
+                .get("http://localhost:8081/elntofsibu",{
+                    "name_lsibu" : locaciones[i].name_LOCATION
+                })
+                    .then((result) => {
+                        self.inventario[locaciones[i].name_LOCATION]=result.data; 
+                    }).catch((error) => {
+                        alert("ERROR Servidor ELEMENTO");
+                });
+        }
+                
     }
 }
 </script> 
