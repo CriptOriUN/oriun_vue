@@ -166,7 +166,7 @@ export default {
                       password: self.registerform.password
                   }})
             .then((result)=>{
-              self.$emit('logeado', self.registerform.user_name, result.data.ROL_NAME)
+              self.$emit('logeado', self.registerform.user_name, "Usuario")
             })
             .catch((error) => {
                 if (error.response.status == "422")
