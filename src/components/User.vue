@@ -26,14 +26,13 @@
                     <div class="tabla-eve ">
                         <h3 class="titulo-tablas">Proximos Eventos</h3>
                         <hr>
-                        <div clas
-                        s="row ml-4 mr-4 d-flex bd-highlight">
-                            <div v-for="event in events" :key="event.id" class="evento">
-                                <div class=" tar-evento flex-fill bd-highlight">
-                                    <h5 class="info-titulo">{{event.EVENT_TITLE}}</h5>
-                                    <p class="info-fecha">fecha: {{event.EVENT_INIT}}</p>
-                                    <p class="info-hora-lugar">hora: {{event.EVENT_INIT_HOUR}} Lugar: {{event.NAME_LOC_SPORT}} <a class="detalles" href="#">Detalles</a></p>
-                                </div>
+                        <div class="row ml-4 mr-4 d-flex bd-highlight">
+                            <div v-for="event in events" :key="event.id" class="tar-evento flex-fill bd-highlight">
+                                <!-- <div class=" tar-evento flex-fill bd-highlight"> -->
+                                    <h5 class="info-titulo">{{event.event_TITLE}}</h5>
+                                    <p class="info-fecha">fecha: {{event.event_INIT}}</p>
+                                    <p class="info-hora-lugar">hora: {{event.event_INIT_HOUR}} Lugar: {{event.name_LOC_SPORT}} <a class="detalles" href="#">Detalles</a></p>
+                                <!-- </div> -->
                             </div>
                         </div>
                         <hr>
@@ -47,6 +46,7 @@
 
 <script>
 import NavBar from '../components/header/NavBar'
+import axios from "axios";
 import { events } from '../fake-data';
 import { notifications } from '../fake-data';
 export default {
@@ -57,10 +57,24 @@ export default {
   data: function(){
       return{
           username: "", 
+          events:null
       }  
     },
     created: function() {
     this.username = this.$route.params.username;
+  },
+  mounted(){
+    // console.log('holanda')
+    this.getTodos();
+  },
+  methods:{
+    getTodos(){
+      console.log('codigo get')
+      axios.get('http://localhost:8081/events/',self.username).then(response=>{
+        console.log(response)
+        this.events = response.data
+      }).catch(e=>console.log(e))
+    }
   }
 }
 </script>
@@ -72,6 +86,7 @@ export default {
 }
 .plantilla {
   background: #fff;
+  /* background: url(../assets/login_bg.png); */
   min-height: 100vh; }
   .plantilla .contenedor_p {
     padding-top: 20px; }
