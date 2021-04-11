@@ -14,7 +14,7 @@
       
                     <ul  v-if="role=='Usuario'" class="navbar-nav d-flex justify-content-end" id="usuario">
                         <li class="nav-item mx-4">
-                            <router-link :to="{ name: 'Welcome', params: { username: this.username }}">
+                            <router-link :to="{ name: 'User', params: { username: this.username }}">
                             <a href="# " class="nav-link btn-menu">Mi Cuenta<span class="sr-only ">(Actual)</span></a>
                             </router-link>
                         </li>
@@ -80,7 +80,6 @@
                             <a v-on:click="closeSession" href="#" class="nav-link btn-menu ">Cerrar Sesión</a>
                         </li>
                     </ul>
-               
             </div>
         </div>
     </nav>
