@@ -39,13 +39,11 @@ export default {
     },
      // nos lleva al metodo de update 
      logIn: function(username,role){
-       
        localStorage.setItem('current_username',username)
        localStorage.setItem('my_role', role)
        localStorage.setItem('isAuth', true)
        this.updateAuth()
      }
-     
    },
    // esto sucede de inicio, llevandonos al al root, y ademas haciendo el userupdate, por lo q nos llevara a userauth
    created: function(){
