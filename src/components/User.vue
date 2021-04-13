@@ -46,6 +46,7 @@
 
 <script>
 import NavBar from '../components/header/NavBar'
+
 import axios from "axios";
 
 export default {
@@ -62,6 +63,7 @@ export default {
     },
     created: function() {
     this.username = this.$route.params.username;
+
   },
   mounted(){
     // console.log('holanda')
@@ -75,6 +77,7 @@ export default {
         console.log(response)
         this.events = response.data
       }).catch(e=>console.log(e))
+
     },
     getNotifications(){
       console.log('codigo get')
@@ -83,6 +86,7 @@ export default {
         this.notifications = response.data
       }).catch(e=>console.log(e))
     }
+
   }
 }
 </script>
