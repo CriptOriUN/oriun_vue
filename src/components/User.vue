@@ -16,8 +16,8 @@
                         <hr>
                         <!-- crear en fake notifications -->
                         <div v-for="noti in notifications" :key="noti.id" class="notification">
-                          <h5 class="titulo-noti">{{noti.ID_EVENT}}</h5> <!--aqui no se como hacer la consulta-->
-                          <p class="parrafo-noti">{{noti.NOTIFICATION_DESCRIPTION}}</p><!--aqui hay un error de ortografia :v-->
+                          <h5 class="titulo-noti"><a class="titulo-noti-btn" href="#">{{noti.name_SPORT}}</a></h5> <!--aqui no se como hacer la consulta-->
+                          <p class="parrafo-noti">{{noti.notification_DESCRIPTION}}</p><!--aqui hay un error de ortografia :v-->
                           <hr>
                         </div>
                     </div>
@@ -26,7 +26,6 @@
                     <div class="tabla-eve ">
                         <h3 class="titulo-tablas">Proximos Eventos</h3>
                         <hr>
-
                         <div class="row ml-4 mr-4 d-flex bd-highlight">
                             <div v-for="event in events" :key="event.id" class="tar-evento flex-fill bd-highlight">
                                 <!-- <div class=" tar-evento flex-fill bd-highlight"> -->
@@ -50,8 +49,6 @@ import NavBar from '../components/header/NavBar'
 
 import axios from "axios";
 
-import { events } from '../fake-data';
-import { notifications } from '../fake-data';
 export default {
     name: 'Users',
     components: {
@@ -60,7 +57,8 @@ export default {
   data: function(){
       return{
           username: "", 
-          events:null
+          events:null, 
+          notifications:null
       }  
     },
     created: function() {
@@ -69,14 +67,23 @@ export default {
   },
   mounted(){
     // console.log('holanda')
-    this.getTodos();
+    this.getEvents();
+    this.getNotifications();
   },
   methods:{
-    getTodos(){
-      console.log('codigo get')
+    getEvents(){
+      // console.log('codigo get')
       axios.get('http://localhost:8081/events/',self.username).then(response=>{
         console.log(response)
         this.events = response.data
+      }).catch(e=>console.log(e))
+
+    },
+    getNotifications(){
+      console.log('codigo get')
+      axios.get('http://localhost:8081/notifications/',self.username).then(response=>{
+        console.log(response)
+        this.notifications = response.data
       }).catch(e=>console.log(e))
     }
 
@@ -91,9 +98,7 @@ export default {
 }
 .plantilla {
   background: #fff;
-
   /* background: url(../assets/login_bg.png); */
-
   min-height: 100vh; }
   .plantilla .contenedor_p {
     padding-top: 20px; }
@@ -149,6 +154,13 @@ export default {
           .plantilla .contenedor_p .tabla-eve .tar-evento .detalles:hover {
             text-decoration: underline; }
 
+.titulo-noti-btn{
+  text-decoration: none;
+  color: #fff;
+}
+.titulo-noti-btn:hover{
+  text-decoration: underline;
+}
 .card {
   border-radius: 30px; }
 

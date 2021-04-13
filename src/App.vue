@@ -27,7 +27,7 @@ export default {
         let username = localStorage.getItem("current_username") 
         let role = localStorage.getItem('my_role')
         if (role === "Usuario"){
-          self.$router.push({name: "Welcome", params:{ username: username }})
+          self.$router.push({name: "User", params:{ username: username }})
         } 
         else if (role==="Moderador"){
           self.$router.push({name:"Moderator", params:{username: username}})
@@ -39,13 +39,11 @@ export default {
     },
      // nos lleva al metodo de update 
      logIn: function(username,role){
-       
        localStorage.setItem('current_username',username)
        localStorage.setItem('my_role', role)
        localStorage.setItem('isAuth', true)
        this.updateAuth()
      }
-     
    },
    // esto sucede de inicio, llevandonos al al root, y ademas haciendo el userupdate, por lo q nos llevara a userauth
    created: function(){
