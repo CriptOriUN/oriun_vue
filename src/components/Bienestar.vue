@@ -274,9 +274,7 @@ export default {
         var i 
         for(i=0 ; i<self.locaciones.length ; i++){
             axios
-                .get("http://localhost:8081/elntofsibu",{
-                    "name_lsibu" : locaciones[i].name_LOCATION
-                })
+                .get("http://localhost:8081/elntofsibu")
                     .then((result) => {
                         self.inventario[locaciones[i].name_LOCATION]=result.data; 
                     }).catch((error) => {
