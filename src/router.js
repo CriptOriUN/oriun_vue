@@ -6,6 +6,9 @@ import Welcome from './components/Welcome'
 import User from './components/User'
 import Bienestar from './components/Bienestar'
 import Moderator from './components/Moderator'
+import RegisterModerator from './components/RegisterModerator'
+import AddStock from './components/AddStock'
+import AddLocation from './components/AddLocation'
 
 const router = new vueRouter({
     mode: 'history',
@@ -44,7 +47,22 @@ const router = new vueRouter({
             path: '/:username/bienestar',
             name: "Bienestar",
             component: Bienestar
-        }
+        }, 
+        {
+            path:'/:username/registermoderator',
+            name: "RegisterModerator", 
+            component: RegisterModerator
+        }, 
+        {
+            path:'/:username/addstock',
+            name: "AddStock", 
+            component: AddStock
+        }, 
+        {
+            path:'/:username/addlocation',
+            name: "AddLocation", 
+            component: AddLocation
+        }, 
     ]
 })
 export default router

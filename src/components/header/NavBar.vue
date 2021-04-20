@@ -72,8 +72,18 @@
                             </router-link>
                         </li>
                         <li class="nav-item mx-4">
-                            <router-link to="/" id="products-link">
-                            <a href="# " class="nav-link btn-menu">Buscador</a>
+                            <router-link :to="{ name: 'RegisterModerator', params: { username: this.username }}">
+                            <a href="# " class="nav-link btn-menu">Registrar Moderador</a>
+                            </router-link>
+                        </li>
+                        <li class="nav-item mx-4">
+                            <router-link :to="{ name: 'AddLocation', params: { username: this.username }}" id="products-link">
+                            <a href="# " class="nav-link btn-menu">Agregar Locacion</a>
+                            </router-link>
+                        </li>
+                        <li class="nav-item mx-4">
+                            <router-link :to="{ name: 'AddStock', params: { username: this.username }}" id="products-link">
+                            <a href="# " class="nav-link btn-menu">Agregar Inventario</a>
                             </router-link>
                         </li>
                         <li class="nav-item active mx-4">

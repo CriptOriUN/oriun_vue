@@ -65,7 +65,46 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <a href="#" class="btn btn-primary">Agregar</a>
+                            <!--
+                            <a class="btn btn-primary" type="button" data-toggle="collapse"
+                            aria-controls="details" aria-expanded="false"
+                            title="Ver detalles" data-target="#add_moderator">Agregar</a> 
+                            <form class="collapse " id="add_moderator">
+                                <tr>
+                                    <td class="p-3 text-left" colspan='5'>
+                                        <ul>
+                                            
+                                            <li class="list-group-item py-1">
+                                                <div>Registro de Moderador</div>
+                                            </li>
+                                            <li class="list-group-item py-1">
+                                                <div class="form-group">
+                                                  <input type="text" name="username" id="name" class="form-control"
+                                                     placeholder="Username" required autofocus />
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item py-1">
+                                                <div class="form-group">
+                                                    <input type="password" name="password" id="password" class="form-control"
+                                                        placeholder="Set a password" required />
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item py-1">
+                                                <div class="form-group">
+                                                    <input type="password" name="password_confirmation" id="password-confirm"
+                                                         class="form-control" placeholder="Confirm password" required />
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item py-1">
+                                                <div type="submit" class="btn btn-primary register">
+                                                    Register
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </form>
+                            -->
                         </div>
 
                     </div>
@@ -160,7 +199,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <a href="#" class="btn btn-primary">Agregar</a>
+                            <a href="#" class="btn btn-primary" >Agregar</a>
                         </div>
                     </div>
                 </div>
@@ -210,10 +249,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
         <!-- <div class="d-flex align-items-center col-xl-3 col-lg-3 col-12 mt-4"> -->
         <div class="d-flex align-items-center col-xl-4 col-lg-4 col-8  mx-auto mb-5">
             <img class="logoUnal mx-auto" src="../assets/LogoUnal_Black.png" alt=" ">
@@ -251,7 +286,28 @@ export default {
         */
         getElements: function(location_id){
             alert(JSON.stringify(inventario))
-        }
+        },
+        submitFormRegister: function(){
+            var self = this
+            
+            if (self.registerform.password === self.registerform.password_confirmation){
+            axios
+                .post("http://localhost:8081/userreg?user="+self.registerform.user_name+"&password="+self.registerform.password,{
+                    params: {
+                        user: self.registerform.user_name, 
+                        password: self.registerform.password
+                    }})
+                .then((result)=>{
+                
+                })
+                .catch((error) => {
+                    if (error.response.status == "422")
+                        alert("ERROR 422: El Usuario ya existe.");
+            });
+            }else{
+            alert("Error de digitacion: Las contraseñas no coinciden");
+            }
+        }  
     },
     created: function(){
         this.username = this.$route.params.username;
@@ -416,6 +472,14 @@ table{
   padding-right: 10px;
 
 }
+
+.register{
+
+    padding: 5px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;}
+    
 
 
 

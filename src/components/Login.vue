@@ -67,7 +67,17 @@
                                     <input type="password" name="password" id="password" class="form-control"
                                         v-model="registerform.password" placeholder="Set a password" required />
                                 </div>
-
+                                <div class="text-center pt-2 pb-1 container-hint">
+                                	<transition name="hint" appear>
+                                    <div v-if='passwordValidation.errors.length > 0' class='hints'>
+                                      <h5>Hints</h5>
+                                      <h5 class="reg-validation" v-for='error in passwordValidation.errors' :key="error.id">{{error}}<br></h5>
+                                    </div>
+                                    <div v-else >
+                                      <h5>El password es valido</h5>
+                                    </div>
+                                  </transition>
+                                </div>
                                 <div class="form-group">
                                     <input type="password" name="password_confirmation" id="password-confirm"
                                         class="form-control" placeholder="Confirm password" 
@@ -95,6 +105,12 @@ export default {
     name: "Login", 
     data: function(){
         return{
+          	rules: [
+			        	{ message:'One lowercase letter required.', regex:/[a-z]+/ },
+				        { message:"One uppercase letter required.",  regex:/[A-Z]+/ },
+				        { message:"8 characters minimum.", regex:/.{8,}/ },
+				        { message:"One number required.", regex:/[0-9]+/ }
+			      ],
             registerform:{
                 user_name:"",
                 email:"",
@@ -104,29 +120,32 @@ export default {
             loginform : {
                 user_name:"", 
                 password:""
-            }
+            }, 
+            validregex: false
         }
     }, 
+    computed:{
+      passwordValidation () {
+        var self = this
+        let errors = []
+        for (let condition of this.rules) {
+          if (!condition.regex.test(self.registerform.password)) {
+            errors.push(condition.message)
+          }
+        }
+        if (errors.length === 0) {
+          self.validregex=true
+          return { valid:true, errors }
+        } else {
+          self.validregex=false
+          return { valid:false, errors }
+        }
+		  }
+    },
     methods:{
       submitFormLogin: function(){
         //alert(JSON.stringify(this.loginform))
         var self = this
-        /*
-        axios
-          .post("http://localhost:8081/userlog/",{
-                params: {
-                    user: self.loginform.username, 
-                    password: self.loginform.password
-                }})
-          .then((result)=>{
-            self.$emit('logeado', self.loginform.username)
-          })
-          .catch((error) => {
-              if (error.response.status == "404")
-                  alert("ERROR 404: Usuario no encontrado.");
-              if (error.response.status == "406")
-                  alert("ERROR 403: Contraseña Erronea.");  
-         });*/
          
          axios
           .post("http://localhost:8081/userlog/",self.loginform)
@@ -139,26 +158,14 @@ export default {
               if (error.response.status == "406")
                   alert("ERROR 403: Usuario no encontrado.");  
          });
-         
-         /*
-         axios
-          .post("https://new-ecommerce-api.herokuapp.com/customer/auth",self.loginform)
-          .then((result)=>{
-            self.$emit('logeado', self.loginform.username)
-          })
-          .catch((error) => {
-              if (error.response.status == "404")
-                  alert("ERROR 404: Usuario no encontrado.");
-              if (error.response.status == "403")
-                  alert("ERROR 403: Contraseña Erronea.");  
-         });
-         */
+
          
       }, 
       submitFormRegister: function(){
         var self = this
         
         if (self.registerform.password === self.registerform.password_confirmation){
+          if(self.validregex==true){
           axios
             .post("http://localhost:8081/userreg?user="+self.registerform.user_name+"&password="+self.registerform.password,{
                   params: {
@@ -172,6 +179,9 @@ export default {
                 if (error.response.status == "422")
                     alert("ERROR 422: El Usuario ya existe.");
           });
+          }else{
+            alert("NO estan cumpliendose las condiciones de la contraseña")
+          }
         }else{
           alert("Error de digitacion: Las contraseñas no coinciden");
         }
@@ -271,6 +281,12 @@ export default {
     border-bottom: none;
   }
 
+  .container-hint h5{
+    color: white;
+    font-size: small;
+    margin-left: auto;
+    margin-right: auto;
+  }
   
  
   .text-primary {
