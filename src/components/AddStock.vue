@@ -12,12 +12,19 @@
                 </div>
                 <form v-on:submit.prevent="submitFormLocation">
                     <div class="form-group">
-                        <input type="text" name="locationname" id="name" class="form-control"
-                            placeholder="Nombre Locacion" v-model="stockform.NAME_LOCATION" required autofocus />
+
+                        <label for="Locacion" class="titulo_bln my-check">Locacion</label>
+                        <select name="" class="form-control" id="Locacion" v-model="selected" required>
+                            <option v-for="locacion in locaciones" :key="locacion.id" :value="locacion.name_LOCATION">{{locacion.name_LOCATION}}</option>
+                        </select>
+
                     </div>
                     <div class="form-group">
-                        <input type="text" name="sportname" id="namesport" class="form-control"
-                            placeholder="Nombre Deporte" v-model="stockform.NAME_SPORT" required />
+                        <label for="Deporte" class="titulo_bln my-check">Deporte </label>
+                        <select name="" class="form-control" id="Deporte" v-model="selected" required>
+                            <option v-for="deporte in deportes" :key="deporte.id" :value="deporte.name_SPORT">{{deporte.name_SPORT}}</option>
+                        </select>
+                
                     </div>
                     <div class="form-group">
                       <div class="form-check form-switch my-check">
@@ -66,35 +73,32 @@ export default {
                 //ELEMENT_IMAGE:"", 
                 DESCRIPTION:"",
             },
+            locaciones:[], 
+            deportes:[],
             username:"",
             exitoso:false
         }
     }, 
     created:function(){
         this.username = this.$route.params.username;
+        let self = this;
+        axios
+        .get("http://localhost:8081/locationssibu")
+            .then((result) => {
+                self.locaciones=result.data; 
+            }).catch((error) => {
+                alert("ERROR Servidor LOCACION");
+            });
+        axios
+        .get("http://localhost:8081/sports")
+            .then((result) => {
+                self.deportes=result.data; 
+            }).catch((error) => {
+                alert("ERROR Servidor DEPORTES");
+            });
     },
     methods:{
-      submitFormRegister: function(){
-        var self = this
-        
-        if (self.registerform.password === self.registerform.password_confirmation){
-          axios
-            .post("http://localhost:8081/userreg?user="+self.registerform.user_name+"&password="+self.registerform.password,{
-                  params: {
-                      user: self.registerform.user_name, 
-                      password: self.registerform.password
-                  }})
-            .then((result)=>{
-              
-            })
-            .catch((error) => {
-                if (error.response.status == "422")
-                    alert("ERROR 422: El Moderador ya existe.");
-          });
-        }else{
-          alert("Error de digitacion: Las contraseñas no coinciden");
-        }
-      }
+
     }
 } 
 
