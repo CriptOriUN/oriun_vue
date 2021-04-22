@@ -13,11 +13,11 @@
                 <form v-on:submit.prevent="submitFormLocation">
                     <div class="form-group">
                         <input type="text" name="locationname" id="name" class="form-control"
-                            placeholder="Nombre Locacion" v-model="locationform.NAME_LOCATION" required autofocus />
+                            placeholder="Nombre Locacion" v-model="locationform.name_LOCATION" required autofocus />
                     </div>
                     <div class="form-group">
                       <div class="form-check form-switch my-check">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" v-model="locationform.OPEN" required>
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" v-model="locationform.open">
                         <label class="form-check-label" for="flexSwitchCheckDefault">Abierto</label>
                       </div>
                     </div>
@@ -33,7 +33,7 @@
                         </button>
                     </div>
                 </form>
-                <div class="pb-5" v-if="exitoso==true">
+                <div class="pb-5 my-check" v-if="exitoso==true">
                     La Locacion fue regitrada con exito
                 </div> 
             </div>
@@ -53,9 +53,9 @@ export default {
     data: function(){
         return{
             locationform:{
-              NAME_LOCATION:"", 
-              OPEN:false, 
-              IMAGE_LOCATION:0,
+              name_LOCATION:"", 
+              open:false, 
+              //IMAGE_LOCATION:,
             },
             username:"",
             exitoso:false
@@ -65,6 +65,22 @@ export default {
         this.username = this.$route.params.username;
     },
     methods:{
+      submitFormLocation: function(){
+        var self = this 
+        axios
+          .post("http://localhost:8081/glocationsibu",self.locationform)
+          .then((result)=>{
+            self.locationform.name_LOCATION="" 
+            self.locationform.open = false
+            self.exitoso=true;
+            setTimeout(()=>{
+              self.exitoso=false;
+            }, 1500)
+          })
+          .catch((error) => {
+            alert("Error no esperado en el servidor.")
+        });
+      }
     }
 } 
 

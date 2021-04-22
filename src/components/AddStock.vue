@@ -10,25 +10,31 @@
                 <div class="title">
                     <br>
                 </div>
-                <form v-on:submit.prevent="submitFormLocation">
+                <form v-on:submit.prevent="submitFormElement">
+                    <div class="form-group">
+                        <input type="text" name="locationname" id="name" class="form-control"
+                            placeholder="Nombre Elemento" v-model="stockform.element_NAME" required autofocus />
+                    </div>
                     <div class="form-group">
 
                         <label for="Locacion" class="titulo_bln my-check">Locacion</label>
-                        <select name="" class="form-control" id="Locacion" v-model="selected" required>
+                        <select name="" class="form-control" id="Locacion" v-model="stockform.name_LOCATION" required>
+                            <option disabled value="">Seleccione un elemento</option>
                             <option v-for="locacion in locaciones" :key="locacion.id" :value="locacion.name_LOCATION">{{locacion.name_LOCATION}}</option>
                         </select>
 
                     </div>
                     <div class="form-group">
                         <label for="Deporte" class="titulo_bln my-check">Deporte </label>
-                        <select name="" class="form-control" id="Deporte" v-model="selected" required>
+                        <select name="" class="form-control" id="Deporte" v-model="stockform.name_SPORT" required>
+                            <option disabled value="">Seleccione un elemento</option>
                             <option v-for="deporte in deportes" :key="deporte.id" :value="deporte.name_SPORT">{{deporte.name_SPORT}}</option>
                         </select>
                 
                     </div>
                     <div class="form-group">
                       <div class="form-check form-switch my-check">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" v-model="stockform.AVAILABLE" required>
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" v-model="stockform.available">
                         <label class="form-check-label" for="flexSwitchCheckDefault">Disponible</label>
                       </div>
                     </div>
@@ -39,7 +45,7 @@
                       </div> 
                     </div>
                     <div class="form-group">
-                       <textarea name="message" placeholder="Descripcion" cols="43" rows="3" v-model="stockform.DESCRIPTION" required></textarea>
+                       <textarea name="message" placeholder="Descripcion" cols="43" rows="3" v-model="stockform.description" required></textarea>
                     </div>
                     <div class="text-center pt-2 pb-1">
                         <button type="submit" class="btn btn-primary">
@@ -47,7 +53,7 @@
                         </button>
                     </div>
                 </form>
-                <div class="pb-5" v-if="exitoso==true">
+                <div class="pb-5 my-check" v-if="exitoso==true">
                     El Inventario fue registrado con exito
                 </div> 
             </div>
@@ -67,11 +73,12 @@ export default {
     data: function(){
         return{
             stockform:{
-                NAME_LOCATION:"",
-                NAME_SPORT:"",
-                AVAILABLE:false, 
+                name_LOCATION:"",
+                name_SPORT:"",
+                available:false, 
+                element_NAME:"",
                 //ELEMENT_IMAGE:"", 
-                DESCRIPTION:"",
+                description:"",
             },
             locaciones:[], 
             deportes:[],
@@ -94,10 +101,27 @@ export default {
             .then((result) => {
                 self.deportes=result.data; 
             }).catch((error) => {
-                alert("ERROR Servidor DEPORTES");
+                alert("ERROR Servidor DEPORTE");
             });
     },
     methods:{
+      submitFormElement: function(){
+        var self = this 
+        axios
+          .post("http://localhost:8081/element",self.stockform)
+          .then((result)=>{
+            
+          })
+          .catch((error) => {
+            alert("Error no esperado en el servidor.")
+        });
+        self.stockform.name_LOCATION=self.stockform.name_SPORT=self.stockform.element_NAME=self.stockform.description="";
+        self.stockform.available=false;
+        self.exitoso=true;
+        setTimeout(()=>{
+          self.exitoso=false;
+        }, 1500)
+      }
 
     }
 } 
