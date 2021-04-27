@@ -14,23 +14,22 @@
       
                     <ul  v-if="role=='Usuario'" class="navbar-nav d-flex justify-content-end" id="usuario">
                         <li class="nav-item mx-4">
-
-                        <router-link :to="{ name: 'User', params: { username: this.username }}" id="products-link">
+                        <router-link :to="{ name: 'User', params: { username: this.username }}" >
                         <a href="# " class="nav-link btn-menu">Inicio<span class="sr-only ">(Actual)</span></a>
                         </router-link>
                     </li>
                     <li class="nav-item mx-4">
-                        <router-link :to="{ name: 'Welcome', params: { username: this.username }}" id="products-link">
+                        <router-link :to="{ name: 'Welcome', params: { username: this.username }}">
                         <a href="# " class="nav-link btn-menu">Perfil</a>
                         </router-link>
                     </li>
                     <li class="nav-item active mx-4">
-                        <router-link :to="{ name: 'CreateEvent', params: { username: this.username }}" id="products-link">
+                        <router-link :to="{ name: 'CreateEvent', params: { username: this.username }}" >
                         <a href="#" class="nav-link btn-menu">Crear Evento</a>
                         </router-link>
                     </li>
                     <li class="nav-item mx-4">
-                        <router-link to="/" id="products-link">
+                        <router-link :to="{ name: 'Searcher', params: { username: this.username }}">
                         <a href="# " class="nav-link btn-menu">Buscador</a>
                         </router-link>
                     </li>

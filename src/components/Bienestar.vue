@@ -65,46 +65,6 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <!--
-                            <a class="btn btn-primary" type="button" data-toggle="collapse"
-                            aria-controls="details" aria-expanded="false"
-                            title="Ver detalles" data-target="#add_moderator">Agregar</a> 
-                            <form class="collapse " id="add_moderator">
-                                <tr>
-                                    <td class="p-3 text-left" colspan='5'>
-                                        <ul>
-                                            
-                                            <li class="list-group-item py-1">
-                                                <div>Registro de Moderador</div>
-                                            </li>
-                                            <li class="list-group-item py-1">
-                                                <div class="form-group">
-                                                  <input type="text" name="username" id="name" class="form-control"
-                                                     placeholder="Username" required autofocus />
-                                                </div>
-                                            </li>
-                                            <li class="list-group-item py-1">
-                                                <div class="form-group">
-                                                    <input type="password" name="password" id="password" class="form-control"
-                                                        placeholder="Set a password" required />
-                                                </div>
-                                            </li>
-                                            <li class="list-group-item py-1">
-                                                <div class="form-group">
-                                                    <input type="password" name="password_confirmation" id="password-confirm"
-                                                         class="form-control" placeholder="Confirm password" required />
-                                                </div>
-                                            </li>
-                                            <li class="list-group-item py-1">
-                                                <div type="submit" class="btn btn-primary register">
-                                                    Register
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </td>
-                                </tr>
-                            </form>
-                            -->
                         </div>
 
                     </div>
@@ -181,9 +141,9 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr v-for="element in inventario[locacion.name_LOCATION]" :key="element.id"  id="usuarioslist">
-                                                            <td >{{element.element_NAME}}</td>
-                                                            <td class="">
+                                                        <tr v-for="element in elementos" :key="element.id"  id="usuarioslist">
+                                                            <td v-if="element.name_LOCATION==locacion.name_LOCATION">{{element.element_NAME}}</td>
+                                                            <td v-if="element.name_LOCATION==locacion.name_LOCATION" class="">
                                                                 <button class="btn btn-danger" title="Eliminar" data-toggle="modal"
                                                                     data-target="#elementModel">
                                                                     <!-- Borrar -->
@@ -199,7 +159,6 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <a href="#" class="btn btn-primary" >Agregar</a>
                         </div>
                     </div>
                 </div>
@@ -267,23 +226,10 @@ export default {
       return{
           usuarios: [], 
           locaciones:[], 
-          inventario:{},
+          elementos:[],
       }  
     },
     methods: {
-        /*
-        getElements: function(location_id){
-            let self = this; 
-            axios
-            .get("http://localhost:8081/elntofsibu?name_location="+location_id)
-                .then((result) => {
-                    self.inventario[location_id]=result.data; 
-                }).catch((error) => {
-                    alert("ERROR Servidor");
-                });
-            alert(JSON.stringify(inventario[location_id]))
-        }
-        */
         getElements: function(location_id){
             alert(JSON.stringify(inventario))
         },
@@ -326,17 +272,14 @@ export default {
             }).catch((error) => {
                 alert("ERROR Servidor LOCACION");
             });
-                        
-        var i 
-        for(i=0 ; i<self.locaciones.length ; i++){
-            axios
-                .get("https://wise-brook-308119.ue.r.appspot.com/elntofsibu")
-                    .then((result) => {
-                        self.inventario[locaciones[i].name_LOCATION]=result.data; 
-                    }).catch((error) => {
-                        alert("ERROR Servidor ELEMENTO");
-                });
-        }
+        
+        axios
+        .get("https://wise-brook-308119.ue.r.appspot.com/elements")
+            .then((result) => {
+                self.elementos=result.data; 
+            }).catch((error) => {
+                alert("ERROR Servidor ELEMENTOS");
+            });
                 
     }
 }

@@ -9,7 +9,7 @@ import Moderator from './components/Moderator'
 import RegisterModerator from './components/RegisterModerator'
 import AddStock from './components/AddStock'
 import AddLocation from './components/AddLocation'
-
+import Searcher from './components/Searcher'
 const router = new vueRouter({
     mode: 'history',
     base: __dirname,
@@ -63,6 +63,11 @@ const router = new vueRouter({
             name: "AddLocation", 
             component: AddLocation
         }, 
+        {
+            path:'/:username/searcher', 
+            name: "Searcher", 
+            component: Searcher
+        }
     ]
 })
 export default router
