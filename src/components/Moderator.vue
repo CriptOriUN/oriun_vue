@@ -292,19 +292,19 @@ export default {
   },
   mounted: function () {
     axios
-      .get("http://localhost:8081/events/")
+      .get("https://wise-brook-308119.ue.r.appspot.com/events/")
       // .then(response => console.log(response.data));
       .then((response) => (this.eventsData = response.data));
     axios
-      .get("http://localhost:8081/sports/")
+      .get("https://wise-brook-308119.ue.r.appspot.com/sports/")
       .then((response) => (this.sportsData = response.data));
     axios
-      .get("http://localhost:8081/othersports/")
+      .get("https://wise-brook-308119.ue.r.appspot.com/othersports/")
       .then((response) => (this.suggestedSports = response.data));
   },
   methods: {
      addSport(suggestedSport){
-        axios.post("http://localhost:8081/g/", { "name_SPORT":suggestedSport})
+        axios.post("https://wise-brook-308119.ue.r.appspot.com/g/", { "name_SPORT":suggestedSport})
           .then(console.log("Suggested Sport: " + suggestedSport))
      }
   },

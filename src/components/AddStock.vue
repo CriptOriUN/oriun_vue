@@ -90,14 +90,14 @@ export default {
         this.username = this.$route.params.username;
         let self = this;
         axios
-        .get("http://localhost:8081/locationssibu")
+        .get("https://wise-brook-308119.ue.r.appspot.com/locationssibu")
             .then((result) => {
                 self.locaciones=result.data; 
             }).catch((error) => {
                 alert("ERROR Servidor LOCACION");
             });
         axios
-        .get("http://localhost:8081/sports")
+        .get("https://wise-brook-308119.ue.r.appspot.com/sports")
             .then((result) => {
                 self.deportes=result.data; 
             }).catch((error) => {
@@ -108,7 +108,7 @@ export default {
       submitFormElement: function(){
         var self = this 
         axios
-          .post("http://localhost:8081/element",self.stockform)
+          .post("https://wise-brook-308119.ue.r.appspot.com/element",self.stockform)
           .then((result)=>{
             
           })

@@ -73,7 +73,7 @@ export default {
   methods:{
     getEvents(){
       // console.log('codigo get')
-      axios.get('http://localhost:8081/events/',self.username).then(response=>{
+      axios.get('https://wise-brook-308119.ue.r.appspot.com/events/',self.username).then(response=>{
         console.log(response)
         this.events = response.data
       }).catch(e=>console.log(e))
@@ -81,7 +81,7 @@ export default {
     },
     getNotifications(){
       console.log('codigo get')
-      axios.get('http://localhost:8081/notifications/',self.username).then(response=>{
+      axios.get('https://wise-brook-308119.ue.r.appspot.com/notifications/',self.username).then(response=>{
         console.log(response)
         this.notifications = response.data
       }).catch(e=>console.log(e))

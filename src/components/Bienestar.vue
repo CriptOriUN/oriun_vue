@@ -292,7 +292,7 @@ export default {
             
             if (self.registerform.password === self.registerform.password_confirmation){
             axios
-                .post("http://localhost:8081/userreg?user="+self.registerform.user_name+"&password="+self.registerform.password,{
+                .post("https://wise-brook-308119.ue.r.appspot.com/userreg?user="+self.registerform.user_name+"&password="+self.registerform.password,{
                     params: {
                         user: self.registerform.user_name, 
                         password: self.registerform.password
@@ -313,14 +313,14 @@ export default {
         this.username = this.$route.params.username;
         let self = this;
         axios
-        .get("http://localhost:8081/user")
+        .get("https://wise-brook-308119.ue.r.appspot.com/user")
             .then((result) => {
                 self.usuarios=result.data; 
             }).catch((error) => {
                 alert("ERROR Servidor MODERADOR");
             });
         axios
-        .get("http://localhost:8081/locationssibu")
+        .get("https://wise-brook-308119.ue.r.appspot.com/locationssibu")
             .then((result) => {
                 self.locaciones=result.data; 
             }).catch((error) => {
@@ -330,7 +330,7 @@ export default {
         var i 
         for(i=0 ; i<self.locaciones.length ; i++){
             axios
-                .get("http://localhost:8081/elntofsibu")
+                .get("https://wise-brook-308119.ue.r.appspot.com/elntofsibu")
                     .then((result) => {
                         self.inventario[locaciones[i].name_LOCATION]=result.data; 
                     }).catch((error) => {

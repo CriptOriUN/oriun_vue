@@ -68,7 +68,7 @@ export default {
       submitFormLocation: function(){
         var self = this 
         axios
-          .post("http://localhost:8081/glocationsibu",self.locationform)
+          .post("https://wise-brook-308119.ue.r.appspot.com/glocationsibu",self.locationform)
           .then((result)=>{
             self.locationform.name_LOCATION="" 
             self.locationform.open = false

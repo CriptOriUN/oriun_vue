@@ -249,7 +249,7 @@ export default {
   methods: {
     getSports() {
       axios
-        .get("http://localhost:8081/sports")
+        .get("https://wise-brook-308119.ue.r.appspot.com/sports")
         .then((response) => {
           console.log(response);
           this.sports = response.data;
@@ -258,7 +258,7 @@ export default {
     },
     getLocations() {
       axios
-        .get("http://localhost:8081/locationssport")
+        .get("https://wise-brook-308119.ue.r.appspot.com/locationssport")
         .then((response) => {
           console.log(response);
           this.locations = response.data;
