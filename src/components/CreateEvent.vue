@@ -168,13 +168,13 @@
                   </div>
                </form>
                <div class="col d-flex flex-row-reverse seccion">
-                  <button
+                  <!-- <button
                      v-on:click="mostrarDeportes()"
                      class="btn boton"
                      type="button"
                   >
                      tes
-                  </button>
+                  </button> -->
                   <button
                      v-on:click="submitEventForm()"
                      class="btn boton mb-4"
@@ -253,7 +253,7 @@ export default {
       },
       submitEventForm: function() {
          // console.log(JSON.stringify(this.eventForm));
-         this.eventForm.name_LOC_SPORT = "Cancha IEI";
+         // this.eventForm.name_LOC_SPORT = "Cancha IEI";
 
          if (
             this.eventForm.event_TITLE == "" ||
@@ -340,7 +340,7 @@ export default {
 
             axios
                // .post("http://localhost:8082/event", this.eventForm)
-               .post("https://wise-brook-308119.ue.r.appspot.com/event")
+               .post("https://wise-brook-308119.ue.r.appspot.com/event",this.eventForm)
                .then((response) => {
                   console.log(this.eventForm);
                   alert("Evento Creado con exito");
