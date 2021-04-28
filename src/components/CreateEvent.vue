@@ -168,9 +168,13 @@
                   </div>
                </form>
                <div class="col d-flex flex-row-reverse seccion">
-                  <!-- <button v-on:click="test()" class="btn boton" type="button">
-                     Finalizar
-                  </button> -->
+                  <button
+                     v-on:click="mostrarDeportes()"
+                     class="btn boton"
+                     type="button"
+                  >
+                     tes
+                  </button>
                   <button
                      v-on:click="submitEventForm()"
                      class="btn boton mb-4"
@@ -313,7 +317,7 @@ export default {
             ) {
                alert("Por favor escriba otro deporte");
             }
-         }else if (this.eventForm.name_SPORT != "Otro") {
+         } else if (this.eventForm.name_SPORT != "Otro") {
             this.eventForm.other_SPORT = " ";
          } else {
             this.eventForm.user_NAME = this.username;
@@ -348,6 +352,16 @@ export default {
       eventLoc(location) {
          this.eventForm.name_LOC_SPORT = location;
          // console.log("aqui", this.eventForm);
+      },
+      mostrarDeportes: function() {
+         let dep = [];
+         for (var i = 0; i < this.sports.length; i++) {
+            if (this.sports[i].name_SPORT != "Vacio") {
+               dep.push(this.sports[i]);
+            }
+         }
+         // console.log(dep);
+         return dep;
       },
    },
 };
