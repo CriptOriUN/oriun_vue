@@ -11,6 +11,7 @@
          <div class="row my-3 justify-content-center">
             <div class="col-md-7 col-10 back pl-4 pr-4">
                <h3 class="titulos tit-det pt-4 pb-4">Detalles Generales</h3>
+
                <form action="">
                   <label for="titulo" class="titulo_bln"
                      >Titulo Del Evento</label
@@ -107,6 +108,23 @@
                         >{{ sport.name_SPORT }}
                      </option>
                   </select>
+
+                  <label
+                     for="otroDep"
+                     class="titulo_bln"
+                     v-if="this.eventForm.name_SPORT == 'Otro'"
+                     >Otro Deporte</label
+                  >
+                  <input
+                     v-if="this.eventForm.name_SPORT == 'Otro'"
+                     type="Text"
+                     class="form-control mb-4"
+                     id="event_TITLE"
+                     placeholder="Deporte"
+                     v-model="eventForm.other_SPORT"
+                     required
+                  />
+
                   <label for="Capacidad" class="titulo_bln">Capacidad</label>
                   <select
                      v-model="eventForm.capacity"
@@ -150,7 +168,9 @@
                   </div>
                </form>
                <div class="col d-flex flex-row-reverse seccion">
-                  <!-- <button v-on:click="test()" class="btn boton" type="submit">Finalizar</button> -->
+                  <!-- <button v-on:click="test()" class="btn boton" type="button">
+                     Finalizar
+                  </button> -->
                   <button
                      v-on:click="submitEventForm()"
                      class="btn boton mb-4"
@@ -204,6 +224,7 @@ export default {
    methods: {
       getSports() {
          axios
+            // .get("http://localhost:8082/sports")
             .get("https://wise-brook-308119.ue.r.appspot.com/sports")
             .then((response) => {
                console.log(response);
@@ -213,6 +234,7 @@ export default {
       },
       getLocations() {
          axios
+            // .get("http://localhost:8082/locationssport")
             .get("https://wise-brook-308119.ue.r.appspot.com/locationssport")
             .then((response) => {
                console.log("wihs", response);
@@ -222,7 +244,6 @@ export default {
       },
       test() {
          this.eventForm.user_NAME = this.username;
-         this.eventForm.name_LOC_SPORT = "Cancha IEI";
          // this.eventForm.event_INIT_HOUR = this.eventForm.event_INIT_HOUR.concat(':00');
          console.log(this.eventForm);
       },
@@ -284,6 +305,16 @@ export default {
             this.eventForm.name_LOC_SPORT == " "
          ) {
             alert("Por favor escoja un Lugar");
+         } else if (this.eventForm.name_SPORT == "Otro") {
+            if (
+               this.eventForm.other_SPORT == "" ||
+               this.eventForm.other_SPORT == null ||
+               this.eventForm.other_SPORT == " "
+            ) {
+               alert("Por favor escriba otro deporte");
+            }
+         }else if (this.eventForm.name_SPORT != "Otro") {
+            this.eventForm.other_SPORT = " ";
          } else {
             this.eventForm.user_NAME = this.username;
             this.eventForm.event_FINISH_HOUR = this.eventForm.event_FINISH_HOUR.concat(
@@ -301,10 +332,11 @@ export default {
                0,
                8
             );
-            console.log("quepasa",JSON.stringify(this.eventForm));
+            console.log("quepasa", JSON.stringify(this.eventForm));
 
             axios
-               .post("http://localhost:8082/event", this.eventForm)
+               // .post("http://localhost:8082/event", this.eventForm)
+               .post("https://wise-brook-308119.ue.r.appspot.com/event")
                .then((response) => {
                   console.log(this.eventForm);
                   alert("Evento Creado con exito");
@@ -315,11 +347,10 @@ export default {
       },
       eventLoc(location) {
          this.eventForm.name_LOC_SPORT = location;
-         console.log("aqui", this.eventForm);
+         // console.log("aqui", this.eventForm);
       },
    },
 };
-
 </script>
 
 <style scoped>
@@ -357,6 +388,11 @@ export default {
    background: rgba(255, 255, 255, 0);
    border-color: rgba(255, 255, 255, 0);
 }
+.back #button:active {
+   color: #550000;
+   background: rgba(255, 255, 255, 0);
+   border-color: rgba(255, 255, 255, 0);
+}
 .tit-det {
    font-size: 30px;
 }
@@ -374,7 +410,7 @@ export default {
    padding-right: 15px;
    text-align: center;
 }
-.subtitulo{
+.subtitulo {
    font-size: 25px;
 }
 </style>
