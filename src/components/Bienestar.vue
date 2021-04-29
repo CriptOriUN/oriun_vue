@@ -233,27 +233,6 @@ export default {
         getElements: function(location_id){
             alert(JSON.stringify(inventario))
         },
-        submitFormRegister: function(){
-            var self = this
-            
-            if (self.registerform.password === self.registerform.password_confirmation){
-            axios
-                .post("https://wise-brook-308119.ue.r.appspot.com/userreg?user="+self.registerform.user_name+"&password="+self.registerform.password,{
-                    params: {
-                        user: self.registerform.user_name, 
-                        password: self.registerform.password
-                    }})
-                .then((result)=>{
-                
-                })
-                .catch((error) => {
-                    if (error.response.status == "422")
-                        alert("ERROR 422: El Usuario ya existe.");
-            });
-            }else{
-            alert("Error de digitacion: Las contraseñas no coinciden");
-            }
-        }  
     },
     created: function(){
         this.username = this.$route.params.username;

@@ -76,7 +76,7 @@ export default {
         
         if (self.registerform.password === self.registerform.password_confirmation){
           axios
-            .post("https://wise-brook-308119.ue.r.appspot.com/userreg?user="+self.registerform.user_name+"&password="+self.registerform.password,{
+            .post("https://wise-brook-308119.ue.r.appspot.com/modreg?user="+self.registerform.user_name+"&password="+self.registerform.password,{
                   params: {
                       user: self.registerform.user_name, 
                       password: self.registerform.password

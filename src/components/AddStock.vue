@@ -110,17 +110,16 @@ export default {
         axios
           .post("https://wise-brook-308119.ue.r.appspot.com/element",self.stockform)
           .then((result)=>{
-            
+            self.stockform.name_LOCATION=self.stockform.name_SPORT=self.stockform.element_NAME=self.stockform.description="";
+            self.stockform.available=false;
+            self.exitoso=true;
+            setTimeout(()=>{
+              self.exitoso=false;
+            }, 1500)
           })
           .catch((error) => {
             alert("Error no esperado en el servidor.")
         });
-        self.stockform.name_LOCATION=self.stockform.name_SPORT=self.stockform.element_NAME=self.stockform.description="";
-        self.stockform.available=false;
-        self.exitoso=true;
-        setTimeout(()=>{
-          self.exitoso=false;
-        }, 1500)
       }
 
     }

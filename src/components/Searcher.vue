@@ -37,8 +37,14 @@
                             </div>
                         </div>
                         <div id="boton-asistir">
-                            <button type="button" class="btn btn-primary">Asistir</button>
+                            <button type="button" class="btn btn-primary" @click="asistir(evento.id_EVENT)">Asistir</button>
                         </div>
+                        <div class="pb-5" v-if="exitoso==true">
+                            El usuario fue registrado al evento con exito
+                        </div> 
+                        <div class="pb-5" v-if="noexitoso==true">
+                            El Usuario ya estaba registrado en el evento
+                        </div> 
                     </div>
                 </div>
             </div>
@@ -58,7 +64,10 @@ export default {
       return{
           username: "", 
           eventos:[] ,
-          search:''
+          search:'', 
+          puedoAsistir:false,
+          exitoso: false,
+          noexitoso: false
       }  
     },
     created: function() {
@@ -71,8 +80,36 @@ export default {
         }).catch((error) => {
             alert("ERROR Servidor EVENTOS");
         });
-  }, 
-  computed:{
+    }, 
+    methods:{
+      asistir: function(id_EVENT){
+        let self = this;
+        axios
+        .post("https://wise-brook-308119.ue.r.appspot.com/asistirevent?id_user="+self.username+"&id_event="+id_EVENT,{
+            params: {
+                id_user: self.username, 
+                id_event: id_EVENT
+            }})
+            .then((result) => {
+                self.puedoAsistir = result.data;
+                if(self.puedoAsistir==true){
+                    self.exitoso=true;
+                    setTimeout(()=>{
+                    self.exitoso=false;
+                    }, 1500)
+                }
+                else{
+                    self.noexitoso=true;
+                    setTimeout(()=>{
+                    self.noexitoso=false;
+                    }, 1500)
+                }
+            }).catch((error) => {
+                alert("ERROR Servidor ASISTIR EVENTOS");
+            });
+      }
+    },
+    computed:{
       filterEvents: function(){
           return this.eventos.filter((evento) => {
               if(evento.event_TITLE.toLowerCase().match(this.search.toLowerCase())
@@ -82,8 +119,8 @@ export default {
                   return evento
               }
           });
-      }
-  }
+        }
+    }
 }
 </script>
 
