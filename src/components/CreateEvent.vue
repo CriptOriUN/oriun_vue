@@ -351,7 +351,7 @@ export default {
                      .catch((e) => console.log(e));
                }
             } else {
-               this.eventForm.other_SPORT = " ";
+               this.eventForm.other_SPORT = null;
                this.eventForm.user_NAME = this.username;
                this.eventForm.event_FINISH_HOUR = this.eventForm.event_FINISH_HOUR.concat(
                   ":00"
