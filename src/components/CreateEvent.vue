@@ -369,8 +369,8 @@ export default {
                console.log("quepasa", JSON.stringify(this.eventForm));
 
                axios
-                  .post("http://localhost:8082/event", this.eventForm)
-                  // .post("https://wise-brook-308119.ue.r.appspot.com/event")
+                  // .post("http://localhost:8082/event", this.eventForm)
+                  .post("https://wise-brook-308119.ue.r.appspot.com/event",this.eventForm)
                   .then((response) => {
                      console.log(this.eventForm);
                      alert("Evento Creado con exito");
