@@ -119,7 +119,7 @@
                      v-if="this.eventForm.name_SPORT == 'Otro'"
                      type="Text"
                      class="form-control mb-4"
-                     id="event_TITLE"
+                     id="other_SPORT"
                      placeholder="Deporte"
                      v-model="eventForm.other_SPORT"
                      required
@@ -241,7 +241,7 @@ export default {
             // .get("http://localhost:8082/locationssport")
             .get("https://wise-brook-308119.ue.r.appspot.com/locationssport")
             .then((response) => {
-               console.log("wihs", response);
+               // console.log("wihs", response);
                this.locations = response.data;
             })
             .catch((e) => console.log(e));
@@ -252,7 +252,7 @@ export default {
          console.log(this.eventForm);
       },
       submitEventForm: function() {
-         // console.log(JSON.stringify(this.eventForm));
+         console.log(JSON.stringify(this.eventForm));
          // this.eventForm.name_LOC_SPORT = "Cancha IEI";
 
          if (
@@ -309,59 +309,80 @@ export default {
             this.eventForm.name_LOC_SPORT == " "
          ) {
             alert("Por favor escoja un Lugar");
-         } else if (this.eventForm.name_SPORT == "Otro") {
-            if (
-               this.eventForm.other_SPORT == "" ||
-               this.eventForm.other_SPORT == null ||
-               this.eventForm.other_SPORT == " "
-            ) {
-               alert("Por favor escriba otro deporte");
-            }
-         } else if (this.eventForm.name_SPORT != "Otro") {
-            this.eventForm.other_SPORT = " ";
          } else {
-            this.eventForm.user_NAME = this.username;
-            this.eventForm.event_FINISH_HOUR = this.eventForm.event_FINISH_HOUR.concat(
-               ":00"
-            );
-            this.eventForm.event_INIT_HOUR = this.eventForm.event_INIT_HOUR.concat(
-               ":00"
-            );
+            if (this.eventForm.name_SPORT == "Otro") {
+               if (
+                  this.eventForm.other_SPORT == "" ||
+                  this.eventForm.other_SPORT == null ||
+                  this.eventForm.other_SPORT == " "
+               ) {
+                  alert("Por favor escriba otra actividad");
+               } else {
+                  this.eventForm.user_NAME = this.username;
+                  this.eventForm.event_FINISH_HOUR = this.eventForm.event_FINISH_HOUR.concat(
+                     ":00"
+                  );
+                  this.eventForm.event_INIT_HOUR = this.eventForm.event_INIT_HOUR.concat(
+                     ":00"
+                  );
 
-            this.eventForm.event_FINISH_HOUR = this.eventForm.event_FINISH_HOUR.substring(
-               0,
-               8
-            );
-            this.eventForm.event_INIT_HOUR = this.eventForm.event_INIT_HOUR.substring(
-               0,
-               8
-            );
-            console.log("quepasa", JSON.stringify(this.eventForm));
+                  this.eventForm.event_FINISH_HOUR = this.eventForm.event_FINISH_HOUR.substring(
+                     0,
+                     8
+                  );
+                  this.eventForm.event_INIT_HOUR = this.eventForm.event_INIT_HOUR.substring(
+                     0,
+                     8
+                  );
 
-            axios
-               // .post("http://localhost:8082/event", this.eventForm)
-               .post("https://wise-brook-308119.ue.r.appspot.com/event",this.eventForm)
-               .then((response) => {
-                  console.log(this.eventForm);
-                  alert("Evento Creado con exito");
-                  location.href = "../";
-               })
-               .catch((e) => console.log(e));
+                  console.log("quepasa", JSON.stringify(this.eventForm));
+
+                  axios
+                     // .post("http://localhost:8082/event", this.eventForm)
+                     .post("https://wise-brook-308119.ue.r.appspot.com/event",eventForm)
+                     .then((response) => {
+                        console.log(this.eventForm);
+                        alert("Evento Creado con exito");
+                        location.href = "../";
+                     })
+                     .catch((e) => console.log(e));
+               }
+            } else {
+               this.eventForm.other_SPORT = " ";
+               this.eventForm.user_NAME = this.username;
+               this.eventForm.event_FINISH_HOUR = this.eventForm.event_FINISH_HOUR.concat(
+                  ":00"
+               );
+               this.eventForm.event_INIT_HOUR = this.eventForm.event_INIT_HOUR.concat(
+                  ":00"
+               );
+
+               this.eventForm.event_FINISH_HOUR = this.eventForm.event_FINISH_HOUR.substring(
+                  0,
+                  8
+               );
+               this.eventForm.event_INIT_HOUR = this.eventForm.event_INIT_HOUR.substring(
+                  0,
+                  8
+               );
+
+               console.log("quepasa", JSON.stringify(this.eventForm));
+
+               axios
+                  .post("http://localhost:8082/event", this.eventForm)
+                  // .post("https://wise-brook-308119.ue.r.appspot.com/event")
+                  .then((response) => {
+                     console.log(this.eventForm);
+                     alert("Evento Creado con exito");
+                     location.href = "../";
+                  })
+                  .catch((e) => console.log(e));
+            }
          }
       },
       eventLoc(location) {
          this.eventForm.name_LOC_SPORT = location;
          // console.log("aqui", this.eventForm);
-      },
-      mostrarDeportes: function() {
-         let dep = [];
-         for (var i = 0; i < this.sports.length; i++) {
-            if (this.sports[i].name_SPORT != "Vacio") {
-               dep.push(this.sports[i]);
-            }
-         }
-         // console.log(dep);
-         return dep;
       },
    },
 };
