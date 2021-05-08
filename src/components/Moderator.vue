@@ -9,51 +9,53 @@
           <p class="fullName text-center" id="userName">{{ username }}</p>
         </div>
       </div>
-      <div class="row justify-content-center mx-auto" id="myTab" role="tablist">
+      <div class="row justify-content-center mx-auto">
         <!-- <div class="card col-xl-4 col-lg-4 col-md-6 col-12 mt-4"> -->
         <ul class="row nav col-auto d-flex justify-content-between">
           <li class="col-5 mt-4 mx-auto nav-item">
-            <a
-              href="#event-list"
+            <!-- <a class="card nav-link" id="events-tab" v-on:click="openEvents()"> -->
+            <router-link
+              :to="{name: 'Moderator', query: { tab: 'events' } }"
               class="card nav-link"
               id="events-tab"
-              data-toggle="tab"
             >
               <div class="text-center">Eventos</div>
-            </a>
+            </router-link>
           </li>
 
           <li class="col-5 mt-4 mx-auto nav-item">
-            <a
-              href="#sport-list"
+            <!-- <a class="card nav-link" id="sports-tab" v-on:click="openSports()"> -->
+            <router-link
+              :to="{name: 'Moderator', query: { tab: 'sports' } }"
               class="card nav-link"
               id="sports-tab"
-              data-toggle="tab"
             >
               <div class="text-center">Deportes</div>
-            </a>
+            </router-link>
           </li>
         </ul>
 
-        <div class="row tab-content mt-5 mb-5" id="myTabContent">
+        <div class="row mt-5 mb-5">
           <!-- EVENTOS -->
-          <div
-            class="tab-pane fade mx-auto"
-            id="event-list"
-            role="tabpanel"
-            aria-labelledby="events-tab"
-          >
+          <div class="mx-auto dynamic-content" id="event-list">
             <div class="card card-tables">
               <div class="card-header mx-auto">
                 <h2>Eventos Creados</h2>
                 <hr />
               </div>
+              <!-- Buscador -->
+              <input
+                type="search"
+                placeholder="Buscar"
+                class="form-control search-input"
+                data-table="EventsTable"
+              />
               <div class="card-body">
                 <!-- Lista de Eventos-->
                 <div class="table-responsive">
                   <table
                     id="EventsTable"
-                    class="table table-bordered table-hover table-striped table-options"
+                    class="table table-bordered table-hover table-options EventsTable"
                   >
                     <thead class="thead-dark text-center">
                       <tr>
@@ -64,7 +66,10 @@
                         <th></th>
                       </tr>
                     </thead>
-                    <tbody v-for="event in eventsData">
+                    <tbody
+                      v-for="(event, index) in eventsData"
+                      v-bind:key="index"
+                    >
                       <tr>
                         <td>{{ event.user_NAME }}</td>
                         <td>{{ event.event_INIT }}</td>
@@ -76,6 +81,11 @@
                           }}
                         </td>
                         <td>{{ event.name_LOC_SPORT }}</td>
+                        <td class="d-none" v-if="event.other_SPORT == null">
+                          {{ event.name_SPORT }}
+                        </td>
+                        <td class="d-none" v-else>{{ event.other_SPORT }}</td>
+                        <td class="d-none">{{ event.event_DESCRIPTION }}</td>
                         <td>
                           <button
                             class="btn btn-primary"
@@ -90,26 +100,30 @@
                             <i class="fa fa-info-circle"></i>
                           </button>
                           <button
+                            @click="delEvent(event)"
                             class="btn btn-danger"
                             title="Eliminar"
-                            data-toggle="modal"
-                            data-target="#adviseModel"
                           >
                             <!-- Borrar -->
                             <i class="fa fa-minus-circle"></i>
                           </button>
                         </td>
                       </tr>
-
+                      <!-- Detalles de evento-->
                       <tr
                         class="collapse"
                         v-bind:id="['details' + event.id_EVENT]"
                       >
                         <td class="p-3 text-left" colspan="5">
                           <ul class="list-group">
+                            <li class="d-none">{{ event.user_NAME }}</li>
+                            <li class="d-none">{{ event.event_INIT }}</li>
+                            <li class="d-none">{{ event.name_LOC_SPORT }}v</li>
                             <li class="list-group-item py-1">
                               <h6 class="d-inline">Deporte:</h6>
-                              <span v-if="event.other_SPORT == null">{{ event.name_SPORT }}</span>
+                              <span v-if="event.other_SPORT == null">{{
+                                event.name_SPORT
+                              }}</span>
                               <span v-else>{{ event.other_SPORT }}</span>
                             </li>
                             <li class="list-group-item py-1">
@@ -146,54 +160,8 @@
             </div>
           </div>
 
-          <!-- Modal -->
-          <div
-            class="modal fade"
-            id="adviseModel"
-            tabindex="-1"
-            role="dialog"
-            aria-labelledby="adviseModelTitle"
-            aria-hidden="true"
-          >
-            <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="adviseModalTitle">
-                    Advertencia!
-                  </h5>
-                  <button
-                    type="button"
-                    class="close"
-                    data-dismiss="modal"
-                    aria-label="Close"
-                  >
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  ¿Desea eliminar el evento seleccionado?
-                </div>
-                <div class="modal-footer">
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-dismiss="modal"
-                  >
-                    Cancelar
-                  </button>
-                  <button type="button" class="btn btn-danger">Eliminar</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- DEPORTES -->
-          <div
-            class="tab-pane fade mx-auto"
-            id="sport-list"
-            role="tabpanel"
-            aria-labelledby="sport-tab"
-          >
+          <div class="mx-auto dynamic-content" id="sport-list">
             <div class="card card-tables">
               <div class="card-header">
                 <h2>Deportes</h2>
@@ -201,20 +169,38 @@
               </div>
 
               <div class="card-body">
-                <!-- Lista de Eventos-->
+                <!-- Lista de Deportes registrados-->
                 <div class="table-responsive float-left col-5">
                   <table
                     id="SportsTable"
-                    class="table table-bordered table-hover table-striped"
+                    class="table table-bordered table-hover"
+                    ref="sportsTable"
                   >
                     <thead class="thead-dark text-center">
                       <tr>
                         <th>REGISTRADOS</th>
+                        <th></th>
                       </tr>
                     </thead>
-                    <tbody v-for="sport in sportsData">
-                      <tr>
-                        <td v-if="sport.name_SPORT != 'Vacio'">{{ sport.name_SPORT }}</td>
+                    <tbody id="sportsTableRows">
+                      <tr
+                        v-for="(sport, index) in sportsData"
+                        :key="index"
+                        v-bind:id="[sport.name_SPORT]"
+                      >
+                        <td v-if="sport.name_SPORT != 'Otro'">
+                          {{ sport.name_SPORT }}
+                        </td>
+                        <td v-if="sport.name_SPORT != 'Otro'">
+                          <button
+                            id="show-modal"
+                            v-on:click="delSport(sport)"
+                            class="btn btn-danger"
+                            title="Eliminar"
+                          >
+                            <i class="fa fa-minus-circle"></i>
+                          </button>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -223,7 +209,7 @@
                 <div class="table-responsive float-right col-7">
                   <table
                     id="SugestionsTable"
-                    class="table table-bordered table-hover table-striped table-options"
+                    class="table table-bordered table-hover table-options"
                   >
                     <thead class="thead-dark text-center">
                       <tr>
@@ -232,16 +218,28 @@
                         <th></th>
                       </tr>
                     </thead>
-                    <tbody v-for="suggestedSport in suggestedSports">
-                      <tr>
-                        <td>{{suggestedSport}}</td>
-                        <td>1</td>
+                    <tbody>
+                      <tr
+                        v-for="(suggestedSport, index) in suggestedSports"
+                        :key="index"
+                        v-bind:id="'sugg' + suggestedSport[0]"
+                      >
+                        <td>{{ suggestedSport[0] }}</td>
+                        <td>{{ suggestedSport[1] }}</td>
                         <td>
-                          <button  v-on:click="addSport(suggestedSport)" class="btn btn-primary" title="Añadir">
-                          <!-- <button class="btn btn-primary" title="Añadir"> -->
+                          <button
+                            v-on:click="addSport(suggestedSport[0])"
+                            class="btn btn-primary"
+                            title="Registar"
+                          >
+                            <!-- <button class="btn btn-primary" title="Añadir"> -->
                             <i class="fa fa-plus-circle"></i>
                           </button>
-                          <button class="btn btn-danger" title="Eliminar">
+                          <button
+                            v-on:click="delSuggestedSport(suggestedSport[0])"
+                            class="btn btn-danger"
+                            title="Descartar"
+                          >
                             <i class="fa fa-minus-circle"></i>
                           </button>
                         </td>
@@ -253,6 +251,10 @@
             </div>
           </div>
         </div>
+
+        <!-- MODAL -->
+        <vue-toastr ref="mytoast"></vue-toastr>
+        <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
       </div>
 
       <!-- <div class="d-flex align-items-center col-xl-3 col-lg-3 col-12 mt-4"> -->
@@ -270,14 +272,19 @@
 </template> 
 
 <script>
-import NavBarModerator from "../components/header/NavBarModerator";
+import NavBarModerator from "../components/header/NavBarModerator.vue";
 import axios from "axios";
-// import func from 'vue-editor-bridge';
+import Vue from "vue";
+import ConfirmDialogue from "../components/modal/ConfirmDialogue";
+
 export default {
   name: "Moderator",
   components: {
     NavBarModerator,
+    ConfirmDialogue,
+    "vue-toastr": window.VueToastr,
   },
+
   data: function () {
     return {
       username: "",
@@ -287,26 +294,235 @@ export default {
       suggestedSports: [],
     };
   },
+  watch: {
+    "$route.query.tab": {
+      immediate: true,
+      handler(tab) {
+        this.showTab();
+      },
+    },
+  },
   created: function () {
     this.username = this.$route.params.username;
   },
   mounted: function () {
     axios
       .get("https://wise-brook-308119.ue.r.appspot.com/events/")
+      // .get("http://localhost:8081/events/")
       // .then(response => console.log(response.data));
-      .then((response) => (this.eventsData = response.data));
+      .then(
+        (response) => (this.eventsData = response.data),
+        this.tableFilter()
+      );
     axios
       .get("https://wise-brook-308119.ue.r.appspot.com/sports/")
+      // .get("http://localhost:8081/sports/")
       .then((response) => (this.sportsData = response.data));
+
     axios
-      .get("https://wise-brook-308119.ue.r.appspot.com/othersports/")
+      .get("https://wise-brook-308119.ue.r.appspot.com/otherscount/")
+      // .get("http://localhost:8081/otherscount/")
       .then((response) => (this.suggestedSports = response.data));
+
+    this.$refs.mytoast.defaultPosition = "toast-bottom-right";
+    this.showTab();
   },
   methods: {
-     addSport(suggestedSport){
-        axios.post("https://wise-brook-308119.ue.r.appspot.com/g/", { "name_SPORT":suggestedSport})
-          .then(console.log("Suggested Sport: " + suggestedSport))
-     }
+    async addSport(suggestedSport) {
+      const ok = await this.$refs.confirmDialogue.show({
+        title: "Registrar deporte sugerido",
+        message:
+          "¿Está seguro que desea registar " +
+          suggestedSport.bold().big() +
+          "?",
+        okButton: "Registrar",
+      });
+      if (ok) {
+        try {
+          await axios.post("https://wise-brook-308119.ue.r.appspot.com/g/", { name_SPORT: suggestedSport });
+          // await axios.post("http://localhost:8081/g/", { name_SPORT: suggestedSport[0] });
+
+          var table = document.getElementById("sportsTableRows");
+          var row = table.insertRow(0);
+          row.innerHTML = table.lastChild.innerHTML;
+          row.id = suggestedSport[0];
+          row.firstChild.innerHTML = suggestedSport[0];
+          this.success("Deporte Registrado");
+          setTimeout(() => {  location.reload() }, 1000);
+        } catch (error) {
+          this.error("Error registrando deporte");
+        }
+      } else {
+      }
+    },
+    async delSport(sport) {
+      // this.printHello()
+      const ok = await this.$refs.confirmDialogue.show({
+        title: "Eliminar Deporte",
+        message:
+          "¿Está seguro que desea eliminar " +
+          sport.name_SPORT.bold().big() +
+          "? </br> Esta acción es irreversible",
+        okButton: "Eliminar",
+      });
+      // If you throw an error, the method will terminate here unless you surround it wil try/catch
+      if (ok) {
+        try {
+          await axios.delete(
+            "https://wise-brook-308119.ue.r.appspot.com/nosports?sport=" +
+              String(sport.name_SPORT)
+            // "http://localhost:8081/nosports?sport=" + String(sport.name_SPORT)
+          );
+          document.getElementById(sport.name_SPORT).remove();
+          this.success("Deporte Eliminado");
+          setTimeout(() => {  location.reload() }, 1000);
+        } catch (error) {
+          this.error("Error eliminando deporte");
+          this.warning(
+            "Intente eliminando primero los eventos asociados a este deporte"
+          );
+        }
+      }
+    },
+
+    async delEvent(event) {
+      // this.printHello()
+      const ok = await this.$refs.confirmDialogue.show({
+        title: "Eliminar Evento",
+        message:
+          "¿Está seguro que desea eliminar el Evento? </br> Esta acción es irreversible",
+        okButton: "Eliminar",
+      });
+      // If you throw an error, the method will terminate here unless you surround it wil try/catch
+      if (ok) {
+        try {
+          // axios
+          //   .delete(
+          //     "http://localhost:8081/event?event=" + String(event.id_EVENT)
+          //   )
+          //   .then(this.success("Evento Eliminado"));
+          console.log("Registrar evento - Error Intencionado", e);
+          this.success("Evento eliminado");
+        } catch (error) {
+          this.error("Error eliminando evento (Error Intencionado)");
+        }
+      } else {
+      }
+    },
+
+    async delSuggestedSport(suggestedSport) {
+      const ok = await this.$refs.confirmDialogue.show({
+        title: "Descartar sugerencia",
+        message:
+          "¿Está seguro que desea descartar la sugerencia de registrar " +
+          suggestedSport.bold().big() +
+          " en los deportes? </br> </br> Este deporte no se volverá a mostrar en las sugerencias",
+        okButton: "Descartar",
+      });
+      // If you throw an error, the method will terminate here unless you surround it wil try/catch
+      if (ok) {
+        try {
+          console.log("Registrar evento - Error Intencionado", e);
+          document.getElementById(suggestedSport).remove();
+          this.success("Evento eliminado");
+          location.reload();
+        } catch (error) {
+          this.error("Error descartando sugerencia (Error Intencionado)");
+          this.warning(
+            "Intente eliminando primero los eventos asociados a este deporte"
+          );
+        }
+      } else {
+      }
+    },
+
+    success(msg) {
+      this.$refs.mytoast.s({
+        msg: msg,
+        progressbar: false,
+      });
+    },
+    error(msg) {
+      this.$refs.mytoast.e({
+        msg: msg,
+        progressbar: false,
+      });
+    },
+    warning(msg) {
+      this.$refs.mytoast.w({
+        msg: msg,
+        progressbar: false,
+      });
+    },
+    info(msg) {
+      this.$refs.mytoast.i({
+        msg: msg,
+        progressbar: false,
+      });
+    },
+    tableFilter() {
+      "use strict";
+      var TableFilter = (function (myArray) {
+        var search_input;
+
+        function _onInputSearch(e) {
+          search_input = e.target;
+          var tables = document.getElementsByClassName(
+            search_input.getAttribute("data-table")
+          );
+          myArray.forEach.call(tables, function (table) {
+            myArray.forEach.call(table.tBodies, function (tbody) {
+              myArray.forEach.call(tbody.rows, function (row) {
+                var text_content = row.textContent.toLowerCase();
+                var search_val = search_input.value.toLowerCase();
+                row.style.display =
+                  text_content.indexOf(search_val) > -1 ? "" : "none";
+              });
+            });
+          });
+        }
+
+        return {
+          init: function () {
+            var inputs = document.getElementsByClassName("search-input");
+            myArray.forEach.call(inputs, function (input) {
+              input.oninput = _onInputSearch;
+            });
+          },
+        };
+      })(Array.prototype);
+
+      document.addEventListener("readystatechange", function () {
+        if (document.readyState === "complete") {
+          TableFilter.init();
+        }
+      });
+    },
+    getParameterByName(name, url) {
+      if (!url) url = window.location.href;
+      name = name.replace(/[\[\]]/g, "\\$&");
+      var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return "";
+      return decodeURIComponent(results[2].replace(/\+/g, " "));
+    },
+    showTab() {
+      var dynamicContent = this.getParameterByName("tab");
+      console.log("dynamicContent", dynamicContent);
+      // Check if the URL parameter is apples
+      if (dynamicContent == "events") {
+        console.log("events-tab");
+        document.getElementById("sport-list").style.display = "none";
+        document.getElementById("event-list").style.display = "block";
+      }
+      // Check if the URL parameter is oranges
+      else if (dynamicContent == "sports") {
+        console.log("sports-tab");
+        document.getElementById("event-list").style.display = "none";
+        document.getElementById("sport-list").style.display = "block";
+      }
+    },
   },
 };
 </script> 
@@ -330,6 +546,7 @@ export default {
   overflow: hidden;
   color: white;
   font-size: 35pt;
+  cursor: pointer;
 }
 .card.nav-link:hover {
   top: -2px;
@@ -353,9 +570,10 @@ export default {
   height: 40px;
   /* margin: 5px; */
 }
-.tab-pane.fade {
+.dynamic-content {
   /* background-color: #94B43B; */
   width: 80%;
+  display: none;
 }
 .card-header {
   background-color: transparent;
@@ -380,6 +598,11 @@ export default {
   /* font-size: 1rem; */
   transition: 0.1s;
 }
+
+#SportsTable td:last-child {
+  text-align: center;
+}
+
 .card-tables .card-body {
   margin-top: -20px;
   width: 95%;
@@ -413,6 +636,15 @@ table {
   padding-left: 10px;
   padding-right: 10px;
 }
+
+.form-control.search-input {
+  width: 200px;
+  margin-right: 45px;
+  margin-left: auto;
+  margin-top: -15px;
+  margin-bottom: 15px;
+}
+
 @media (max-width: 768px) {
   .welcome {
     font-size: 100pt;

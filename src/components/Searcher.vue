@@ -19,7 +19,7 @@
                     <div class="evento" v-for="evento in filterEvents" :key="evento.id"> 
                         <div class = "columnas">
                             <div>
-                                <h4>Nombre: {{evento.event_TITLE}}<h4>
+                                <h4>Nombre: {{evento.event_TITLE}}</h4>
                                 <h4>Deporte: {{evento.name_SPORT}}</h4>
                                 <h4>Organizador: {{evento.user_NAME}}</h4>
                             </div> 

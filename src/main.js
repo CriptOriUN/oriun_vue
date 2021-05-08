@@ -3,9 +3,13 @@
 import Vue from 'vue'
 import App from './App'
 import vueRouter from 'vue-router'
+import VueToast from 'vue-toast-notification';
+
+// import 'vue-toast-notification/dist/dist/theme-default.css';
 
 import router from './router'
 Vue.use(vueRouter)
+Vue.use(VueToast);
 
 Vue.config.productionTip = false
 
