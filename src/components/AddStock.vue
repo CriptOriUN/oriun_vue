@@ -1,65 +1,135 @@
 <template>
-    
-    <div class="regmoderator">
-        <NavBar :username="username"/>
-        <div class="container  pt-4 text-center">
-            <div class="pb-5">
-                <h2>Agregar Inventario</h2>
+   <div class="regmoderator">
+      <NavBar :username="username"/>
+      <div class="container  pt-4 text-center">
+         <div class="pb-5">
+            <h2>Agregar y Modificar Inventario</h2>
+         </div>
+         <div class="card mx-auto">
+            <div class="card-header border-bottom-0 bg-transparent">
+               <ul class="nav nav-tabs justify-content-center" id="pills-tab" role="tablist">
+                  <li class="nav-item text-center" id="login-tab">
+                     <a class="nav-link active text-primary" id="pills-login-tab" data-toggle="pill"
+                        href="#pills-login" role="tab" aria-controls="pills-login" aria-selected="true">Agregar</a>
+                  </li>
+                  <li class="nav-item text-center">
+                     <a class="nav-link text-primary" id="pills-register-tab" data-toggle="pill"
+                        href="#pills-register" role="tab" aria-controls="pills-register"
+                        aria-selected="false">Actualizar</a>
+                  </li>
+               </ul>
             </div>
-            <div class="card mx-auto">
-                <div class="title">
-                    <br>
-                </div>
-                <form v-on:submit.prevent="submitFormElement">
-                    <div class="form-group">
-                        <input type="text" name="locationname" id="name" class="form-control"
-                            placeholder="Nombre Elemento" v-model="stockform.element_NAME" required autofocus />
-                    </div>
-                    <div class="form-group">
+            <div class="card-body pb-4">
+               <div class="tab-content" id="pills-tabContent">
+                  <div class="tab-pane fade show active" id="pills-login" role="tabpanel"
+                     aria-labelledby="pills-login-tab">
+                      <form v-on:submit.prevent="submitFormElement">
+                          <div class="form-group">
+                              <input type="text" name="locationname" id="name" class="form-control"
+                                  placeholder="Nombre Elemento" v-model="stockform.element_NAME" required autofocus />
+                          </div>
+                          <div class="form-group">
 
-                        <label for="Locacion" class="titulo_bln my-check">Locacion</label>
-                        <select name="" class="form-control" id="Locacion" v-model="stockform.name_LOCATION" required>
-                            <option disabled value="">Seleccione un elemento</option>
-                            <option v-for="locacion in locaciones" :key="locacion.id" :value="locacion.name_LOCATION">{{locacion.name_LOCATION}}</option>
-                        </select>
+                              <label for="Locacion" class="titulo_bln my-check">Locacion</label>
+                              <select name="" class="form-control" id="Locacion" v-model="stockform.name_LOCATION" required>
+                                  <option disabled value="">Seleccione un elemento</option>
+                                  <option v-for="locacion in locaciones" :key="locacion.id" :value="locacion.name_LOCATION">{{locacion.name_LOCATION}}</option>
+                              </select>
 
-                    </div>
-                    <div class="form-group">
-                        <label for="Deporte" class="titulo_bln my-check">Deporte </label>
-                        <select name="" class="form-control" id="Deporte" v-model="stockform.name_SPORT" required>
-                            <option disabled value="">Seleccione un elemento</option>
-                            <option v-for="deporte in deportes" :key="deporte.id" :value="deporte.name_SPORT">{{deporte.name_SPORT}}</option>
-                        </select>
-                
-                    </div>
-                    <div class="form-group">
-                      <div class="form-check form-switch my-check">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" v-model="stockform.available">
-                        <label class="form-check-label" for="flexSwitchCheckDefault">Disponible</label>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <div class="my-check">
-                        <label for="locationimage">Imagen: </label>
-                        <input type="file" id="locationimage" name="locationimage" accept="image/*"  required>
+                          </div>
+                          <div class="form-group">
+                              <label for="Deporte" class="titulo_bln my-check">Deporte </label>
+                              <select name="" class="form-control" id="Deporte" v-model="stockform.name_SPORT" required>
+                                  <option disabled value="">Seleccione un elemento</option>
+                                  <option v-for="deporte in deportes" :key="deporte.id" :value="deporte.name_SPORT">{{deporte.name_SPORT}}</option>
+                              </select>
+                      
+                          </div>
+                          <div class="form-group">
+                            <div class="form-check form-switch my-check">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" v-model="stockform.available">
+                              <label class="form-check-label" for="flexSwitchCheckDefault">Disponible</label>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="my-check">
+                              <label for="locationimage">Imagen: </label>
+                              <input type="file" id="locationimage" name="locationimage" accept="image/*"  required>
+                            </div> 
+                          </div>
+                          <div class="form-group">
+                            <textarea name="message" placeholder="Descripcion" cols="43" rows="3" v-model="stockform.description" required></textarea>
+                          </div>
+                          <div class="text-center pt-2 pb-1">
+                              <button type="submit" class="btn btn-primary">
+                                  Añadir Inventario
+                              </button>
+                          </div>
+                      </form>
+                      <div class="pb-5 my-check" v-if="exitoso==true">
+                        El elemento fue registrado con exito
                       </div> 
-                    </div>
-                    <div class="form-group">
-                       <textarea name="message" placeholder="Descripcion" cols="43" rows="3" v-model="stockform.description" required></textarea>
-                    </div>
-                    <div class="text-center pt-2 pb-1">
-                        <button type="submit" class="btn btn-primary">
-                            Añadir Inventario
-                        </button>
-                    </div>
-                </form>
-                <div class="pb-5 my-check" v-if="exitoso==true">
-                    El Inventario fue registrado con exito
-                </div> 
+                  </div>
+                  <div class="tab-pane fade" id="pills-register" role="tabpanel"
+                     aria-labelledby="pills-register-tab">
+                      <form v-on:submit.prevent="updateFormElement">
+                          <div class="form-group">
+
+                              <label for="Elemento" class="titulo_bln my-check">Elemento</label>
+                              <select name="" class="form-control" id="Elemento" v-model="updateform.id_ELEMENT" required>
+                                  <option disabled value="">Seleccione un elemento</option>
+                                  <option v-for="elemento in elementos" :key="elemento.id" :value="elemento.id_ELEMENT">{{elemento.element_NAME}}</option>
+                              </select>
+
+                          </div>
+                          <div class="form-group">
+
+                              <label for="Locacion" class="titulo_bln my-check">Locacion</label>
+                              <select name="" class="form-control" id="Locacion" v-model="updateform.name_LOCATION" required>
+                                  <option disabled value="">Seleccione un elemento</option>
+                                  <option v-for="locacion in locaciones" :key="locacion.id" :value="locacion.name_LOCATION">{{locacion.name_LOCATION}}</option>
+                              </select>
+
+                          </div>
+                          <div class="form-group">
+                              <label for="Deporte" class="titulo_bln my-check">Deporte </label>
+                              <select name="" class="form-control" id="Deporte" v-model="updateform.name_SPORT" required>
+                                  <option disabled value="">Seleccione un elemento</option>
+                                  <option v-for="deporte in deportes" :key="deporte.id" :value="deporte.name_SPORT">{{deporte.name_SPORT}}</option>
+                              </select>
+                      
+                          </div>
+                          <div class="form-group">
+                            <div class="form-check form-switch my-check">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" v-model="updateform.available">
+                              <label class="form-check-label" for="flexSwitchCheckDefault">Disponible</label>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="my-check">
+                              <label for="locationimage">Imagen: </label>
+                              <input type="file" id="locationimage" name="locationimage" accept="image/*"  required>
+                            </div> 
+                          </div>
+                          <div class="form-group">
+                            <textarea name="message" placeholder="Descripcion" cols="43" rows="3" v-model="updateform.description" required></textarea>
+                          </div>
+                          <div class="text-center pt-2 pb-1">
+                              <button type="submit" class="btn btn-primary">
+                                  Actualizar Inventario
+                              </button>
+                          </div>
+                      </form>
+                      <div class="pb-5 my-check" v-if="exitoso==true">
+                        El elemento fue actualizado con exito
+                    </div> 
+                  </div>
+               </div>
             </div>
-        </div>
-    </div>
-</template> 
+         </div>
+      </div>
+   </div>
+</template>
 
 <script>
 import NavBar from '../components/header/NavBar'
@@ -80,8 +150,17 @@ export default {
                 //ELEMENT_IMAGE:"", 
                 description:"",
             },
+            updateform:{
+                name_LOCATION:"",
+                name_SPORT:"",
+                available:false, 
+                id_ELEMENT:"",
+                //ELEMENT_IMAGE:"", 
+                description:"",
+            },
             locaciones:[], 
-            deportes:[],
+            deportes:[], 
+            elementos:[],
             username:"",
             exitoso:false
         }
@@ -103,6 +182,13 @@ export default {
             }).catch((error) => {
                 alert("ERROR Servidor DEPORTE");
             });
+        axios
+        .get("https://wise-brook-308119.ue.r.appspot.com/elements") 
+          .then((result => {
+            self.elementos = result.data;
+          })).catch((error) => {
+            alert("Error Servidor ELEMENTOS")
+          })
     },
     methods:{
       submitFormElement: function(){
@@ -120,8 +206,24 @@ export default {
           .catch((error) => {
             alert("Error no esperado en el servidor.")
         });
-      }
+      }, 
 
+      updateFormElement: function(){
+        var self = this 
+        axios
+          .put("https://wise-brook-308119.ue.r.appspot.com/elementupd",self.updateform)
+          .then((result)=>{
+            self.updateform.name_LOCATION=self.updateform.name_SPORT=self.updateform.id_ELEMENT=self.updateform.description="";
+            self.updateform.available=false;
+            self.exitoso=true;
+            setTimeout(()=>{
+              self.exitoso=false;
+            }, 1500)
+          })
+          .catch((error) => {
+            alert("Error no esperado en el servidor.")
+        });
+      }
     }
 } 
 
@@ -189,7 +291,7 @@ export default {
   }
   
   .nav-link {
-    background-color: #466B3F;
+    background-color: #76232f;
     border-bottom: 1px;
   }
   
