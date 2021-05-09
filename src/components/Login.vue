@@ -99,8 +99,10 @@
 </template> 
 
 <script>
+import Vue from "vue"
 import axios from "axios";
-
+import { VueReCaptcha } from 'vue-recaptcha-v3';
+Vue.use(VueReCaptcha, {sitekey: '6Ld0AcsaAAAAAPuanlUIf4OjtLv1O0x8JUDf9DdV'});
 export default {
     name: "Login", 
     data: function(){
@@ -146,20 +148,20 @@ export default {
       submitFormLogin: function(){
         //alert(JSON.stringify(this.loginform))
         var self = this
-         
-         axios
-          .post("https://wise-brook-308119.ue.r.appspot.com/userlog/",self.loginform)
-          .then((result)=>{
-            self.$emit('logeado', self.loginform.user_name, result.data.ROL_NAME)
-          })
-          .catch((error) => {
-              if (error.response.status == "404")
-                  alert("ERROR 404:Contraseña Erronea.");
-              if (error.response.status == "406")
-                  alert("ERROR 403: Usuario no encontrado.");  
-         });
-
-         
+        self.$recaptcha("login").then((token) => {
+        data["g-recaptcha-response"] = token;
+          axios
+            .post("https://wise-brook-308119.ue.r.appspot.com/userlog/",self.loginform)
+            .then((result)=>{
+              self.$emit('logeado', self.loginform.user_name, result.data.ROL_NAME)
+            })
+            .catch((error) => {
+                if (error.response.status == "404")
+                    alert("ERROR 404:Contraseña Erronea.");
+                if (error.response.status == "406")
+                    alert("ERROR 403: Usuario no encontrado.");  
+          });
+        });
       }, 
       submitFormRegister: function(){
         var self = this
