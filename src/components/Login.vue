@@ -37,7 +37,13 @@
                                     <input type="password" name="password" class="form-control" id="password"
                                         v-model="loginform.password" required />
                                 </div>
-
+                                <div class="text-center pt-4">
+                                <vue-hcaptcha
+                                    sitekey="e3605ee2-18a4-4e7c-9a8e-5885075be08e"
+                                    @verify="captchaVerified"
+                                    @error="hCaptchaVerified=false">
+                                </vue-hcaptcha>        
+                                </div>
                                 <div class="text-center pt-4">
                                     <button type="submit" class="btn btn-primary">Login</button>
                                 </div>
@@ -99,12 +105,11 @@
 </template> 
 
 <script>
-import Vue from "vue"
 import axios from "axios";
-import { VueReCaptcha } from 'vue-recaptcha-v3';
-Vue.use(VueReCaptcha, {sitekey: '6Ld0AcsaAAAAAPuanlUIf4OjtLv1O0x8JUDf9DdV'});
+import VueHcaptcha from '@hcaptcha/vue-hcaptcha';
 export default {
-    name: "Login", 
+    name: "Login",
+    components: { VueHcaptcha }, 
     data: function(){
         return{
           	rules: [
@@ -123,7 +128,8 @@ export default {
                 user_name:"", 
                 password:""
             }, 
-            validregex: false
+            validregex: false,
+            hCaptchaVerified: true
         }
     }, 
     computed:{
@@ -147,21 +153,22 @@ export default {
     methods:{
       submitFormLogin: function(){
         //alert(JSON.stringify(this.loginform))
+        if (this.hCaptchaVerified !== true) return;
         var self = this
-        self.$recaptcha("login").then((token) => {
-        data["g-recaptcha-response"] = token;
-          axios
-            .post("https://wise-brook-308119.ue.r.appspot.com/userlog/",self.loginform)
-            .then((result)=>{
-              self.$emit('logeado', self.loginform.user_name, result.data.ROL_NAME)
-            })
-            .catch((error) => {
-                if (error.response.status == "404")
-                    alert("ERROR 404:Contraseña Erronea.");
-                if (error.response.status == "406")
-                    alert("ERROR 403: Usuario no encontrado.");  
-          });
-        });
+         axios
+          .post("https://wise-brook-308119.ue.r.appspot.com/userlog/",self.loginform)
+          .then((result)=>{
+            self.$emit('logeado', self.loginform.user_name, result.data.ROL_NAME)
+          })
+          .catch((error) => {
+              if (error.response.status == "404")
+                  alert("ERROR 404:Contraseña Erronea.");
+              if (error.response.status == "406")
+                  alert("ERROR 403: Usuario no encontrado."); 
+              this.hCaptchaVerified=false; 
+         });
+
+         
       }, 
       submitFormRegister: function(){
         var self = this
@@ -187,6 +194,10 @@ export default {
         }else{
           alert("Error de digitacion: Las contraseñas no coinciden");
         }
+      },
+      captchaVerified(e) {
+        if (e) this.hCaptchaVerified = true;
+        else this.hCaptchaVerified = false;
       }
     }
 } 
