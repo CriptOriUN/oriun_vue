@@ -47,7 +47,9 @@
                            name="fecha_incio"
                            id="fecha_incio_ce"
                            v-model="eventForm.event_INIT"
+                           v-on:change="hoy()"
                            required
+                           min="2021-05-01"
                         />
                      </div>
                      <div class="col-6">
@@ -58,8 +60,9 @@
                            type="date"
                            class="form-control"
                            name="fin"
-                           id="fecha_incio_ce"
+                           id="fecha_fin_ce"
                            v-model="eventForm.event_END"
+                           min="2021-05-01"
                            required
                         />
                      </div>
@@ -126,7 +129,15 @@
                   />
 
                   <label for="Capacidad" class="titulo_bln">Capacidad</label>
-                  <select
+                  <input
+                     type="number"
+                     v-model="eventForm.capacity"
+                     required
+                     class="form-control"
+                     min="1"
+                     max="100"
+                  />
+                  <!-- <select
                      v-model="eventForm.capacity"
                      required
                      class="form-control"
@@ -135,7 +146,7 @@
                      <option>10</option>
                      <option>20</option>
                      <option>50</option>
-                  </select>
+                  </select> -->
                   <div class="row my-5">
                      <div class="col">
                         <h3 class="titulo_lugares tit-det titulo_bln titulos">
@@ -224,12 +235,27 @@ export default {
    mounted() {
       this.getSports();
       this.getLocations();
+      var fecha = new Date();
+      var anio = fecha.getFullYear();
+      var dia = fecha.getDate();
+      var _mes = fecha.getMonth(); //viene con valores de 0 al 11
+      _mes = _mes + 1; //ahora lo tienes de 1 al 12
+      if (_mes < 10) {
+         //ahora le agregas un 0 para el formato date
+         var mes = "0" + _mes;
+      } else {
+         var mes = _mes.toString;
+      }
+      document.getElementById("fecha_incio_ce").min =
+         anio + "-" + mes + "-" + dia;
+      document.getElementById("fecha_fin_ce").min =
+         anio + "-" + mes + "-" + dia;
    },
    methods: {
       getSports() {
          axios
-            // .get("http://localhost:8082/sports")
-            .get("https://wise-brook-308119.ue.r.appspot.com/sports")
+            .get("http://localhost:8081/sports")
+            // .get("https://wise-brook-308119.ue.r.appspot.com/sports")
             .then((response) => {
                console.log(response);
                this.sports = response.data;
@@ -238,8 +264,8 @@ export default {
       },
       getLocations() {
          axios
-            // .get("http://localhost:8082/locationssport")
-            .get("https://wise-brook-308119.ue.r.appspot.com/locationssport")
+            .get("http://localhost:8081/locationssport")
+            // .get("https://wise-brook-308119.ue.r.appspot.com/locationssport")
             .then((response) => {
                // console.log("wihs", response);
                this.locations = response.data;
@@ -250,6 +276,22 @@ export default {
          this.eventForm.user_NAME = this.username;
          // this.eventForm.event_INIT_HOUR = this.eventForm.event_INIT_HOUR.concat(':00');
          console.log(this.eventForm);
+      },
+      hoy() {
+         var fecha = new Date();
+         var anio = fecha.getFullYear();
+         var dia = fecha.getDate();
+         var _mes = fecha.getMonth(); //viene con valores de 0 al 11
+         _mes = _mes + 1; //ahora lo tienes de 1 al 12
+         if (_mes < 10) {
+            //ahora le agregas un 0 para el formato date
+            var mes = "0" + _mes;
+         } else {
+            var mes = _mes.toString;
+         }
+         document.getElementById("fecha_fin_ce").min =
+             this.eventForm.event_INIT;
+         // console.log("llega aqui papu", this.eventForm.event_INIT);
       },
       submitEventForm: function() {
          console.log(JSON.stringify(this.eventForm));
@@ -338,11 +380,11 @@ export default {
                   console.log("quepasa2", JSON.stringify(this.eventForm));
 
                   axios
-                     // .post("http://localhost:8082/event", this.eventForm)
-                     .post(
-                        "https://wise-brook-308119.ue.r.appspot.com/event",
-                        this.eventForm
-                     )
+                     .post("http://localhost:8081/event", this.eventForm)
+                     // .post(
+                     //    "https://wise-brook-308119.ue.r.appspot.com/event",
+                     //    this.eventForm
+                     // )
                      .then((response) => {
                         console.log(this.eventForm);
                         alert("Evento Creado con exito");
@@ -369,14 +411,14 @@ export default {
                   8
                );
 
-               console.log("quepasa", JSON.stringify(this.eventForm));
+               // console.log("quepasa", JSON.stringify(this.eventForm));
 
                axios
-                  // .post("http://localhost:8082/event", this.eventForm)
-                  .post(
-                     "https://wise-brook-308119.ue.r.appspot.com/event",
-                     this.eventForm
-                  )
+                  .post("http://localhost:8081/event", this.eventForm)
+                  // .post(
+                  //    "https://wise-brook-308119.ue.r.appspot.com/event",
+                  //    this.eventForm
+                  // )
                   .then((response) => {
                      console.log(this.eventForm);
                      alert("Evento Creado con exito");
@@ -395,9 +437,9 @@ export default {
 </script>
 
 <style scoped>
-* {
+/* * {
    font-size: 14pt;
-}
+} */
 
 .back {
    color: #fff;
