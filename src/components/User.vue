@@ -94,12 +94,8 @@ export default {
   mounted() {
     // console.log('holanda')
 
-    // this.push().then(() => {
-      this.getEvents();
-      this.getUserSports();
-    // });
-
-    // this.getAllNotifications();
+    this.getEvents();
+    this.getUserSports();
     this.getNotifications();
 
     // this.test();
@@ -109,8 +105,8 @@ export default {
       console.log("GET EVENT");
       axios
         .get(
-          "http://localhost:8081/events/",
-          //  "https://wise-brook-308119.ue.r.appspot.com/events/",
+          // "http://localhost:8081/events/",
+           "https://wise-brook-308119.ue.r.appspot.com/events/",
           self.username
         )
         .then((response) => {
@@ -123,8 +119,8 @@ export default {
       console.log("GET USER SPORTS");
       axios
         .get(
-          "http://localhost:8081/usersports" +
-            //  "https://wise-brook-308119.ue.r.appspot.com/usersports" +
+          // "http://localhost:8081/usersports" +
+             "https://wise-brook-308119.ue.r.appspot.com/usersports" +
             "?user=" +
             this.username
         )
@@ -136,40 +132,11 @@ export default {
           // this.getNotifications();
         });
     },
-    // getAllNotifications() {
-    //   console.log('GET ALL NOTIFICATIONS');
-    //    axios
-    //    .get("http://localhost:8081/notifications")
-    //    .then((response) => {
-    //       // console.log(response);
-    //       this.allnotifications = response.data;
-    //       console.log("Lenght All Notifications: ",this.allnotifications.length);
-    //     })
-
-    // },
-    // getNotifications() {
-    //   console.log("GET NOTIFICATIONS");
-    //   console.log("Lenght All Notifications: ", this.allnotifications.length);
-    //   this.notifications = [];
-    //   for (var i = 0; i < this.allnotifications.length; i++) {
-    //     if (this.allnotifications[i].name_SPORT in this.userSports) {
-    //       this.notifications.concat(this.allnotifications[i]);
-    //     }
-    //   }
-    // },
-    // async push() {
-    //   var source = new EventSource("http://localhost:8081/push");
-    //   source.onmessage = function (event) {
-    //     let data = JSON.parse(event.data);
-    //     this.allnotifications = data;
-    //     console.log("running");
-    //   };
-    // },
     getNotifications() {
       axios
         .get(
-          "http://localhost:8081/usersports" +
-            //  "https://wise-brook-308119.ue.r.appspot.com/usersports" +
+          // "http://localhost:8081/usersports" +
+             "https://wise-brook-308119.ue.r.appspot.com/usersports" +
             "?user=" +
             this.username
         )
@@ -179,8 +146,8 @@ export default {
           for (var i = 0; i < this.userSports.length; i++) {
             axios
               .get(
-                "http://localhost:8081/sportnotifications" +
-                  //  "https://wise-brook-308119.ue.r.appspot.com/sportnotifications" +
+                // "http://localhost:8081/sportnotifications" +
+                   "https://wise-brook-308119.ue.r.appspot.com/sportnotifications" +
                   "?sport=" +
                   this.userSports[i].name_SPORT
               )
@@ -192,82 +159,8 @@ export default {
           // console.log(sportNotifications);
         });
     },
-    // test() {
-    //   // var source = new EventSource("push");
-    //   // var source = new EventSource("https://wise-brook-308119.ue.r.appspot.com/push");
-    //   var source = new EventSource("http://localhost:8081/push");
-    //   // console.log("source", source);
-
-    //   source.onmessage = function (event) {
-    //     // console.log("Hola");
-    //     let data = JSON.parse(event.data);
-    //     // console.log(data.length)
-    //     this.allnotifications = data;
-    //     // document.getElementById("fecha").innerHTML = data.substr(0, 10);
-    //     // document.getElementById("hora").innerHTML = data.substr(11, 8);
-    //     // console.log("data: ", data);
-    //   };
-    // },
   },
 };
-
-
-// 
-
-// import { RSocketClient, JsonSerializer, IdentitySerializer } from 'rsocket-core';
-// import RSocketWebSocketClient from 'rsocket-websocket-client';
-
-// // backend ws endpoint
-// const wsURL = 'ws://localhost:6565/rsocket';
-
-// // rsocket client
-// const client = new RSocketClient({
-//     serializers: {
-//         data: JsonSerializer,
-//         metadata: IdentitySerializer
-//     },
-//     setup: {
-//         keepAlive: 60000, 
-//         lifetime: 180000,
-//         dataMimeType: 'application/json',
-//         metadataMimeType: 'message/x.rsocket.routing.v0',
-//     },
-//     transport: new RSocketWebSocketClient({
-//         url: wsURL
-//     })
-// });
-
-// // error handler
-// const errorHanlder = (e) => console.log(e);
-// // response handler
-// const responseHanlder = (payload) => {
-//     const li = document.createElement('li');
-//     li.innerText = payload.data;
-//     li.classList.add('list-group-item', 'small')
-//     document.getElementById('result').appendChild(li);
-// }
-
-// // request to rsocket-websocket and response handling
-// const numberRequester = (socket, value) => {
-//     socket.requestStream({
-//         data: value,
-//         metadata: String.fromCharCode('number.stream'.length) + 'number.stream'
-//     }).subscribe({
-//         onError: errorHanlder,
-//         onNext: responseHanlder,
-//         onSubscribe: subscription => {
-//             subscription.request(100); // set it to some max value
-//         }
-//     })
-// }
-
-// // once the backend connection is established, register the event listeners
-// client.connect().then(socket => {
-//     document.getElementById('n').addEventListener('change', ({srcElement}) => {
-//         numberRequester(socket, parseInt(srcElement.value));
-//     })
-// }, errorHanlder);
-
 
 </script>
 
