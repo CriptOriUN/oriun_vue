@@ -129,7 +129,7 @@ export default {
                 password:""
             }, 
             validregex: false,
-            hCaptchaVerified: true
+            hCaptchaVerified: false
         }
     }, 
     computed:{
@@ -153,7 +153,7 @@ export default {
     methods:{
       submitFormLogin: function(){
         //alert(JSON.stringify(this.loginform))
-        if (this.hCaptchaVerified !== true) return;
+        if (this.hCaptchaVerified == true){
         var self = this
          axios
           .post("https://wise-brook-308119.ue.r.appspot.com/userlog/",self.loginform)
@@ -167,7 +167,10 @@ export default {
                   alert("ERROR 403: Usuario no encontrado."); 
               this.hCaptchaVerified=false; 
          });
-
+        }
+        else{
+          alert("El Captcha no se ha verificado o se hiso de manera incorrecta")
+        }
          
       }, 
       submitFormRegister: function(){
