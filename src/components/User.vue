@@ -164,7 +164,7 @@ export default {
          // console.log("codigo get");
          // axios.get('https://wise-brook-308119.ue.r.appspot.com/notifications/',self.username).then(response=>{
          axios
-            .get("http://localhost:8081/notifications/", self.username)
+            .get("http://localhost:8081/usernotifications/?user="+ self.username)
             .then((response) => {
                // console.log(response);
                this.notifications = response.data;
