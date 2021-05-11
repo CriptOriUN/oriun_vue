@@ -76,9 +76,9 @@
                           <div class="form-group">
 
                               <label for="Elemento" class="titulo_bln my-check">Elemento</label>
-                              <select name="" class="form-control" id="Elemento" v-model="updateform.id_ELEMENT" required>
+                              <select name="" class="form-control" id="Elemento" v-model="element_key" required>
                                   <option disabled value="">Seleccione un elemento</option>
-                                  <option v-for="elemento in elementos" :key="elemento.id" :value="elemento.id_ELEMENT">{{elemento.element_NAME}}</option>
+                                  <option v-for="elemento in elementos" :key="elemento.id" :value="elemento">{{elemento.element_NAME}}</option>
                               </select>
 
                           </div>
@@ -142,6 +142,7 @@ export default {
     },
     data: function(){
         return{
+            element_key,
             stockform:{
                 name_LOCATION:"",
                 name_SPORT:"",
@@ -154,7 +155,8 @@ export default {
                 name_LOCATION:"",
                 name_SPORT:"",
                 available:false, 
-                id_ELEMENT:"",
+                element_NAME:this.element_key.element_NAME,
+                id_ELEMENT:this.element_key.id_ELEMENT,
                 //ELEMENT_IMAGE:"", 
                 description:"",
             },
@@ -190,6 +192,9 @@ export default {
             alert("Error Servidor ELEMENTOS")
           })
     },
+    computed:{
+
+    }
     methods:{
       submitFormElement: function(){
         var self = this 
