@@ -192,9 +192,6 @@ export default {
             alert("Error Servidor ELEMENTOS")
           })
     },
-    computed:{
-
-    }
     methods:{
       submitFormElement: function(){
         var self = this 
