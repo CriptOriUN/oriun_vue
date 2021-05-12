@@ -102,9 +102,8 @@ export default {
   },
   mounted: function () {
     axios
-      // .get("https://wise-brook-308119.ue.r.appspot.com/events/")
-      .get("http://localhost:8081/elements/")
-      // .then(response => console.log(response.data));
+      .get("https://wise-brook-308119.ue.r.appspot.com/elements/")
+      // .get("http://localhost:8081/elements/")
       .then((response) => (this.elements = response.data));
     this.$refs.mytoast.defaultPosition = "toast-bottom-right";
   },
