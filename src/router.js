@@ -10,6 +10,7 @@ import RegisterModerator from './components/RegisterModerator'
 import AddStock from './components/AddStock'
 import AddLocation from './components/AddLocation'
 import Searcher from './components/Searcher'
+import Elements from './components/Elements'
 const router = new vueRouter({
     mode: 'history',
     base: __dirname,
@@ -67,6 +68,11 @@ const router = new vueRouter({
             path:'/:username/searcher', 
             name: "Searcher", 
             component: Searcher
+        }, 
+        {
+            path:'/:username/elements', 
+            name: "Elements", 
+            component: Elements
         }
     ]
 })
