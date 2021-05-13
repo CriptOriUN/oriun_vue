@@ -165,7 +165,7 @@ export default {
       // console.log(this.username, "hola", self.username);
       axios
         .get(
-          "https://wise-brook-308119.ue.r.appspot.comhttp/usersports/?user=" +
+          "https://wise-brook-308119.ue.r.appspot.com/usersports/?user=" +
             this.username
         )
         .then((response) => {
