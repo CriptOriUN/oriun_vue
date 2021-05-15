@@ -1,7 +1,7 @@
 <template>
     
     <div class="login">
-        <div class="container  pt-4 text-center">
+        <div class="container mb-5 pt-4 text-center">
             <div class="pb-5">
                 <img class="app-logo" src="../assets/oriun.png" alt="" height="100" />
             </div>
@@ -156,7 +156,7 @@ export default {
         if (this.hCaptchaVerified == true){
         var self = this
          axios
-          .post("https://wise-brook-308119.ue.r.appspot.com/userlog/",self.loginform)
+          .post("http://localhost:8081/userlog/",self.loginform)
           .then((result)=>{
             self.$emit('logeado', self.loginform.user_name, result.data.ROL_NAME)
           })
@@ -179,13 +179,10 @@ export default {
         if (self.registerform.password === self.registerform.password_confirmation){
           if(self.validregex==true){
           axios
-            .post("https://wise-brook-308119.ue.r.appspot.com/userreg?user="+self.registerform.user_name+"&password="+self.registerform.password,{
-                  params: {
-                      user: self.registerform.user_name, 
-                      password: self.registerform.password
-                  }})
+            .post("http://localhost:8081/userreg?user="+self.registerform.user_name+"&password="+self.registerform.password+"&email="+self.registerform.email)
             .then((result)=>{
-              self.$emit('logeado', self.registerform.user_name, "Usuario")
+              alert("Se te ha enviado un correo de verificacion a " + self.registerform.email);
+              // self.$emit('logeado', self.registerform.user_name, "Usuario")
             })
             .catch((error) => {
                 if (error.response.status == "422")

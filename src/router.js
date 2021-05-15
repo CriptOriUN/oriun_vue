@@ -11,14 +11,17 @@ import AddStock from './components/AddStock'
 import AddLocation from './components/AddLocation'
 import Searcher from './components/Searcher'
 import Elements from './components/Elements'
+import Confirmation from './components/Confirmation'
+
 const router = new vueRouter({
     mode: 'history',
     base: __dirname,
-    routes: [{
-            path: '/',
-            name: "root",
-            component: App
-        },
+    routes: [
+        // {
+        //     path: '/',
+        //     name: "root",
+        //     component: App
+        // },
         {
             path: '/login',
             name: "Login",
@@ -73,7 +76,17 @@ const router = new vueRouter({
             path:'/:username/elements', 
             name: "Elements", 
             component: Elements
-        }
+        }, 
+        {
+            path:'/confirm-account', 
+            name: "Confirmation", 
+            component: Confirmation
+        },
+        {
+            path: '/:pathMatch(.*)*',
+            component: Login
+        },
+
     ]
 })
 export default router
