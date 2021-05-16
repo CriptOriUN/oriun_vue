@@ -70,7 +70,7 @@ export default {
   },
   // esto sucede de inicio, llevandonos al al root, y ademas haciendo el userupdate, por lo q nos llevara a userauth
   created: function () {
-    //  this.$router.push({name:"root"})
+     this.$router.push({namse:"root"})
     this.updateAuth();
   },
 };
