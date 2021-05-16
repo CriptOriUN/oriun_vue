@@ -15,7 +15,7 @@
           <li class="col-5 mt-4 mx-auto nav-item">
             <!-- <a class="card nav-link" id="events-tab" v-on:click="openEvents()"> -->
             <router-link
-              :to="{name: 'Moderator', query: { tab: 'events' } }"
+              :to="{ name: 'Moderator', query: { tab: 'events' } }"
               class="card nav-link"
               id="events-tab"
             >
@@ -26,7 +26,7 @@
           <li class="col-5 mt-4 mx-auto nav-item">
             <!-- <a class="card nav-link" id="sports-tab" v-on:click="openSports()"> -->
             <router-link
-              :to="{name: 'Moderator', query: { tab: 'sports' } }"
+              :to="{ name: 'Moderator', query: { tab: 'sports' } }"
               class="card nav-link"
               id="sports-tab"
             >
@@ -47,16 +47,13 @@
               <input
                 type="search"
                 placeholder="Buscar"
-                class="form-control search-input"
-                data-table="EventsTable"
+                class="form-control"
+                v-model="search"
               />
               <div class="card-body">
                 <!-- Lista de Eventos-->
                 <div class="table-responsive">
-                  <table
-                    id="EventsTable"
-                    class="table table-bordered table-hover table-options EventsTable"
-                  >
+                  <table class="table table-bordered table-hover table-options">
                     <thead class="thead-dark text-center">
                       <tr>
                         <th>CREADOR</th>
@@ -66,10 +63,7 @@
                         <th></th>
                       </tr>
                     </thead>
-                    <tbody
-                      v-for="(event, index) in eventsData"
-                      v-bind:key="index"
-                    >
+                    <tbody v-for="event in filterEvents" :key="event.id_EVENT">
                       <tr>
                         <td>{{ event.user_NAME }}</td>
                         <td>{{ event.event_INIT }}</td>
@@ -81,11 +75,6 @@
                           }}
                         </td>
                         <td>{{ event.name_LOC_SPORT }}</td>
-                        <td class="d-none" v-if="event.other_SPORT == null">
-                          {{ event.name_SPORT }}
-                        </td>
-                        <td class="d-none" v-else>{{ event.other_SPORT }}</td>
-                        <td class="d-none">{{ event.event_DESCRIPTION }}</td>
                         <td>
                           <button
                             class="btn btn-primary"
@@ -116,9 +105,6 @@
                       >
                         <td class="p-3 text-left" colspan="5">
                           <ul class="list-group">
-                            <li class="d-none">{{ event.user_NAME }}</li>
-                            <li class="d-none">{{ event.event_INIT }}</li>
-                            <li class="d-none">{{ event.name_LOC_SPORT }}v</li>
                             <li class="list-group-item py-1">
                               <h6 class="d-inline">Deporte:</h6>
                               <span v-if="event.other_SPORT == null">{{
@@ -151,6 +137,13 @@
                               <span>{{ event.capacity }}</span>
                             </li>
                           </ul>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tbody v-if="filterEvents.length == 0">
+                      <tr style="height: 100px">
+                        <td class="align-middle text-center"  colspan="5">
+                          No hay Eventos para mostrar
                         </td>
                       </tr>
                     </tbody>
@@ -288,10 +281,10 @@ export default {
   data: function () {
     return {
       username: "",
-      events: null,
-      eventsData: [],
+      events: [],
       sportsData: [],
       suggestedSports: [],
+      search: "",
     };
   },
   watch: {
@@ -308,12 +301,9 @@ export default {
   mounted: function () {
     axios
       .get("https://wise-brook-308119.ue.r.appspot.com/events/")
-      // .get("http://localhost:8081/events/")
+      // .get("http://localhost:8081/eventsall/")
       // .then(response => console.log(response.data));
-      .then(
-        (response) => (this.eventsData = response.data),
-        this.tableFilter()
-      );
+      .then((response) => (this.events = response.data));
     axios
       .get("https://wise-brook-308119.ue.r.appspot.com/sports/")
       // .get("http://localhost:8081/sports/")
@@ -340,7 +330,9 @@ export default {
       if (ok) {
         try {
           await axios.post("https://wise-brook-308119.ue.r.appspot.com/g/", { name_SPORT: suggestedSport });
-          // await axios.post("http://localhost:8081/g/", { name_SPORT: suggestedSport[0] });
+          // await axios.post("http://localhost:8081/g/", {
+          //   name_SPORT: suggestedSport[0],
+          // });
 
           var table = document.getElementById("sportsTableRows");
           var row = table.insertRow(0);
@@ -348,7 +340,9 @@ export default {
           row.id = suggestedSport[0];
           row.firstChild.innerHTML = suggestedSport[0];
           this.success("Deporte Registrado");
-          setTimeout(() => {  location.reload() }, 1000);
+          setTimeout(() => {
+            location.reload();
+          }, 1000);
         } catch (error) {
           this.error("Error registrando deporte");
         }
@@ -369,13 +363,14 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "https://wise-brook-308119.ue.r.appspot.com/nosports?sport=" +
-              String(sport.name_SPORT)
+            "https://wise-brook-308119.ue.r.appspot.com/nosports?sport=" + String(sport.name_SPORT)
             // "http://localhost:8081/nosports?sport=" + String(sport.name_SPORT)
           );
           document.getElementById(sport.name_SPORT).remove();
           this.success("Deporte Eliminado");
-          setTimeout(() => {  location.reload() }, 1000);
+          setTimeout(() => {
+            location.reload();
+          }, 1000);
         } catch (error) {
           this.error("Error eliminando deporte");
           this.warning(
@@ -460,44 +455,6 @@ export default {
         progressbar: false,
       });
     },
-    tableFilter() {
-      "use strict";
-      var TableFilter = (function (myArray) {
-        var search_input;
-
-        function _onInputSearch(e) {
-          search_input = e.target;
-          var tables = document.getElementsByClassName(
-            search_input.getAttribute("data-table")
-          );
-          myArray.forEach.call(tables, function (table) {
-            myArray.forEach.call(table.tBodies, function (tbody) {
-              myArray.forEach.call(tbody.rows, function (row) {
-                var text_content = row.textContent.toLowerCase();
-                var search_val = search_input.value.toLowerCase();
-                row.style.display =
-                  text_content.indexOf(search_val) > -1 ? "" : "none";
-              });
-            });
-          });
-        }
-
-        return {
-          init: function () {
-            var inputs = document.getElementsByClassName("search-input");
-            myArray.forEach.call(inputs, function (input) {
-              input.oninput = _onInputSearch;
-            });
-          },
-        };
-      })(Array.prototype);
-
-      document.addEventListener("readystatechange", function () {
-        if (document.readyState === "complete") {
-          TableFilter.init();
-        }
-      });
-    },
     getParameterByName(name, url) {
       if (!url) url = window.location.href;
       name = name.replace(/[\[\]]/g, "\\$&");
@@ -522,6 +479,29 @@ export default {
         document.getElementById("event-list").style.display = "none";
         document.getElementById("sport-list").style.display = "block";
       }
+    },
+  },
+  computed: {
+    filterEvents: function () {
+      return this.events.filter((event) => {
+        if (
+          event.event_TITLE.toLowerCase().match(this.search.toLowerCase()) ||
+          event.name_SPORT.toLowerCase().match(this.search.toLowerCase()) ||
+          event.name_LOC_SPORT.toLowerCase().match(this.search.toLowerCase()) ||
+          event.user_NAME.toLowerCase().match(this.search.toLowerCase()) ||
+          event.event_DESCRIPTION.toLowerCase().match(this.search.toLowerCase())
+        ) {
+          return event;
+        }
+        if (event.other_SPORT != null) {
+          if (
+            event.other_SPORT.toLowerCase().match(this.search.toLowerCase())
+          ) {
+            return event;
+          }
+        }
+         
+      });
     },
   },
 };
@@ -627,9 +607,7 @@ ul {
 .row {
   width: 100%;
 }
-table {
-  background-color: #e9ecef;
-}
+
 .logoUnal {
   display: inline-block;
   width: 85%;
@@ -637,12 +615,17 @@ table {
   padding-right: 10px;
 }
 
-.form-control.search-input {
+.form-control {
   width: 200px;
   margin-right: 45px;
   margin-left: auto;
   margin-top: -15px;
   margin-bottom: 15px;
+}
+
+table {
+  background-color: #e9ecef;
+  /* min-width: 350px; */
 }
 
 @media (max-width: 768px) {
