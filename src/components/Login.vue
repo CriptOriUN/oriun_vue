@@ -182,114 +182,130 @@
 
 <script>
 import axios from "axios";
-import VueHcaptcha from '@hcaptcha/vue-hcaptcha';
+import VueHcaptcha from "@hcaptcha/vue-hcaptcha";
 export default {
-    name: "Login",
-    components: { VueHcaptcha }, 
-    data: function(){
-        return{
-          	rules: [
-			        	{ message:'One lowercase letter required.', regex:/[a-z]+/ },
-				        { message:"One uppercase letter required.",  regex:/[A-Z]+/ },
-				        { message:"8 characters minimum.", regex:/.{8,}/ },
-				        { message:"One number required.", regex:/[0-9]+/ }
-			      ],
-            registerform:{
-                user_name:"",
-                email:"",
-                password:"", 
-                password_confirmation:""
-            },
-            loginform : {
-                user_name:"", 
-                password:""
-            }, 
-            validregex: false,
-            hCaptchaVerified: false,
-            accountVerified: false
+  name: "Login",
+  components: { VueHcaptcha },
+  data: function () {
+    return {
+      rules: [
+        { message: "One lowercase letter required.", regex: /[a-z]+/ },
+        { message: "One uppercase letter required.", regex: /[A-Z]+/ },
+        { message: "8 characters minimum.", regex: /.{8,}/ },
+        { message: "One number required.", regex: /[0-9]+/ },
+      ],
+      registerform: {
+        user_name: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
+      },
+      loginform: {
+        user_name: "",
+        password: "",
+      },
+      validregex: false,
+      hCaptchaVerified: false,
+      accountVerified: false,
+    };
+  },
+  computed: {
+    passwordValidation() {
+      var self = this;
+      let errors = [];
+      for (let condition of this.rules) {
+        if (!condition.regex.test(self.registerform.password)) {
+          errors.push(condition.message);
         }
-    }, 
-    computed:{
-      passwordValidation () {
-        var self = this
-        let errors = []
-        for (let condition of this.rules) {
-          if (!condition.regex.test(self.registerform.password)) {
-            errors.push(condition.message)
-          }
-        }
-        if (errors.length === 0) {
-          self.validregex=true
-          return { valid:true, errors }
-        } else {
-          self.validregex=false
-          return { valid:false, errors }
-        }
-		  }
+      }
+      if (errors.length === 0) {
+        self.validregex = true;
+        return { valid: true, errors };
+      } else {
+        self.validregex = false;
+        return { valid: false, errors };
+      }
     },
-    methods:{
-      submitFormLogin: function(){
-        //alert(JSON.stringify(this.loginform))
-        if (this.hCaptchaVerified == true){
-          var self = this
-          axios
-            .get("http://localhost:8081/userstate?user=" + self.loginform.user_name)
-            .then((result) => {
-              self.accountVerified = result;
-            })
-
-          if(self.accountVerified){
-          axios
-            .post("https://wise-brook-308119.ue.r.appspot.com/userlog/",self.loginform)
-            .then((result)=>{
-              self.$emit('logeado', self.loginform.user_name, result.data.ROL_NAME)
-            })
-            .catch((error) => {
-                if (error.response.status == "404")
+  },
+  methods: {
+    submitFormLogin: function () {
+      //alert(JSON.stringify(this.loginform))
+      if (this.hCaptchaVerified == true) {
+        var self = this;
+        axios
+          .get(
+            "http://localhost:8081/userstate?user=" + self.loginform.user_name
+          )
+          .then((result) => {
+            self.accountVerified = result;
+            if (self.accountVerified) {
+              axios
+                .post(
+                  "https://wise-brook-308119.ue.r.appspot.com/userlog/",
+                  self.loginform
+                )
+                .then((result) => {
+                  self.$emit(
+                    "logeado",
+                    self.loginform.user_name,
+                    result.data.ROL_NAME
+                  );
+                })
+                .catch((error) => {
+                  if (error.response.status == "404")
                     alert("ERROR 404:Contraseña Erronea.");
-                if (error.response.status == "406")
-                    alert("ERROR 403: Usuario no encontrado."); 
-                this.hCaptchaVerified=false; 
+                  if (error.response.status == "406")
+                    alert("ERROR 403: Usuario no encontrado.");
+                  this.hCaptchaVerified = false;
+                });
+            } else {
+              alert("No has verificado tu cuenta.");
+            }
           });
-          }else{
-            alert("No has verificado tu cuenta.")            
-          }
-        }
-        else{
-          alert("El Captcha no se ha verificado o se hizo de manera incorrecta")
-        }
-         
-      }, 
-      submitFormRegister: function(){
-        var self = this
-        
-        if (self.registerform.password === self.registerform.password_confirmation){
-          if(self.validregex==true){
+      } else {
+        alert("El Captcha no se ha verificado o se hizo de manera incorrecta");
+      }
+    },
+    submitFormRegister: function () {
+      var self = this;
+
+      if (
+        self.registerform.password === self.registerform.password_confirmation
+      ) {
+        if (self.validregex == true) {
           axios
-            .post("https://wise-brook-308119.ue.r.appspot.com/userreg?user="+self.registerform.user_name+"&password="+self.registerform.password+"&email="+self.registerform.email)
-            .then((result)=>{
-              alert("Se te ha enviado un correo de verificacion a " + self.registerform.email);
+            .post(
+              "https://wise-brook-308119.ue.r.appspot.com/userreg?user=" +
+                self.registerform.user_name +
+                "&password=" +
+                self.registerform.password +
+                "&email=" +
+                self.registerform.email
+            )
+            .then((result) => {
+              alert(
+                "Se te ha enviado un correo de verificacion a " +
+                  self.registerform.email
+              );
               // self.$emit('logeado', self.registerform.user_name, "Usuario")
             })
             .catch((error) => {
-                if (error.response.status == "422")
-                    alert("ERROR 422: El Usuario ya existe.");
-          });
-          }else{
-            alert("NO estan cumpliendose las condiciones de la contraseña")
-          }
-        }else{
-          alert("Error de digitacion: Las contraseñas no coinciden");
+              if (error.response.status == "422")
+                alert("ERROR 422: El Usuario ya existe.");
+            });
+        } else {
+          alert("NO estan cumpliendose las condiciones de la contraseña");
         }
-      },
-      captchaVerified(e) {
-        if (e) this.hCaptchaVerified = true;
-        else this.hCaptchaVerified = false;
+      } else {
+        alert("Error de digitacion: Las contraseñas no coinciden");
       }
-    }
-} 
-
-
+    },
+    captchaVerified(e) {
+      if (e) this.hCaptchaVerified = true;
+      else this.hCaptchaVerified = false;
+    },
+  },
+};
 </script>
 
 
