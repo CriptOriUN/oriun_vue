@@ -23,25 +23,25 @@ export default {
 
       if (self.is_auth == false){
         if(!(self.$route.path == '/confirm-account')){
-          self.$router.push({ name: "Login" });         
+          self.$router.push({ name: "Login" }).catch(()=>{});
         }        
       } 
       else {
         let username = localStorage.getItem("current_username");
         let role = localStorage.getItem("my_role");
         if (role === "Usuario") {
-          self.$router.push({ name: "User", params: { username: username } });
+          self.$router.push({ name: "User", params: { username: username } }).catch(()=>{});
         } else if (role === "Moderador") {
           self.$router.push({
             name: "Moderator",
             params: { username: username },
             query: this.$route.query,
-          });
+          }).catch(()=>{});
         } else {
           self.$router.push({
             name: "Bienestar",
             params: { username: username },
-          });
+          }).catch(()=>{});
         }
       }
       

@@ -72,7 +72,7 @@ export default {
       var self = this;
       localStorage.removeItem("isAuth");
       localStorage.removeItem("current_username");
-      self.$router.push({ name: "root" });
+      self.$router.push({ name: "root" }).catch(()=>{});
     },
     selectActive() {
       // Get the container element

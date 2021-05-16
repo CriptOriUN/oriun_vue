@@ -187,7 +187,7 @@ export default {
       localStorage.removeItem("isAuth");
       localStorage.removeItem("current_username");
       localStorage.removeItem("my_role");
-      self.$router.push({ name: "root" });
+      self.$router.push({ name: "root" }).catch(()=>{});
     },
 
   },
