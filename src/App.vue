@@ -22,7 +22,9 @@ export default {
       self.is_auth = localStorage.getItem("isAuth") || false;
 
       if (self.is_auth == false){
-        self.$router.push({ name: "Login" });
+        if(!("/confirm-account" in self.$route.path)){
+          self.$router.push({ name: "Login" });         
+        }
       } 
       else {
         let username = localStorage.getItem("current_username");
@@ -43,24 +45,6 @@ export default {
         }
       }
       
-      // if (self.is_auth == true){
-      //   let username = localStorage.getItem("current_username");
-      //   let role = localStorage.getItem("my_role");
-      //   if (role === "Usuario") {
-      //     self.$router.push({ name: "User", params: { username: username } });
-      //   } else if (role === "Moderador") {
-      //     self.$router.push({
-      //       name: "Moderator",
-      //       params: { username: username },
-      //       query: this.$route.query,
-      //     });
-      //   } else {
-      //     self.$router.push({
-      //       name: "Bienestar",
-      //       params: { username: username },
-      //     });
-      //   }
-      // }
     },
     // nos lleva al metodo de update
     logIn: function (username, role) {
