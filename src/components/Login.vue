@@ -206,7 +206,6 @@ export default {
       },
       validregex: false,
       hCaptchaVerified: false,
-      accountVerified: false,
     };
   },
   computed: {
@@ -237,8 +236,7 @@ export default {
             "http://localhost:8081/userstate?user=" + self.loginform.user_name
           )
           .then((result) => {
-            console.log("AccountVerified", result);
-            if (result) {
+            if (result.data) {
               axios
                 .post(
                   "https://wise-brook-308119.ue.r.appspot.com/userlog/",
