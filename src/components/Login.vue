@@ -206,7 +206,7 @@ export default {
             }, 
             validregex: false,
             hCaptchaVerified: false,
-            accountVerified = false
+            accountVerified: false
         }
     }, 
     computed:{
@@ -232,7 +232,7 @@ export default {
         //alert(JSON.stringify(this.loginform))
         if (this.hCaptchaVerified == true){
           var self = this
-          await axios
+          axios
             .get("http://localhost:8081/userstate?user=" + self.loginform.user_name)
             .then((result) => {
               self.accountVerified = result;
