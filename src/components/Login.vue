@@ -237,8 +237,8 @@ export default {
             "http://localhost:8081/userstate?user=" + self.loginform.user_name
           )
           .then((result) => {
-            self.accountVerified = result;
-            if (self.accountVerified) {
+            console.log("AccountVerified", result);
+            if (result) {
               axios
                 .post(
                   "https://wise-brook-308119.ue.r.appspot.com/userlog/",
