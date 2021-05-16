@@ -82,10 +82,10 @@ const router = new vueRouter({
             name: "Confirmation", 
             component: Confirmation
         },
-        {
-            path: '/:pathMatch(.*)*',
-            component: Login 
-        },
+        // {
+        //     path: '/:pathMatch(.*)*',
+        //     component: Login
+        // },
 
     ]
 })
