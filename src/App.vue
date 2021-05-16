@@ -22,9 +22,12 @@ export default {
       self.is_auth = localStorage.getItem("isAuth") || false;
 
       if (self.is_auth == false){
-        if(!("/confirm-account" in self.$route.path)){
-          self.$router.push({ name: "Login" });         
-        }
+        // if(!("/confirm-account" in self.$route.path)){
+        //   self.$router.push({ name: "Login" });         
+        // }
+        console.log('--------------------');
+        console.log(!("/confirm-account" in self.$route.path));
+        console.log(self.$route.path);
       } 
       else {
         let username = localStorage.getItem("current_username");
