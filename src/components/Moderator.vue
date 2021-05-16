@@ -337,8 +337,8 @@ export default {
           var table = document.getElementById("sportsTableRows");
           var row = table.insertRow(0);
           row.innerHTML = table.lastChild.innerHTML;
-          row.id = suggestedSport[0];
-          row.firstChild.innerHTML = suggestedSport[0];
+          row.id = suggestedSport;
+          row.firstChild.innerHTML = suggestedSport;
           this.success("Deporte Registrado");
           setTimeout(() => {
             location.reload();
@@ -385,21 +385,19 @@ export default {
       const ok = await this.$refs.confirmDialogue.show({
         title: "Eliminar Evento",
         message:
-          "¿Está seguro que desea eliminar el Evento? </br> Esta acción es irreversible",
+          "¿Está seguro que desea eliminar el Evento? </br> Esta acción es irreversible.",
         okButton: "Eliminar",
       });
       // If you throw an error, the method will terminate here unless you surround it wil try/catch
       if (ok) {
         try {
-          // axios
-          //   .delete(
-          //     "http://localhost:8081/event?event=" + String(event.id_EVENT)
-          //   )
-          //   .then(this.success("Evento Eliminado"));
-          console.log("Registrar evento - Error Intencionado", e);
+          await axios
+            .delete(
+              "http://localhost:8081/NoEvent?id_event=" + event.id_EVENT)
+            .then(this.success("Evento Eliminado"));
           this.success("Evento eliminado");
         } catch (error) {
-          this.error("Error eliminando evento (Error Intencionado)");
+          this.error("Error eliminando evento");
         }
       } else {
       }
