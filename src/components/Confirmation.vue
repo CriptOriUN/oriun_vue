@@ -46,7 +46,7 @@ export default {
 
   created: function () {
     axios
-      .post("http://localhost:8081/confirm-account", null, {
+      .post("https://wise-brook-308119.ue.r.appspot.com/confirm-account", null, {
         method: "post",
         params: {
           token: this.$route.query.token,

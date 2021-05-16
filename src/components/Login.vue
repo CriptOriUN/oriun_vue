@@ -156,7 +156,7 @@ export default {
         if (this.hCaptchaVerified == true){
         var self = this
          axios
-          .post("http://localhost:8081/userlog/",self.loginform)
+          .post("https://wise-brook-308119.ue.r.appspot.com/userlog/",self.loginform)
           .then((result)=>{
             self.$emit('logeado', self.loginform.user_name, result.data.ROL_NAME)
           })
@@ -179,7 +179,7 @@ export default {
         if (self.registerform.password === self.registerform.password_confirmation){
           if(self.validregex==true){
           axios
-            .post("http://localhost:8081/userreg?user="+self.registerform.user_name+"&password="+self.registerform.password+"&email="+self.registerform.email)
+            .post("https://wise-brook-308119.ue.r.appspot.com/userreg?user="+self.registerform.user_name+"&password="+self.registerform.password+"&email="+self.registerform.email)
             .then((result)=>{
               alert("Se te ha enviado un correo de verificacion a " + self.registerform.email);
               // self.$emit('logeado', self.registerform.user_name, "Usuario")
