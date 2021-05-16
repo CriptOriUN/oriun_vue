@@ -26,8 +26,9 @@ export default {
         //   self.$router.push({ name: "Login" });         
         // }
         console.log('--------------------');
-        console.log(!("/confirm-account" in self.$route.path));
         console.log(self.$route.path);
+        console.log(!(self.$route.path.includes('/confirm-account')));
+        
       } 
       else {
         let username = localStorage.getItem("current_username");
