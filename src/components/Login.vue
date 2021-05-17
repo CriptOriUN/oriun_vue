@@ -233,7 +233,7 @@ export default {
         var self = this;
         axios
           .get(
-            "http://localhost:8081/userstate?user=" + self.loginform.user_name
+            "https://wise-brook-308119.ue.r.appspot.com/userstate?user=" + self.loginform.user_name
           )
           .then((result) => {
             if (result.data) {
