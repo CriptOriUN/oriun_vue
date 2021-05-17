@@ -43,13 +43,21 @@
                 <h2>Eventos Creados</h2>
                 <hr />
               </div>
-              <!-- Buscador -->
-              <input
-                type="search"
-                placeholder="Buscar"
-                class="form-control"
-                v-model="search"
-              />
+              <div class="row">
+                <label class="switch">
+                  <input id="eventsSelector" type="checkbox" v-model="switchChecked"/>
+                  <span class="slider round"></span>
+                </label>
+                <p v-if="switchChecked" class="ml-3">Ver solo activos</p>
+                <p v-else class="ml-3">Ver todos</p>
+                <!-- Buscador -->
+                <input
+                  type="search"
+                  placeholder="Buscar"
+                  class="form-control"
+                  v-model="search"
+                />
+              </div>
               <div class="card-body">
                 <!-- Lista de Eventos-->
                 <div class="table-responsive">
@@ -142,7 +150,7 @@
                     </tbody>
                     <tbody v-if="filterEvents.length == 0">
                       <tr style="height: 100px">
-                        <td class="align-middle text-center"  colspan="5">
+                        <td class="align-middle text-center" colspan="5">
                           No hay Eventos para mostrar
                         </td>
                       </tr>
@@ -282,9 +290,11 @@ export default {
     return {
       username: "",
       events: [],
+      allevents: [],
       sportsData: [],
       suggestedSports: [],
       search: "",
+      switchChecked: false,
     };
   },
   watch: {
@@ -293,7 +303,8 @@ export default {
       handler(tab) {
         this.showTab();
       },
-    },
+    },  
+
   },
   created: function () {
     this.username = this.$route.params.username;
@@ -301,17 +312,16 @@ export default {
   mounted: function () {
     axios
       .get("https://wise-brook-308119.ue.r.appspot.com/events/")
-      // .get("http://localhost:8081/eventsall/")
-      // .then(response => console.log(response.data));
       .then((response) => (this.events = response.data));
     axios
+      .get("https://wise-brook-308119.ue.r.appspot.com/eventsall/")
+      .then((response) => (this.allevents = response.data));
+    axios
       .get("https://wise-brook-308119.ue.r.appspot.com/sports/")
-      // .get("http://localhost:8081/sports/")
       .then((response) => (this.sportsData = response.data));
 
     axios
       .get("https://wise-brook-308119.ue.r.appspot.com/otherscount/")
-      // .get("http://localhost:8081/otherscount/")
       .then((response) => (this.suggestedSports = response.data));
 
     this.$refs.mytoast.defaultPosition = "toast-bottom-right";
@@ -329,10 +339,9 @@ export default {
       });
       if (ok) {
         try {
-          await axios.post("https://wise-brook-308119.ue.r.appspot.com/g/", { name_SPORT: suggestedSport });
-          // await axios.post("http://localhost:8081/g/", {
-          //   name_SPORT: suggestedSport[0],
-          // });
+          await axios.post("https://wise-brook-308119.ue.r.appspot.com/g/", {
+            name_SPORT: suggestedSport,
+          });
 
           var table = document.getElementById("sportsTableRows");
           var row = table.insertRow(0);
@@ -364,7 +373,6 @@ export default {
         try {
           await axios.delete(
             "https://wise-brook-308119.ue.r.appspot.com/nosports?sport=" + String(sport.name_SPORT)
-            // "http://localhost:8081/nosports?sport=" + String(sport.name_SPORT)
           );
           document.getElementById(sport.name_SPORT).remove();
           this.success("Deporte Eliminado");
@@ -392,10 +400,12 @@ export default {
       if (ok) {
         try {
           await axios
-            .delete(
-              "http://localhost:8081/NoEvent?id_event=" + event.id_EVENT)
-            .then(this.success("Evento Eliminado"));
+            .delete("https://wise-brook-308119.ue.r.appspot.com/NoEvent?id_event=" + event.id_EVENT)
+          document.getElementById(event.id_EVENT).remove();
           this.success("Evento eliminado");
+          setTimeout(() => {
+            location.reload();
+          }, 1000);
         } catch (error) {
           this.error("Error eliminando evento");
         }
@@ -420,7 +430,7 @@ export default {
           this.success("Evento eliminado");
           location.reload();
         } catch (error) {
-          this.error("Error descartando sugerencia (Error Intencionado)");
+          this.error("Error descartando sugerencia");
           this.warning(
             "Intente eliminando primero los eventos asociados a este deporte"
           );
@@ -481,7 +491,11 @@ export default {
   },
   computed: {
     filterEvents: function () {
-      return this.events.filter((event) => {
+      var target = this.events;
+      if(this.switchChecked){
+        target = this.allevents;
+      }
+      return target.filter((event) => {
         if (
           event.event_TITLE.toLowerCase().match(this.search.toLowerCase()) ||
           event.name_SPORT.toLowerCase().match(this.search.toLowerCase()) ||
@@ -498,7 +512,6 @@ export default {
             return event;
           }
         }
-         
       });
     },
   },
@@ -624,6 +637,60 @@ ul {
 table {
   background-color: #e9ecef;
   /* min-width: 350px; */
+}
+
+/* Toggle Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 23px;
+  margin-left: 40px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 17px;
+  width: 17px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+input:checked + .slider {
+  background-color: #2196f3;
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+input:checked + .slider:before {
+  -webkit-transform: translateX(16px);
+  -ms-transform: translateX(16px);
+  transform: translateX(16px);
+}
+/* Rounded sliders */
+.slider.round {
+  border-radius: 22px;
+}
+.slider.round:before {
+  border-radius: 50%;
 }
 
 @media (max-width: 768px) {
