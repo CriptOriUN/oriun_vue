@@ -400,7 +400,8 @@ export default {
       if (ok) {
         try {
           await axios
-            .delete("https://wise-brook-308119.ue.r.appspot.com/NoEvent?id_event=" + event.id_EVENT)
+            // .delete("https://wise-brook-308119.ue.r.appspot.com/NoEvent?id_event=" + event.id_EVENT)
+            .delete("http://localhost:8081/NoEvent?id_event=" + event.id_EVENT)
           document.getElementById(event.id_EVENT).remove();
           this.success("Evento eliminado");
           setTimeout(() => {
