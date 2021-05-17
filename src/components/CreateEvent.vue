@@ -6,8 +6,7 @@
         <h2 class="titulo_prin">Crear evento</h2>
       </div>
     </div>
-
-    <div class="container pt-4">
+    <div class="container pt-4"> 
       <div class="row my-3 justify-content-center">
         <div class="col-md-7 col-10 back pl-4 pr-4">
           <h3 class="titulos tit-det pt-4 pb-4">Detalles Generales</h3>
@@ -89,21 +88,17 @@
               </div>
             </div>
             <label for="Deporte" class="titulo_bln">Deporte</label>
-            <select
-              name=""
-              class="form-control"
-              id="Deporte"
-              v-model="eventForm.name_SPORT"
-              required
-            >
-              <option
-                v-for="sport in sports"
-                :key="sport.id"
-                :value="sport.name_SPORT"
-              >
-                {{ sport.name_SPORT }}
-              </option>
-            </select>
+            <input type="text" class="form-control" id="Deporte" v-model="eventForm.name_SPORT" @input="filterSports" @focus="modal=true" required>
+            <div id="sportsList" v-if="filteredSports.length > 0 && modal">
+              <ul class="sportsList">
+                <li v-for="sport in filteredSports" :key="sport.id" @click="setSport(sport)">{{ sport }}</li>
+              </ul>
+            </div>
+            <div id="sportsList" v-if="filteredSports.length == 0 && modal && eventForm.name_SPORT != ''">
+              <ul class="sportsList">
+                <li @click="setSport('Otro')">Otro</li>
+              </ul>
+            </div>
 
             <label
               for="otroDep"
@@ -130,16 +125,6 @@
               min="1"
               max="100"
             />
-            <!-- <select
-                     v-model="eventForm.capacity"
-                     required
-                     class="form-control"
-                  >
-                     <option>5</option>
-                     <option>10</option>
-                     <option>20</option>
-                     <option>50</option>
-                  </select> -->
             <div class="row my-5">
               <div class="col">
                 <h3 class="titulo_lugares tit-det titulo_bln titulos">
@@ -205,7 +190,7 @@ export default {
   data: function () {
     return {
       username: "",
-      sports: null,
+      sports: [],
       locations: null,
       eventForm: {
         user_NAME: "",
@@ -220,6 +205,9 @@ export default {
         event_FINISH_HOUR: "",
         event_TITLE: "",
       },
+      sportsNames: [],
+      filteredSports: [],
+      modal: false,
     };
   },
   created: function () {
@@ -246,17 +234,18 @@ export default {
   methods: {
     getSports() {
       axios
-        // .get("http://localhost:8081/sports")
         .get("https://wise-brook-308119.ue.r.appspot.com/sports")
         .then((response) => {
           console.log(response);
           this.sports = response.data;
+          this.sports.forEach(sport => {
+            this.sportsNames.push(sport.name_SPORT);
+          });
         })
         .catch((e) => console.log(e));
     },
     getLocations() {
       axios
-        // .get("http://localhost:8081/locationssport")
         .get("https://wise-brook-308119.ue.r.appspot.com/locationssport")
         .then((response) => {
           // console.log("wihs", response);
@@ -331,6 +320,10 @@ export default {
       ) {
         alert("El campo Deporte esta vacio");
       } else if (
+        !(this.sportsNames.includes(this.eventForm.name_SPORT))
+      ) {
+        alert("Si el Deporte seleccionado no esta registrado, elige 'Otro'");
+      } else if (
         this.eventForm.capacity == "" ||
         this.eventForm.capacity == null ||
         this.eventForm.capacity == " "
@@ -350,6 +343,10 @@ export default {
             this.eventForm.other_SPORT == " "
           ) {
             alert("Por favor escriba otra actividad");
+          }else if (
+            this.sportsNames.map(sport => sport.toLowerCase()).includes(this.eventForm.other_SPORT.toLowerCase())
+          ) {
+            alert("La actividad eligida se encuentra registrada. Seleccionala en el campo 'Deporte'");
           } else {
             this.eventForm.user_NAME = this.username;
             this.eventForm.event_FINISH_HOUR = this.eventForm.event_FINISH_HOUR.concat(
@@ -371,7 +368,6 @@ export default {
             console.log("quepasa2", JSON.stringify(this.eventForm));
 
             axios
-              // .post("http://localhost:8081/event", this.eventForm)
               .post(
                 "https://wise-brook-308119.ue.r.appspot.com/event",
                 this.eventForm
@@ -405,7 +401,6 @@ export default {
           // console.log("quepasa", JSON.stringify(this.eventForm));
 
           axios
-            // .post("http://localhost:8081/event", this.eventForm)
             .post(
               "https://wise-brook-308119.ue.r.appspot.com/event",
               this.eventForm
@@ -423,6 +418,15 @@ export default {
       this.eventForm.name_LOC_SPORT = location;
       // console.log("aqui", this.eventForm);
     },
+    filterSports(){
+      this.filteredSports = this.sportsNames.filter(sport =>{
+        return sport.toLowerCase().includes(this.eventForm.name_SPORT.toLowerCase());
+      });
+    },
+    setSport(sport){
+      this.eventForm.name_SPORT = sport;
+      this.modal = false;
+    }
   },
 };
 </script>
@@ -486,5 +490,23 @@ export default {
 }
 .subtitulo {
   font-size: 25px;
+}
+.sportsList{
+  list-style-type: none;
+  background-color: white;
+  color:#495057;
+  padding-left:0px;
+  border: 1px solid;
+  margin-top: -15px;
+}
+
+.sportsList li{
+  cursor: pointer;
+  padding-left: 15px;
+}
+.sportsList li:hover{
+  background: #1e90ff;
+  color: white;
+  
 }
 </style>
