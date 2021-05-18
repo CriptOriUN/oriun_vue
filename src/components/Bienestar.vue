@@ -144,7 +144,7 @@
                                                         <tr v-for="element in elementos" :key="element.id"  id="usuarioslist">
                                                             <td v-if="element.name_LOCATION==locacion.name_LOCATION">{{element.element_NAME}}</td>
                                                             <td v-if="element.name_LOCATION==locacion.name_LOCATION" class="">
-                                                                <button class="btn btn-danger" title="Eliminar" @click="delElement(element.id_ELEMENT)">
+                                                                <button class="btn btn-danger" title="Eliminar" @click="delElement(element.id_ELEMENT,element.id)">
                                                                     <!-- Borrar -->
                                                                     <i class="fa fa-minus-circle"></i>
                                                                 </button>
@@ -214,7 +214,7 @@ export default {
         getElements: function(location_id){
             alert(JSON.stringify(inventario))
         },
-        delElement: function(element_id){
+        delElement: function(element_id,id){
             const ok = this.$refs.confirmDialogue.show({
                 title: "Eliminar Elemento",
                 message:
@@ -229,9 +229,10 @@ export default {
                 axios.delete(
                     "https://wise-brook-308119.ue.r.appspot.com/noelements?id=" + element_id
                 );
+                this.elementos.splice(id,1);
                 this.success("Elemento Eliminado");
                 setTimeout(() => {
-                    location.reload();
+                    
                 }, 1000);
                 } catch (error) {
                 this.error("Error eliminando ELEMENTO");
