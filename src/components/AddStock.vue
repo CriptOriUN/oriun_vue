@@ -76,9 +76,9 @@
                           <div class="form-group">
 
                               <label for="Elemento" class="titulo_bln my-check">Elemento</label>
-                              <select name="" class="form-control" id="Elemento" v-model="element_key" required>
+                              <select name="" class="form-control" id="Elemento" v-model="updateform.id_ELEMENT" required>
                                   <option disabled value="">Seleccione un elemento</option>
-                                  <option v-for="elemento in elementos" :key="elemento.id" :value="elemento">{{elemento.element_NAME}}</option>
+                                  <option v-for="elemento in elementos" :key="elemento.id" :value="elemento.id_ELEMENT">{{elemento.element_NAME}}</option>
                               </select>
 
                           </div>
@@ -134,7 +134,6 @@
 <script>
 import NavBar from '../components/header/NavBar'
 import axios from "axios";
-
 export default {
     name: "AddStock", 
     components:{
@@ -142,7 +141,6 @@ export default {
     },
     data: function(){
         return{
-            element_key,
             stockform:{
                 name_LOCATION:"",
                 name_SPORT:"",
@@ -155,8 +153,7 @@ export default {
                 name_LOCATION:"",
                 name_SPORT:"",
                 available:false, 
-                element_NAME:this.element_key.element_NAME,
-                id_ELEMENT:this.element_key.id_ELEMENT,
+                id_ELEMENT:"",
                 //ELEMENT_IMAGE:"", 
                 description:"",
             },
@@ -209,7 +206,6 @@ export default {
             alert("Error no esperado en el servidor.")
         });
       }, 
-
       updateFormElement: function(){
         var self = this 
         axios
@@ -228,26 +224,19 @@ export default {
       }
     }
 } 
-
-
 </script>
 
 
 <style scoped>
-
 *{
     font-size: 14pt;
 }
-
-
 .card {
     width: 600px;
     background-color: #A61C31;
     border-radius: 30px;
   }
   
-
-
   button, .btn-primary{
     background-color: #B1B2B0;
     border: none;
@@ -272,7 +261,6 @@ export default {
     margin-bottom: 15px;
     margin-left: 30px;
   }
-
   
   .card-header {
     padding: 0;
@@ -318,11 +306,9 @@ export default {
   .nav-tabs .nav-link {
     border-top-left-radius: 0px;
   }
-
   .nav-tabs{
     border-bottom: none;
   }
-
   textarea{
     border-radius: 10px;
   }

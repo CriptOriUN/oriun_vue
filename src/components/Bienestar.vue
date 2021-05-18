@@ -144,8 +144,7 @@
                                                         <tr v-for="element in elementos" :key="element.id"  id="usuarioslist">
                                                             <td v-if="element.name_LOCATION==locacion.name_LOCATION">{{element.element_NAME}}</td>
                                                             <td v-if="element.name_LOCATION==locacion.name_LOCATION" class="">
-                                                                <button class="btn btn-danger" title="Eliminar" data-toggle="modal"
-                                                                    data-target="#elementModel">
+                                                                <button class="btn btn-danger" title="Eliminar" @click="delElement(element.id_ELEMENT)">
                                                                     <!-- Borrar -->
                                                                     <i class="fa fa-minus-circle"></i>
                                                                 </button>
@@ -158,28 +157,6 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Modal -->
-                <div class="modal fade" id="elementModel" tabindex="-1" role="dialog" aria-labelledby="elementModelTitle"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="adviseModalTitle">Advertencia!
-                                </h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                ¿Desea eliminar el Elemento seleccionado?
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                <button type="button" class="btn btn-danger">Eliminar</button>
                             </div>
                         </div>
                     </div>
@@ -207,6 +184,9 @@
                     </div>
                 </div>
             </div>
+            <!-- MODAL -->
+            <vue-toastr ref="mytoast"></vue-toastr>
+            <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
         </div>
         <!-- <div class="d-flex align-items-center col-xl-3 col-lg-3 col-12 mt-4"> -->
         <div class="d-flex align-items-center col-xl-4 col-lg-4 col-8  mx-auto mb-5">
@@ -219,6 +199,7 @@
 <script>
 import NavBar from './header/NavBar';
 import axios from "axios";
+import ConfirmDialogue from "../components/modal/ConfirmDialogue";
 export default {
     name: 'Bienestar',
     components: {NavBar}, 
@@ -232,6 +213,54 @@ export default {
     methods: {
         getElements: function(location_id){
             alert(JSON.stringify(inventario))
+        },
+        delElement: function(element_id){
+            const ok = this.$refs.confirmDialogue.show({
+                title: "Eliminar Elemento",
+                message:
+                "¿Está seguro que desea eliminar " +
+                sport.name_SPORT.bold().big() +
+                "? </br> Esta acción es irreversible",
+                okButton: "Eliminar",
+            });
+            // If you throw an error, the method will terminate here unless you surround it wil try/catch
+            if (ok) {
+                try {
+                axios.delete(
+                    "https://wise-brook-308119.ue.r.appspot.com/noelements?id=" + element_id
+                );
+                this.success("Elemento Eliminado");
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+                } catch (error) {
+                this.error("Error eliminando ELEMENTO");
+                }
+            }
+        },
+        success(msg) {
+        this.$refs.mytoast.s({
+            msg: msg,
+            progressbar: false,
+        });
+        },
+        error(msg) {
+        this.$refs.mytoast.e({
+            msg: msg,
+            progressbar: false,
+        });
+        },
+        warning(msg) {
+        this.$refs.mytoast.w({
+            msg: msg,
+            progressbar: false,
+        });
+        },
+        info(msg) {
+        this.$refs.mytoast.i({
+            msg: msg,
+            progressbar: false,
+        });
         },
     },
     created: function(){
