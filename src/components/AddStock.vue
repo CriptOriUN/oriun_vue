@@ -78,7 +78,7 @@
                               <label for="Elemento" class="titulo_bln my-check">Elemento</label>
                               <select name="" class="form-control" id="Elemento" v-model="updateform.id_ELEMENT" required>
                                   <option disabled value="">Seleccione un elemento</option>
-                                  <option v-for="elemento in elementos" :key="elemento.id" :value="elemento.id_ELEMENT">{{elemento.element_NAME}}</option>
+                                  <option v-for="elemento in elementos" :key="elemento.id" :value="elemento.id_ELEMENT && elemento.element_NAME">{{elemento.element_NAME}}</option>
                               </select>
 
                           </div>
@@ -151,6 +151,7 @@ export default {
             },
             updateform:{
                 name_LOCATION:"",
+                element_NAME:"",
                 name_SPORT:"",
                 available:false, 
                 id_ELEMENT:"",
