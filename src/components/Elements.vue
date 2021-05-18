@@ -103,7 +103,6 @@ export default {
   mounted: function () {
     axios
       .get("https://wise-brook-308119.ue.r.appspot.com/elements/")
-      // .get("http://localhost:8081/elements/")
       .then((response) => (this.elements = response.data));
     this.$refs.mytoast.defaultPosition = "toast-bottom-right";
   },
@@ -134,7 +133,7 @@ export default {
           "<li><b>Ubicacion: </b>" + element.name_LOCATION + "</li>"+
           "<li><b>Deporte: </b>" + element.name_SPORT + "</li>" +
           "<li><b>Fecha de entrega: </b>" + "?".big().bold() + "</li>"+"</ul>" + 
-          "<img class='d-block mx-auto' alt='Imagen del implemento deportivo' src='https://images.emojiterra.com/google/android-11/512px/26bd.png' height='70'>",
+          "<img class='d-block mx-auto' alt='Imagen del implemento deportivo' src=' data:image/jpg;base64," + element.element_IMAGE + "' height='200'>",
         okButton: "Solicitar",
       });
       // If you throw an error, the method will terminate here unless you surround it wil try/catch
@@ -142,9 +141,8 @@ export default {
         try {
           await axios.post(
             // "https://wise-brook-308119.ue.r.appspot.com/nosports?sport=" + String(sport.name_SPORT)
-            // "http://localhost:8081/nosports?sport=" + String(sport.name_SPORT)
           );
-          this.success("Solicitud realizada correctamente");
+          this.success("Solicitud realizada correctamente (No se está realizando ninguna acción)");
         } catch (error) {
           this.error("Error realizando solcitud");
         }
