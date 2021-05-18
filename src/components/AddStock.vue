@@ -208,7 +208,9 @@ export default {
         });
       }, 
       updateFormElement: function(){
-        var self = this 
+        var self = this  
+        self.updateform.id_ELEMENT = self.updateform.id_ELEMENT[0]
+        self.updateform.element_NAME = self.updateform.id_ELEMENT[1]
         axios
           .put("https://wise-brook-308119.ue.r.appspot.com/elementupd",self.updateform)
           .then((result)=>{
