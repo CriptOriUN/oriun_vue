@@ -18,6 +18,7 @@
                 v-for="event in events"
                 :key="event.id"
                 class="tar-evento evento flex-fill bd-highlight"
+                v-bind:id="event.id_EVENT"
               >
                 <div class="ml-3 row">
                   <h4 class="info-titulo">
@@ -160,6 +161,7 @@ export default {
     this.getEvents();
     this.getUserSports();
     this.getSports();
+    this.$refs.mytoast.defaultPosition = "toast-bottom-right";
   },
   methods: {
     getEvents() {
