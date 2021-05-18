@@ -267,6 +267,15 @@ export default {
         });
         },
     },
+    watch: {
+    "$route.query.tab": {
+      immediate: true,
+      handler(tab) {
+        this.showTab();
+      },
+    },  
+
+  },
     created: function(){
         this.username = this.$route.params.username;
         let self = this;
@@ -292,7 +301,8 @@ export default {
             }).catch((error) => {
                 alert("ERROR Servidor ELEMENTOS");
             });
-                
+        this.$refs.mytoast.defaultPosition = "toast-bottom-right";
+        this.showTab();    
     }
 }
 </script> 
