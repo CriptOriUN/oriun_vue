@@ -200,9 +200,12 @@
 import NavBar from './header/NavBar';
 import axios from "axios";
 import ConfirmDialogue from "../components/modal/ConfirmDialogue";
+import Vue from "vue";
 export default {
     name: 'Bienestar',
-    components: {NavBar}, 
+    components: {NavBar,
+    ConfirmDialogue,
+    "vue-toastr": window.VueToastr}, 
     data: function(){
       return{
           usuarios: [], 
