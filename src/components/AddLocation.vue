@@ -24,8 +24,9 @@
                     <div class="form-group">
                       <div class="my-check">
                         <label for="locationimage">Imagen: </label>
-                        <input type="file" id="locationimage" name="locationimage" accept="image/*" required>
+                        <input type="file" id="locationimage" name="locationimage" accept="image/*" @change="fileSelected" required>
                       </div> 
+                      <img v-if="image" :src="image">
                     </div>
                     <div class="text-center pt-2 pb-1">
                         <button type="submit" class="btn btn-primary">
@@ -55,10 +56,11 @@ export default {
             locationform:{
               name_LOCATION:"", 
               open:false, 
-              //IMAGE_LOCATION:,
+              image_LOCATION:"",
             },
             username:"",
-            exitoso:false
+            exitoso:false,
+            image: ''
         }
     }, 
     created:function(){
@@ -80,7 +82,18 @@ export default {
           .catch((error) => {
             alert("Error no esperado en el servidor.")
         });
-      }
+      },
+      fileSelected(event){
+        const file = event.target.files.item(0);
+        const reader = new FileReader();
+        reader.addEventListener('load', this.imageLoaded);
+        reader.readAsDataURL(file);
+      },
+      imageLoaded(event){
+        this.image = event.target.result;
+        let imagen = event.target.result.split(",",2)
+        this.locationform.image_LOCATION=imagen[1]
+      },
     }
 } 
 
@@ -94,6 +107,9 @@ export default {
     font-size: 14pt;
 }
 
+img{
+  width: 200px;
+}
 
 .card {
     width: 600px;
