@@ -238,7 +238,8 @@ export default {
       },
       imageLoaded(event){
         this.image = event.target.result;
-        this.stockform.element_IMAGE=event.target.result;
+        let imagen = event.target.result.split(",",2)
+        this.stockform.element_IMAGE=imagen[1]
       },
     }
 } 
