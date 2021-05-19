@@ -54,8 +54,9 @@
                           <div class="form-group">
                             <div class="my-check">
                               <label for="locationimage">Imagen: </label>
-                              <input type="file" id="locationimage" name="locationimage" accept="image/*"  required>
+                              <input type="file" id="locationimage" name="locationimage" accept="image/*"  @change="fileSelected" required>
                             </div> 
+                            <img v-if="image" :src="image">
                           </div>
                           <div class="form-group">
                             <textarea name="message" placeholder="Descripcion" cols="43" rows="3" v-model="stockform.description" required></textarea>
@@ -78,7 +79,7 @@
                               <label for="Elemento" class="titulo_bln my-check">Elemento</label>
                               <select name="" class="form-control" id="Elemento" v-model="updateform.id_ELEMENT" required>
                                   <option disabled value="">Seleccione un elemento</option>
-                                  <option v-for="elemento in elementos" :key="elemento.id" :value="[elemento.id_ELEMENT, elemento.element_NAME]">{{elemento.element_NAME}}</option>
+                                  <option v-for="elemento in elementos" :key="elemento.id" :value="elemento.id_ELEMENT">{{elemento.element_NAME}}</option>
                               </select>
 
                           </div>
@@ -108,8 +109,9 @@
                           <div class="form-group">
                             <div class="my-check">
                               <label for="locationimage">Imagen: </label>
-                              <input type="file" id="locationimage" name="locationimage" accept="image/*"  required>
-                            </div> 
+                              <input type="file" id="locationimage" name="locationimage" accept="image/*"  @change="fileSelected" >
+                            </div>
+                            <img v-if="image" :src="image">
                           </div>
                           <div class="form-group">
                             <textarea name="message" placeholder="Descripcion" cols="43" rows="3" v-model="updateform.description" required></textarea>
@@ -146,7 +148,7 @@ export default {
                 name_SPORT:"",
                 available:false, 
                 element_NAME:"",
-                //ELEMENT_IMAGE:"", 
+                element_IMAGE:"", 
                 description:"",
             },
             updateform:{
@@ -162,7 +164,8 @@ export default {
             deportes:[], 
             elementos:[],
             username:"",
-            exitoso:false
+            exitoso:false,
+            image: ''
         }
     }, 
     created:function(){
@@ -191,6 +194,10 @@ export default {
           })
     },
     methods:{
+      getAdd: function(){
+            alert(JSON.stringify(this.stockform))
+            console.log(JSON.stringify(this.stockform));
+        },
       submitFormElement: function(){
         var self = this 
         axios
@@ -209,8 +216,6 @@ export default {
       }, 
       updateFormElement: function(){
         var self = this  
-        self.updateform.id_ELEMENT = self.updateform.id_ELEMENT[0]
-        self.updateform.element_NAME = self.updateform.id_ELEMENT[1]
         axios
           .put("https://wise-brook-308119.ue.r.appspot.com/elementupd",self.updateform)
           .then((result)=>{
@@ -224,7 +229,17 @@ export default {
           .catch((error) => {
             alert("Error no esperado en el servidor.")
         });
-      }
+      },
+      fileSelected(event){
+        const file = event.target.files.item(0);
+        const reader = new FileReader();
+        reader.addEventListener('load', this.imageLoaded);
+        reader.readAsDataURL(file);
+      },
+      imageLoaded(event){
+        this.image = event.target.result;
+        this.stockform.ELEMENT_IMAGE=event.target.result;
+      },
     }
 } 
 </script>
@@ -233,6 +248,9 @@ export default {
 <style scoped>
 *{
     font-size: 14pt;
+}
+img{
+  width: 200px;
 }
 .card {
     width: 600px;
