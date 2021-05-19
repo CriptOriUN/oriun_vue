@@ -238,7 +238,7 @@ export default {
       },
       imageLoaded(event){
         this.image = event.target.result;
-        this.stockform.ELEMENT_IMAGE=event.target.result;
+        this.stockform.element_IMAGE=event.target.result;
       },
     }
 } 
