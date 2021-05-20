@@ -77,7 +77,7 @@
                           <div class="form-group">
 
                               <label for="Elemento" class="titulo_bln my-check">Elemento</label>
-                              <select name="" class="form-control" id="Elemento" v-model="updateform.id_ELEMENT" @change="updname" required>
+                              <select name="" class="form-control" id="Elemento" v-model="updateform.id_ELEMENT" @change="updname(updateform.element_NAME)" required>
                                   <option disabled value="">Seleccione un elemento</option>
                                   <option v-for="elemento in elementos" :key="elemento.id" :value="elemento.id_ELEMENT">{{elemento.element_NAME}}</option>
                               </select>
@@ -245,8 +245,8 @@ export default {
         let imagen = event.target.result.split(",",2)
         this.stockform.element_IMAGE=imagen[1]
       }, 
-      updname(event){
-        console.log(event.target.value)
+      updname: function(nombre){
+        console.log(nombre)
       }
     }
 } 
