@@ -77,9 +77,9 @@
                           <div class="form-group">
 
                               <label for="Elemento" class="titulo_bln my-check">Elemento</label>
-                              <select name="" class="form-control" id="Elemento" @change="updname" required>
+                              <select name="" class="form-control" id="Elemento" v-model="updateform.id_ELEMENT" required>
                                   <option disabled value="">Seleccione un elemento</option>
-                                  <option v-for="elemento in elementos" :key="elemento.id" :value="elemento">{{elemento.element_NAME}}</option>
+                                  <option v-for="elemento in elementos" :key="elemento.id" :value="[elemento.id_ELEMENT,elemento.element_NAME]">{{elemento.element_NAME}}</option>
                               </select>
 
                           </div>
@@ -220,6 +220,8 @@ export default {
       }, 
       updateFormElement: function(){
         var self = this  
+        self.updateform.name_LOCATION=self.updateform.id_ELEMENT[1] 
+        self.updateform.id_ELEMENT=self.updateform.id_ELEMENT[0]
         axios
           .put("https://wise-brook-308119.ue.r.appspot.com/elementupd",self.updateform)
           .then((result)=>{
@@ -245,10 +247,12 @@ export default {
         let imagen = event.target.result.split(",",2)
         this.stockform.element_IMAGE=imagen[1]
       }, 
+      /*
       updname(event){
         this.updateform.element_NAME=event.target.value.element_NAME
         this.updateform.id_ELEMENT=event.target.value.id_ELEMENT
       }
+      */
     }
 } 
 </script>
