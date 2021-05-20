@@ -32,7 +32,7 @@
 
                               <label for="Locacion" class="titulo_bln my-check">Locacion</label>
                               <select name="" class="form-control" id="Locacion" v-model="stockform.name_LOCATION" required>
-                                  <option disabled value="">Seleccione una locación</option>
+                                  <option disabled value="">Seleccione un elemento</option>
                                   <option v-for="locacion in locaciones" :key="locacion.id" :value="locacion.name_LOCATION">{{locacion.name_LOCATION}}</option>
                               </select>
 
@@ -40,7 +40,7 @@
                           <div class="form-group">
                               <label for="Deporte" class="titulo_bln my-check">Deporte </label>
                               <select name="" class="form-control" id="Deporte" v-model="stockform.name_SPORT" required>
-                                  <option disabled value="">Seleccione un Deporte</option>
+                                  <option disabled value="">Seleccione un elemento</option>
                                   <option v-for="deporte in deportes" :key="deporte.id" :value="deporte.name_SPORT">{{deporte.name_SPORT}}</option>
                               </select>
                       
@@ -77,7 +77,7 @@
                           <div class="form-group">
 
                               <label for="Elemento" class="titulo_bln my-check">Elemento</label>
-                              <select name="" class="form-control" id="Elemento" @change="updname" required>
+                              <select name="" class="form-control" id="Elemento" v-model="updateform.id_ELEMENT" required>
                                   <option disabled value="">Seleccione un elemento</option>
                                   <option v-for="elemento in elementos" :key="elemento.id" :value="elemento.id_ELEMENT">{{elemento.element_NAME}}</option>
                               </select>
@@ -87,7 +87,7 @@
 
                               <label for="Locacion" class="titulo_bln my-check">Locacion</label>
                               <select name="" class="form-control" id="Locacion" v-model="updateform.name_LOCATION" required>
-                                  <option disabled value="">Seleccione un elemento</option>
+                                  <option disabled value="">Seleccione una locacion</option>
                                   <option v-for="locacion in locaciones" :key="locacion.id" :value="locacion.name_LOCATION">{{locacion.name_LOCATION}}</option>
                               </select>
 
@@ -95,7 +95,7 @@
                           <div class="form-group">
                               <label for="Deporte" class="titulo_bln my-check">Deporte </label>
                               <select name="" class="form-control" id="Deporte" v-model="updateform.name_SPORT" required>
-                                  <option disabled value="">Seleccione un elemento</option>
+                                  <option disabled value="">Seleccione un deporte</option>
                                   <option v-for="deporte in deportes" :key="deporte.id" :value="deporte.name_SPORT">{{deporte.name_SPORT}}</option>
                               </select>
                       
@@ -198,10 +198,6 @@ export default {
             alert(JSON.stringify(this.stockform))
             console.log(JSON.stringify(this.stockform));
         },
-      getAdd2: function(){
-            alert(JSON.stringify(this.updateform))
-            console.log(JSON.stringify(this.updateform));
-        },
       submitFormElement: function(){
         var self = this 
         axios
@@ -244,7 +240,7 @@ export default {
         this.image = event.target.result;
         let imagen = event.target.result.split(",",2)
         this.stockform.element_IMAGE=imagen[1]
-      }, 
+      },
     }
 } 
 </script>
