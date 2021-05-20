@@ -32,7 +32,7 @@
 
                               <label for="Locacion" class="titulo_bln my-check">Locacion</label>
                               <select name="" class="form-control" id="Locacion" v-model="stockform.name_LOCATION" required>
-                                  <option disabled value="">Seleccione un elemento</option>
+                                  <option disabled value="">Seleccione una locación</option>
                                   <option v-for="locacion in locaciones" :key="locacion.id" :value="locacion.name_LOCATION">{{locacion.name_LOCATION}}</option>
                               </select>
 
@@ -40,7 +40,7 @@
                           <div class="form-group">
                               <label for="Deporte" class="titulo_bln my-check">Deporte </label>
                               <select name="" class="form-control" id="Deporte" v-model="stockform.name_SPORT" required>
-                                  <option disabled value="">Seleccione un elemento</option>
+                                  <option disabled value="">Seleccione un Deporte</option>
                                   <option v-for="deporte in deportes" :key="deporte.id" :value="deporte.name_SPORT">{{deporte.name_SPORT}}</option>
                               </select>
                       
@@ -77,7 +77,7 @@
                           <div class="form-group">
 
                               <label for="Elemento" class="titulo_bln my-check">Elemento</label>
-                              <select name="" class="form-control" id="Elemento" v-model="updateform.id_ELEMENT" @change="updname(updateform.element_NAME)" required>
+                              <select name="" class="form-control" id="Elemento" v-model="updateform" @change="updname" required>
                                   <option disabled value="">Seleccione un elemento</option>
                                   <option v-for="elemento in elementos" :key="elemento.id" :value="elemento.id_ELEMENT">{{elemento.element_NAME}}</option>
                               </select>
@@ -245,8 +245,8 @@ export default {
         let imagen = event.target.result.split(",",2)
         this.stockform.element_IMAGE=imagen[1]
       }, 
-      updname: function(nombre){
-        console.log(nombre)
+      updname(event){
+        console.log(JSON.stringify(event.target.value))
       }
     }
 } 
