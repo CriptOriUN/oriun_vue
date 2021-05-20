@@ -220,11 +220,17 @@ export default {
       }, 
       updateFormElement: function(){
         
-        this.updateform.name_LOCATION=this.updateform.id_ELEMENT[1] 
-        this.updateform.id_ELEMENT=this.updateform.id_ELEMENT[0]
         var self = this  
         axios
-          .put("https://wise-brook-308119.ue.r.appspot.com/elementupd",self.updateform)
+          .put("https://wise-brook-308119.ue.r.appspot.com/elementupd",{
+            name_LOCATION:self.updateform.name_LOCATION,
+            element_NAME:self.updateform.id_ELEMENT[1],
+            name_SPORT:self.updateform.name_SPORT,
+            available:self.updateform.available, 
+            id_ELEMENT:self.updateform.id_ELEMENT[0],
+            //ELEMENT_IMAGE:"", 
+            description:"",
+          })
           .then((result)=>{
             self.updateform.name_LOCATION=self.updateform.name_SPORT=self.updateform.id_ELEMENT=self.updateform.description="";
             self.updateform.available=false;
