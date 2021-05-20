@@ -76,50 +76,51 @@
                       <form v-on:submit.prevent="updateFormElement">
                           <div class="form-group">
 
-                              <label for="Elemento" class="titulo_bln my-check">Elemento</label>
+                              <label for="Elemento " class="titulo_bln my-check">Elemento</label>
                               <select name="" class="form-control" id="Elemento" v-model="updateform.id_ELEMENT" required>
                                   <option disabled value="">Seleccione un elemento</option>
                                   <option v-for="elemento in elementos" :key="elemento.id" :value="elemento.id_ELEMENT">{{elemento.element_NAME}}</option>
                               </select>
-
                           </div>
-                          <div class="form-group">
+                          <div v-if="lookother">
+                            <div class="form-group">
 
-                              <label for="Locacion" class="titulo_bln my-check">Locacion</label>
-                              <select name="" class="form-control" id="Locacion" v-model="updateform.name_LOCATION" required>
-                                  <option disabled value="">Seleccione una locacion</option>
-                                  <option v-for="locacion in locaciones" :key="locacion.id" :value="locacion.name_LOCATION">{{locacion.name_LOCATION}}</option>
-                              </select>
+                                <label for="Locacion" class="titulo_bln my-check">Locacion</label>
+                                <select name="" class="form-control" id="Locacion" v-model="updateform.name_LOCATION" required>
+                                    <option disabled value="">Seleccione una locacion</option>
+                                    <option v-for="locacion in locaciones" :key="locacion.id" :value="locacion.name_LOCATION">{{locacion.name_LOCATION}}</option>
+                                </select>
 
-                          </div>
-                          <div class="form-group">
-                              <label for="Deporte" class="titulo_bln my-check">Deporte </label>
-                              <select name="" class="form-control" id="Deporte" v-model="updateform.name_SPORT" required>
-                                  <option disabled value="">Seleccione un deporte</option>
-                                  <option v-for="deporte in deportes" :key="deporte.id" :value="deporte.name_SPORT">{{deporte.name_SPORT}}</option>
-                              </select>
-                      
-                          </div>
-                          <div class="form-group">
-                            <div class="form-check form-switch my-check">
-                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" v-model="updateform.available">
-                              <label class="form-check-label" for="flexSwitchCheckDefault">Disponible</label>
                             </div>
-                          </div>
-                          <div class="form-group">
-                            <div class="my-check">
-                              <label for="locationimage">Imagen: </label>
-                              <input type="file" id="locationimage" name="locationimage" accept="image/*"  @change="fileSelected" >
+                            <div class="form-group">
+                                <label for="Deporte" class="titulo_bln my-check">Deporte </label>
+                                <select name="" class="form-control" id="Deporte" v-model="updateform.name_SPORT" required>
+                                    <option disabled value="">Seleccione un deporte</option>
+                                    <option v-for="deporte in deportes" :key="deporte.id" :value="deporte.name_SPORT">{{deporte.name_SPORT}}</option>
+                                </select>
+                        
                             </div>
-                            <img v-if="image" :src="image">
-                          </div>
-                          <div class="form-group">
-                            <textarea name="message" placeholder="Descripcion" cols="43" rows="3" v-model="updateform.description" required></textarea>
-                          </div>
-                          <div class="text-center pt-2 pb-1">
-                              <button type="submit" class="btn btn-primary">
-                                  Actualizar Inventario
-                              </button>
+                            <div class="form-group">
+                              <div class="form-check form-switch my-check">
+                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" v-model="updateform.available">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Disponible</label>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <div class="my-check">
+                                <label for="locationimage">Imagen: </label>
+                                <input type="file" id="locationimage" name="locationimage" accept="image/*"  @change="fileSelected" >
+                              </div>
+                              <img v-if="image" :src="image">
+                            </div>
+                            <div class="form-group">
+                              <textarea name="message" placeholder="Descripcion" cols="43" rows="3" v-model="updateform.description" required></textarea>
+                            </div>
+                            <div class="text-center pt-2 pb-1">
+                                <button type="submit" class="btn btn-primary">
+                                    Actualizar Inventario
+                                </button>
+                            </div>
                           </div>
                       </form>
                       <div class="pb-5 my-check" v-if="exitoso==true">
@@ -165,7 +166,8 @@ export default {
             elementos:[],
             username:"",
             exitoso:false,
-            image: ''
+            image: '', 
+            lookother:false
         }
     }, 
     created:function(){
@@ -242,6 +244,16 @@ export default {
         this.stockform.element_IMAGE=imagen[1]
         this.updateform.element_IMAGE=imagen[1]
       },
+    }, 
+    watch:{
+      'updateform.id_ELEMENT'(value){
+        if(value!=""){
+          this.lookother=true;
+        }
+        else{
+          this.lookother=false;
+        }
+      }
     }
 } 
 </script>
