@@ -246,7 +246,7 @@ export default {
         this.stockform.element_IMAGE=imagen[1]
       }, 
       updname(event){
-        console.log(JSON.stringify(event.target.value))
+        console.log(event.target.value.element_NAME)
       }
     }
 } 
