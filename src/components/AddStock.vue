@@ -157,7 +157,7 @@ export default {
                 name_SPORT:"",
                 available:false, 
                 id_ELEMENT:"",
-                //ELEMENT_IMAGE:"", 
+                element_IMAGE:"", 
                 description:"",
             },
             locaciones:[], 
@@ -203,7 +203,7 @@ export default {
         axios
           .post("https://wise-brook-308119.ue.r.appspot.com/element",self.stockform)
           .then((result)=>{
-            self.stockform.name_LOCATION=self.stockform.name_SPORT=self.stockform.element_NAME=self.stockform.description="";
+            self.stockform.name_LOCATION=self.stockform.name_SPORT=self.stockform.element_NAME=self.stockform.description=self.image="";
             self.stockform.available=false;
             self.exitoso=true;
             setTimeout(()=>{
@@ -219,7 +219,7 @@ export default {
         axios
           .put("https://wise-brook-308119.ue.r.appspot.com/a",self.updateform)
           .then((result)=>{
-            self.updateform.name_LOCATION=self.updateform.name_SPORT=self.updateform.id_ELEMENT=self.updateform.description="";
+            self.updateform.name_LOCATION=self.updateform.name_SPORT=self.updateform.id_ELEMENT=self.updateform.description=self.image="";
             self.updateform.available=false;
             self.exitoso=true;
             setTimeout(()=>{
@@ -240,6 +240,7 @@ export default {
         this.image = event.target.result;
         let imagen = event.target.result.split(",",2)
         this.stockform.element_IMAGE=imagen[1]
+        this.updateform.element_IMAGE=imagen[1]
       },
     }
 } 
