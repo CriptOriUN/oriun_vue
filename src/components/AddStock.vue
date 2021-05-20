@@ -201,7 +201,7 @@ export default {
       submitFormElement: function(){
         var self = this 
         axios
-          .post("https://wise-brook-308119.ue.r.appspot.com/a",self.stockform)
+          .post("https://wise-brook-308119.ue.r.appspot.com/element",self.stockform)
           .then((result)=>{
             self.stockform.name_LOCATION=self.stockform.name_SPORT=self.stockform.element_NAME=self.stockform.description="";
             self.stockform.available=false;
@@ -217,7 +217,7 @@ export default {
       updateFormElement: function(){
         var self = this  
         axios
-          .put("https://wise-brook-308119.ue.r.appspot.com/elementupd",self.updateform)
+          .put("https://wise-brook-308119.ue.r.appspot.com/a",self.updateform)
           .then((result)=>{
             self.updateform.name_LOCATION=self.updateform.name_SPORT=self.updateform.id_ELEMENT=self.updateform.description="";
             self.updateform.available=false;
