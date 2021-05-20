@@ -29,7 +29,7 @@
                       <img v-if="image" :src="image">
                     </div>
                     <div class="text-center pt-2 pb-1">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary" v-on:click="getAdd">
                             Añadir Locacion
                         </button>
                     </div>
@@ -67,6 +67,10 @@ export default {
         this.username = this.$route.params.username;
     },
     methods:{
+      getAdd: function(){
+            alert(JSON.stringify(this.locationform))
+            console.log(JSON.stringify(this.locationform));
+        },
       submitFormLocation: function(){
         var self = this 
         axios

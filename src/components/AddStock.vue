@@ -77,7 +77,7 @@
                           <div class="form-group">
 
                               <label for="Elemento" class="titulo_bln my-check">Elemento</label>
-                              <select name="" class="form-control" id="Elemento" v-model="updateform.id_ELEMENT" required>
+                              <select name="" class="form-control" id="Elemento" v-model="updateform.id_ELEMENT" @change="updname" required>
                                   <option disabled value="">Seleccione un elemento</option>
                                   <option v-for="elemento in elementos" :key="elemento.id" :value="elemento.id_ELEMENT">{{elemento.element_NAME}}</option>
                               </select>
@@ -117,7 +117,7 @@
                             <textarea name="message" placeholder="Descripcion" cols="43" rows="3" v-model="updateform.description" required></textarea>
                           </div>
                           <div class="text-center pt-2 pb-1">
-                              <button type="submit" class="btn btn-primary">
+                              <button type="submit" class="btn btn-primary" v-on:click="getAdd2">
                                   Actualizar Inventario
                               </button>
                           </div>
@@ -198,6 +198,10 @@ export default {
             alert(JSON.stringify(this.stockform))
             console.log(JSON.stringify(this.stockform));
         },
+      getAdd2: function(){
+            alert(JSON.stringify(this.updateform))
+            console.log(JSON.stringify(this.updateform));
+        },
       submitFormElement: function(){
         var self = this 
         axios
@@ -240,7 +244,10 @@ export default {
         this.image = event.target.result;
         let imagen = event.target.result.split(",",2)
         this.stockform.element_IMAGE=imagen[1]
-      },
+      }, 
+      updname(event){
+        console.log(event.target.value)
+      }
     }
 } 
 </script>
