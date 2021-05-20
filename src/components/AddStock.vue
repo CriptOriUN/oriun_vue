@@ -77,9 +77,9 @@
                           <div class="form-group">
 
                               <label for="Elemento" class="titulo_bln my-check">Elemento</label>
-                              <select name="" class="form-control" id="Elemento" v-model="updateform.id_ELEMENT" required>
+                              <select name="" class="form-control" id="Elemento" @change="updname" required>
                                   <option disabled value="">Seleccione un elemento</option>
-                                  <option v-for="elemento in elementos" :key="elemento.id" :value="[elemento.id_ELEMENT,elemento.element_NAME]">{{elemento.element_NAME}}</option>
+                                  <option v-for="elemento in elementos" :key="elemento.id" :value="elemento.id_ELEMENT">{{elemento.element_NAME}}</option>
                               </select>
 
                           </div>
@@ -117,7 +117,7 @@
                             <textarea name="message" placeholder="Descripcion" cols="43" rows="3" v-model="updateform.description" required></textarea>
                           </div>
                           <div class="text-center pt-2 pb-1">
-                              <button type="submit" class="btn btn-primary" v-on:click="getAdd2">
+                              <button type="submit" class="btn btn-primary">
                                   Actualizar Inventario
                               </button>
                           </div>
@@ -219,18 +219,9 @@ export default {
         });
       }, 
       updateFormElement: function(){
-        
         var self = this  
         axios
-          .put("https://wise-brook-308119.ue.r.appspot.com/elementupd",{
-            name_LOCATION:self.updateform.name_LOCATION,
-            element_NAME:self.updateform.id_ELEMENT[1],
-            name_SPORT:self.updateform.name_SPORT,
-            available:self.updateform.available, 
-            id_ELEMENT:self.updateform.id_ELEMENT[0],
-            //ELEMENT_IMAGE:"", 
-            description:"",
-          })
+          .put("https://wise-brook-308119.ue.r.appspot.com/elementupd",self.updateform)
           .then((result)=>{
             self.updateform.name_LOCATION=self.updateform.name_SPORT=self.updateform.id_ELEMENT=self.updateform.description="";
             self.updateform.available=false;
@@ -254,12 +245,6 @@ export default {
         let imagen = event.target.result.split(",",2)
         this.stockform.element_IMAGE=imagen[1]
       }, 
-      /*
-      updname(event){
-        this.updateform.element_NAME=event.target.value.element_NAME
-        this.updateform.id_ELEMENT=event.target.value.id_ELEMENT
-      }
-      */
     }
 } 
 </script>

@@ -29,7 +29,7 @@
                       <img v-if="image" :src="image">
                     </div>
                     <div class="text-center pt-2 pb-1">
-                        <button type="submit" class="btn btn-primary" v-on:click="getAdd">
+                        <button type="submit" class="btn btn-primary" >
                             Añadir Locacion
                         </button>
                     </div>
