@@ -59,7 +59,7 @@
                             <img v-if="image" :src="image">
                           </div>
                           <div class="form-group">
-                            <textarea name="message" placeholder="Descripcion" cols="43" rows="3" v-model="stockform.description" required></textarea>
+                            <textarea name="message" placeholder="Descripcion"  rows="3" v-model="stockform.description" required></textarea>
                           </div>
                           <div class="text-center pt-2 pb-1">
                               <button type="submit" class="btn btn-primary">
@@ -75,19 +75,17 @@
                      aria-labelledby="pills-register-tab">
                       <form v-on:submit.prevent="updateFormElement">
                           <div class="form-group">
-
-                              <label for="Elemento " class="titulo_bln my-check">Elemento</label>
-                              <select name="" class="form-control" id="Elemento" v-model="updateform.id_ELEMENT" required>
-                                  <option disabled value="">Seleccione un elemento</option>
-                                  <option v-for="elemento in elementos" :key="elemento.id" :value="elemento.id_ELEMENT">{{elemento.element_NAME}}</option>
-                              </select>
+                            <label for="Elemento " class="titulo_bln my-check">Elemento</label>
+                            <select name="" class="form-control" id="Elemento" v-model="updateform.id_ELEMENT" required>
+                                <option disabled value="">Seleccione un elemento</option>
+                                <option v-for="elemento in elementos" :key="elemento.id" :value="elemento.id_ELEMENT">{{elemento.element_NAME}}</option>
+                            </select>
                           </div>
                           <div v-if="lookother">
                             <div class="form-group">
 
                                 <label for="Locacion" class="titulo_bln my-check">Locacion</label>
                                 <select name="" class="form-control" id="Locacion" v-model="updateform.name_LOCATION" required>
-                                    <option disabled value="">Seleccione una locacion</option>
                                     <option v-for="locacion in locaciones" :key="locacion.id" :value="locacion.name_LOCATION">{{locacion.name_LOCATION}}</option>
                                 </select>
 
@@ -114,10 +112,10 @@
                               <img v-if="image" :src="image">
                             </div>
                             <div class="form-group">
-                              <textarea name="message" placeholder="Descripcion" cols="43" rows="3" v-model="updateform.description" required></textarea>
+                              <textarea name="message" placeholder="Descripcion" rows="3" v-model="updateform.description" required></textarea>
                             </div>
                             <div class="text-center pt-2 pb-1">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary" v-on:click="getAdd2">
                                     Actualizar Inventario
                                 </button>
                             </div>
@@ -137,6 +135,8 @@
 <script>
 import NavBar from '../components/header/NavBar'
 import axios from "axios";
+//import {elementsfake} from '../fake-data'
+//import {locationsfake} from '../fake-data'
 export default {
     name: "AddStock", 
     components:{
@@ -161,18 +161,38 @@ export default {
                 element_IMAGE:"", 
                 description:"",
             },
+            defaultupdate: {
+              name_LOCATION:"",
+              element_NAME:"",
+              name_SPORT:"",
+              available:false, 
+              id_ELEMENT:"",
+              element_IMAGE:"", 
+              description:"",
+            },
             locaciones:[], 
             deportes:[], 
             elementos:[],
             username:"",
             exitoso:false,
             image: '', 
-            lookother:false
+            lookother:false, 
+            //elementsfake ,
+            selectedindex:'',
+            //locationsfake
         }
     }, 
     created:function(){
         this.username = this.$route.params.username;
         let self = this;
+        axios
+        .get("https://wise-brook-308119.ue.r.appspot.com/elements") 
+          .then((result => {
+            self.elementos = result.data;
+          })).catch((error) => {
+            alert("Error Servidor ELEMENTOS")
+          }); 
+
         axios
         .get("https://wise-brook-308119.ue.r.appspot.com/locationssibu")
             .then((result) => {
@@ -187,18 +207,16 @@ export default {
             }).catch((error) => {
                 alert("ERROR Servidor DEPORTE");
             });
-        axios
-        .get("https://wise-brook-308119.ue.r.appspot.com/elements") 
-          .then((result => {
-            self.elementos = result.data;
-          })).catch((error) => {
-            alert("Error Servidor ELEMENTOS")
-          })
     },
     methods:{
+
       getAdd: function(){
             alert(JSON.stringify(this.stockform))
             console.log(JSON.stringify(this.stockform));
+        },
+      getAdd2: function(){
+            alert(JSON.stringify(this.updateform))
+            console.log(JSON.stringify(this.updateform));
         },
       submitFormElement: function(){
         var self = this 
@@ -247,13 +265,19 @@ export default {
     }, 
     watch:{
       'updateform.id_ELEMENT'(value){
+        this.selectedindex = elementsfake.map(function(e){return e.id_ELEMENT}).indexOf(value)
+        alert(this.selectedindex)
         if(value!=""){
-          this.lookother=true;
+          this.updateform.name_LOCATION=this.elementsfake[this.selectedindex].name_LOCATION 
+          this.updateform.name_SPORT=this.elementsfake[this.selectedindex].name_SPORT 
+          this.updateform.available=this.elementsfake[this.selectedindex].available 
+          this.description.description=this.elementsfake[this.selectedindex].description
+          this.lookother=true; 
         }
         else{
           this.lookother=false;
         }
-      }
+      }, 
     }
 } 
 </script>
@@ -265,6 +289,12 @@ export default {
 }
 img{
   width: 200px;
+}
+textarea{
+  width: 500px;
+  border: none;
+  overflow: auto;
+  outline: none;
 }
 .card {
     width: 600px;
@@ -367,6 +397,10 @@ img{
         max-width: 400px;
         width: 80%;
         
+    } 
+
+    textarea{
+      width: 250px;
     }
   }
   
