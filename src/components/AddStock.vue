@@ -265,7 +265,7 @@ export default {
     }, 
     watch:{
       'updateform.id_ELEMENT'(value){
-        this.selectedindex = elementsfake.map(function(e){return e.id_ELEMENT}).indexOf(value)
+        this.selectedindex = elementos.map(function(e){return e.id_ELEMENT}).indexOf(value)
         alert(this.selectedindex)
         if(value!=""){
           this.updateform.name_LOCATION=this.elementsfake[this.selectedindex].name_LOCATION 
