@@ -75,11 +75,12 @@
                      aria-labelledby="pills-register-tab">
                       <form v-on:submit.prevent="updateFormElement">
                           <div class="form-group">
-                            <label for="Elemento " class="titulo_bln my-check">Elemento</label>
-                            <select name="" class="form-control" id="Elemento" v-model="updateform.id_ELEMENT" required>
-                                <option disabled value="">Seleccione un elemento</option>
-                                <option v-for="elemento in elementos" :key="elemento.id" :value="elemento.id_ELEMENT">{{elemento.element_NAME}}</option>
-                            </select>
+
+                              <label for="Elemento " class="titulo_bln my-check">Elemento</label>
+                              <select name="" class="form-control" id="Elemento" v-model="updateform.id_ELEMENT" required>
+                                  <option disabled value="">Seleccione un elemento</option>
+                                  <option v-for="elemento in elementos" :key="elemento.id" :value="elemento.id_ELEMENT">{{elemento.element_NAME}}</option>
+                              </select>
                           </div>
                           <div v-if="lookother">
                             <div class="form-group">
@@ -107,9 +108,9 @@
                             <div class="form-group">
                               <div class="my-check">
                                 <label for="locationimage">Imagen: </label>
-                                <input type="file" id="locationimage" name="locationimage" accept="image/*"  @change="fileSelected" >
+                                <input type="file" id="locationimage" name="locationimage" accept="image/*"  @change="fileSelectedupd" >
                               </div>
-                              <img v-if="image" :src="image">
+                              <img v-if="imageupd" :src="imageupd">
                             </div>
                             <div class="form-group">
                               <textarea name="message" placeholder="Descripcion" rows="3" v-model="updateform.description" required></textarea>
@@ -161,21 +162,13 @@ export default {
                 element_IMAGE:"", 
                 description:"",
             },
-            defaultupdate: {
-              name_LOCATION:"",
-              element_NAME:"",
-              name_SPORT:"",
-              available:false, 
-              id_ELEMENT:"",
-              element_IMAGE:"", 
-              description:"",
-            },
             locaciones:[], 
             deportes:[], 
             elementos:[],
             username:"",
             exitoso:false,
             image: '', 
+            imageupd:'',
             lookother:false, 
             //elementsfake ,
             selectedindex:'',
@@ -260,6 +253,16 @@ export default {
         this.image = event.target.result;
         let imagen = event.target.result.split(",",2)
         this.stockform.element_IMAGE=imagen[1]
+      },
+      fileSelectedupd(event){
+        const fileupd = event.target.files.item(0);
+        const readerupd = new FileReader();
+        readerupd.addEventListener('load', this.imageLoadedupd);
+        readerupd.readAsDataURL(fileupd);
+      },
+      imageLoadedupd(event){
+        this.imageupd = event.target.result;
+        let imagen = event.target.result.split(",",2)
         this.updateform.element_IMAGE=imagen[1]
       },
     }, 
@@ -268,11 +271,13 @@ export default {
         this.selectedindex = elementos.map(function(e){return e.id_ELEMENT}).indexOf(value)
         alert(this.selectedindex)
         if(value!=""){
-          this.updateform.name_LOCATION=this.elementsfake[this.selectedindex].name_LOCATION 
-          this.updateform.name_SPORT=this.elementsfake[this.selectedindex].name_SPORT 
-          this.updateform.available=this.elementsfake[this.selectedindex].available 
-          this.description.description=this.elementsfake[this.selectedindex].description
           this.lookother=true; 
+          this.updateform.name_LOCATION=this.elementos[this.selectedindex].name_LOCATION
+          this.updateform.name_SPORT=this.elementos[this.selectedindex].name_SPORT 
+          this.updateform.available=this.elementos[this.selectedindex].available 
+          this.updateform.description=this.elementos[this.selectedindex].description
+          this.updateform.element_IMAGE=this.elementos[this.selectedindex].element_IMAGE
+          this.imageupd='data:image/png;base64,'+this.elementos[this.selectedindex].element_IMAGE
         }
         else{
           this.lookother=false;
