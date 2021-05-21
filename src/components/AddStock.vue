@@ -268,7 +268,7 @@ export default {
     }, 
     watch:{
       'updateform.id_ELEMENT'(value){
-        this.selectedindex = elementos.map(function(e){return e.id_ELEMENT}).indexOf(value)
+        this.selectedindex = this.elementos.map(function(e){return e.id_ELEMENT}).indexOf(value)
         alert(this.selectedindex)
         if(value!=""){
           this.lookother=true; 
