@@ -17,7 +17,8 @@
     "vue": "^2.5.2",
     "vue-recaptcha-v3": "^1.9.0",
     "vue-router": "^3.5.1",
-    "vue-toast-notification": "^0.6.1"
+    "vue-toast-notification": "^0.6.1",
+    "vue-toasted": "^1.1.28"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

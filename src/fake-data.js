@@ -272,3 +272,363 @@ export const locationsfake =[
             "image_LOCATION": null
         },
 ]
+
+export const usersfake = [
+    {
+        "user_NAME": "aeromeror",
+        "password": "1faae49334d0369a699d226b75685edb13041598",
+        "enabled": true,
+        "rol_NAME": "Moderador",
+        "email": "aeromeror@unal.edu.co"
+    },
+    {
+        "user_NAME": "cacha",
+        "password": "66fc50234c56eae7181ec5ad430421fc95a70b4f",
+        "enabled": true,
+        "rol_NAME": "Bienestar",
+        "email": "cacha@correo.com"
+    },
+    {
+        "user_NAME": "camilo",
+        "password": "019122a29f815a9a3953d9ee250e4548d639c94d",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "camilo@correo.com"
+    },
+    {
+        "user_NAME": "camilso",
+        "password": "1ea7c8fdb8e8531d531db1739ab6b82faa71a0be",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "camilso@correo.com"
+    },
+    {
+        "user_NAME": "camilsxcso",
+        "password": "1ddfa87774f80d5aa0d0878b7c1b04d36e39b9c0",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "camilsxcso@correo.com"
+    },
+    {
+        "user_NAME": "camilsxo",
+        "password": "b4563b2cac5cc8bc4b7d12c8f9c8111452c5d97e",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "camilsxo@correo.com"
+    },
+    {
+        "user_NAME": "camilsxso",
+        "password": "b4563b2cac5cc8bc4b7d12c8f9c8111452c5d97e",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "camilsxso@correo.com"
+    },
+    {
+        "user_NAME": "cdlol",
+        "password": "33aa29e95c2d984e45e69baf53e10c020a3a2716",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "cdlol@correo.com"
+    },
+    {
+        "user_NAME": "chang",
+        "password": "7556fa306848459ef45942ab93525019d92d759c",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "chang@correo.com"
+    },
+    {
+        "user_NAME": "dads",
+        "password": "87cebcb3c890dab7a614871e5e9208550ae7363f",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "dads@correo.com"
+    },
+    {
+        "user_NAME": "Diego",
+        "password": "ad66a7989f23e52eb8f36800de02db8e2dd757ec",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "Diego@correo.com"
+    },
+    {
+        "user_NAME": "Diego Testing",
+        "password": "ad66a7989f23e52eb8f36800de02db8e2dd757ec",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "fexan86930@firmjam.com"
+    },
+    {
+        "user_NAME": "Diego2",
+        "password": "f3da214c7831a3d24924b550fbf1c3268c11fc35",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "Diego2@correo.com"
+    },
+    {
+        "user_NAME": "Diego3",
+        "password": "ad66a7989f23e52eb8f36800de02db8e2dd757ec",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "jivic39519@mxcdd.com"
+    },
+    {
+        "user_NAME": "Diego4",
+        "password": "ad66a7989f23e52eb8f36800de02db8e2dd757ec",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "nikili5436@mxcdd.com"
+    },
+    {
+        "user_NAME": "Diego5",
+        "password": "ad66a7989f23e52eb8f36800de02db8e2dd757ec",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "famase7539@mxcdd.com"
+    },
+    {
+        "user_NAME": "dsad",
+        "password": "319328c74650fba201efd438ec65bcf874db2d8f",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "dsad@correo.com"
+    },
+    {
+        "user_NAME": "ejemplo",
+        "password": "7f08363d965da10d40525d4dbe868a10dfda3fcf",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "ejemplo@correo.com"
+    },
+    {
+        "user_NAME": "johan",
+        "password": "40bd001563085fc35165329ea1ff5c5ecbdbbeef",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "johan@correo.com"
+    },
+    {
+        "user_NAME": "johann",
+        "password": "a4e57e440f71b9ed0812926742ebc6ed6884eeba",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "johann@correo.com"
+    },
+    {
+        "user_NAME": "mapache",
+        "password": "7417ccb8e7a7defe6f410464bf23d9812d0ebe4c",
+        "enabled": true,
+        "rol_NAME": "Moderador",
+        "email": "mapache@correo.com"
+    },
+    {
+        "user_NAME": "mcyersone",
+        "password": "711383a59fda05336fd2ccf70c8059d1523eb41a",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "nohifi5790@httptuan.com"
+    },
+    {
+        "user_NAME": "mcyersone2",
+        "password": "711383a59fda05336fd2ccf70c8059d1523eb41a",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "jivobok790@troikos.com"
+    },
+    {
+        "user_NAME": "mcyersone3",
+        "password": "711383a59fda05336fd2ccf70c8059d1523eb41a",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "hermit.tanimoto@gmail.com"
+    },
+    {
+        "user_NAME": "moderador",
+        "password": "b676cb087863bdc7422e410a77524aac8e65ed6a",
+        "enabled": true,
+        "rol_NAME": "Moderador",
+        "email": "moderador@correo.com"
+    },
+    {
+        "user_NAME": "nico",
+        "password": "1724a1ed7130367a0fb693c7d3217055825229ee",
+        "enabled": true,
+        "rol_NAME": "Moderador",
+        "email": "nico@correo.com"
+    },
+    {
+        "user_NAME": "nrrojasfe",
+        "password": "f9222ebe6930240b2cb7f3cfb474dd76ffbd4638",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "nrrojasfe@unal.edu.co"
+    },
+    {
+        "user_NAME": "nrrojasfe2",
+        "password": "fdd9d78090f4cb1c4898775ee3551fdeb9d13222",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "nrrojasfe2@correo.com"
+    },
+    {
+        "user_NAME": "nrrojasfe3",
+        "password": "1724a1ed7130367a0fb693c7d3217055825229ee",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "nrrojasfe3@correo.com"
+    },
+    {
+        "user_NAME": "nuevousertest",
+        "password": "61488e80388d9faf7b0d7fd30c721ec3aadaa3ba",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "nuevousertest@correo.com"
+    },
+    {
+        "user_NAME": "oamancerag",
+        "password": "ae9aabbfc58b9fc868e5ced7819e9041340dbed3",
+        "enabled": true,
+        "rol_NAME": "Bienestar",
+        "email": "oamancerag@unal.edu.co"
+    },
+    {
+        "user_NAME": "prueba",
+        "password": "prueba",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "prueba@correo.com"
+    },
+    {
+        "user_NAME": "pruebadiabetica",
+        "password": "92ba351577398301c6579ac0febd73a66ccabc37",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "pruebadiabetica@correo.com"
+    },
+    {
+        "user_NAME": "sandia",
+        "password": "aab5503a9970e3a574e2af98a246290e6c74e896",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "sandia@correo.com"
+    },
+    {
+        "user_NAME": "sas",
+        "password": "7bf1ab1b8f7331ab5dc410e01f959d958bfd210e",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "sas@correo.com"
+    },
+    {
+        "user_NAME": "sasa",
+        "password": "1d0dddab6fa8a469863bddc5c2d8a27d863eba07",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "sasa@correo.com"
+    },
+    {
+        "user_NAME": "sassa",
+        "password": "87cebcb3c890dab7a614871e5e9208550ae7363f",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "sassa@correo.com"
+    },
+    {
+        "user_NAME": "sasssa",
+        "password": "a6315d1a79c0a313d15c1b8a4a1faede18ab985e",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "sasssa@correo.com"
+    },
+    {
+        "user_NAME": "sdas",
+        "password": "b620b8b2a3b4937670eb1252b8dc1b3a3d6e5111",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "sdas@correo.com"
+    },
+    {
+        "user_NAME": "user123",
+        "password": "b2e98ad6f6eb8508dd6a14cfa704bad7f05f6fb1",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "user123@correo.com"
+    },
+    {
+        "user_NAME": "useremailval",
+        "password": "711383a59fda05336fd2ccf70c8059d1523eb41a",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "kiyoxa1582@httptuan.com"
+    },
+    {
+        "user_NAME": "userencrypt",
+        "password": "12e4b2cc6a5c46d69877b1d8345159b6ce0d5740",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "userenvrypt@correo.com"
+    },
+    {
+        "user_NAME": "userencrypt2",
+        "password": "7f08363d965da10d40525d4dbe868a10dfda3fcf",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "userencrypt2@correo.com"
+    },
+    {
+        "user_NAME": "Username",
+        "password": "f13b3298cfe8e3db8f68f16269e7d3c17ff433a0",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "username@correo.com"
+    },
+    {
+        "user_NAME": "Username2",
+        "password": "f13b3298cfe8e3db8f68f16269e7d3c17ff433a0",
+        "enabled": true,
+        "rol_NAME": "Bienestar",
+        "email": "username2@correo.com"
+    },
+    {
+        "user_NAME": "userprueba",
+        "password": "95c946bf622ef93b0a211cd0fd028dfdfcf7e39e",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "bafegat135@o3live.com"
+    },
+    {
+        "user_NAME": "usertemp",
+        "password": "e0c0629a28fc5fecca52e77a780e504fcdbeb77d",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "mepopar741@troikos.com"
+    },
+    {
+        "user_NAME": "usertempo",
+        "password": "e0c0629a28fc5fecca52e77a780e504fcdbeb77d",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "vefexa1472@itwbuy.com"
+    },
+    {
+        "user_NAME": "usertemporal",
+        "password": "e0c0629a28fc5fecca52e77a780e504fcdbeb77d",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "pogob22699@sc2hub.com"
+    },
+    {
+        "user_NAME": "wqwq",
+        "password": "1a1f58c9adc75e11a9c4c108e39bb79bfb4435ac",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "wqwq@correo.com"
+    },
+    {
+        "user_NAME": "yavalderramac",
+        "password": "940d86569a24ccad246c986bd5ec3ce7b19874cc",
+        "enabled": true,
+        "rol_NAME": "Usuario",
+        "email": "yavalderramac@unal.edu.co"
+    }
+]

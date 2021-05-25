@@ -51,9 +51,10 @@
                 <div v-if="isLoading">
                   <!--<p> Cargando... </p>-->
                   <div class="loading-icon">
-                    <Spinner :color="color"/>
+                    <Spinner :color="color" />
                   </div>
                 </div>
+
                 <!-- Lista de Moderadores-->
                 <div v-else class="table-responsive">
                   <table
@@ -78,7 +79,10 @@
                         <td v-if="usuario.rol_NAME == 'Moderador'" class="">
                           <button class="btn btn-danger" title="Eliminar">
                             <!-- Borrar -->
-                            <i class="fa fa-minus-circle"></i>
+                            <i
+                              class="fa fa-minus-circle"
+                              @click="delModerador(usuario.user_NAME)"
+                            ></i>
                           </button>
                         </td>
                       </tr>
@@ -106,7 +110,7 @@
                 <div v-if="isLoadingLoc && isLoadingEle">
                   <!--<p> Cargando... </p>-->
                   <div class="loading-icon">
-                    <Spinner :color="color"/>
+                    <Spinner :color="color" />
                   </div>
                 </div>
                 <!-- Lista de Locaciones-->
@@ -144,7 +148,10 @@
                           </button>
                           <button class="btn btn-danger" title="Eliminar">
                             <!-- Borrar -->
-                            <i class="fa fa-minus-circle"></i>
+                            <i
+                              class="fa fa-minus-circle"
+                              @click="delLocation(locacion.name_LOCATION)"
+                            ></i>
                           </button>
                         </td>
                       </tr>
@@ -189,9 +196,7 @@
                                   <button
                                     class="btn btn-danger"
                                     title="Eliminar"
-                                    @click="
-                                      delElement(element.id_ELEMENT, element.id)
-                                    "
+                                    @click="delElement(element.id_ELEMENT)"
                                   >
                                     <!-- Borrar -->
                                     <i class="fa fa-minus-circle"></i>
@@ -229,16 +234,14 @@
 <script>
 import NavBar from "./header/NavBar";
 import axios from "axios";
-import { elementsfake } from "../fake-data";
-import { locationsfake } from "../fake-data";
+import { usersfake } from "../fake-data";
 import Spinner from "./spinner/Spinner";
+import Vue from "vue";
 export default {
   name: "Bienestar",
   components: {
     NavBar,
-    "vue-toastr": window.VueToastr,
-    elementsfake,
-    locationsfake,
+    usersfake,
     Spinner,
   },
   data: function () {
@@ -246,41 +249,90 @@ export default {
       usuarios: [],
       locaciones: [],
       elementos: [],
-      elementsfake,
-      locationsfake,
+      usersfake,
       isLoading: true,
       isLoadingLoc: true,
-      isLoadingEle: true, 
-      color: "#76232f"
+      isLoadingEle: true,
+      color: "#76232f",
     };
   },
   methods: {
     getElements: function (location_id) {
       alert(JSON.stringify(inventario));
     },
-    delElement: function (element_id, id) {},
-    success(msg) {
-      this.$refs.mytoast.s({
-        msg: msg,
-        progressbar: false,
+    delModerador: function (value) {
+      /*
+      let index = this.usersfake
+        .map(function (e) {
+          return e.user_NAME;
+        })
+        .indexOf(value);
+      axios.delete();
+      this.$delete(this.usersfake, index);
+      this.success("Moderador eliminado con exito");*/
+    },
+    delElement: function (value) {
+      let index = this.elementos
+        .map(function (e) {
+          return e.id_ELEMENT;
+        })
+        .indexOf(value);
+
+      axios
+        .delete(
+          "https://wise-brook-308119.ue.r.appspot.com/noelements?id=" + value
+        )
+        .then((result) => {
+          this.$delete(this.elementos, index);
+          this.success("Elemento eliminado con exito");
+        })
+        .catch((error) => {
+          this.failure("Error eliminando Elemento");
+        });
+    },
+    delLocation: function (value) {
+      let index = this.locaciones
+        .map(function (e) {
+          return e.name_LOCATION;
+        })
+        .indexOf(value);
+
+      axios
+        .delete(
+          "https://wise-brook-308119.ue.r.appspot.com/nolsibu?name=" + value
+        )
+        .then((result) => {
+          this.$delete(this.locaciones, index);
+          this.success("Locación eliminada con exito");
+        })
+        .catch((error) => {
+          this.failure("Error eliminando Locación");
+        });
+    },
+    success(message) {
+      Vue.toasted.show(message, {
+        position: "bottom-right",
+        icon: "check",
+        type: "success",
+        action: {
+          text: "ok",
+          onClick: (e, toast) => {
+            toast.goAway(0);
+          },
+        },
       });
     },
-    error(msg) {
-      this.$refs.mytoast.e({
-        msg: msg,
-        progressbar: false,
-      });
-    },
-    warning(msg) {
-      this.$refs.mytoast.w({
-        msg: msg,
-        progressbar: false,
-      });
-    },
-    info(msg) {
-      this.$refs.mytoast.i({
-        msg: msg,
-        progressbar: false,
+    failure(message) {
+      Vue.toasted.show(message, {
+        position: "bottom-right",
+        icon: "error_outline",
+        type: "error",
+        action: {
+          text: "ok",
+          onClick: (e, toast) => {
+            toast.goAway(0);
+          },
+        },
       });
     },
   },
@@ -315,8 +367,6 @@ export default {
       .catch((error) => {
         alert("ERROR Servidor ELEMENTOS");
       });
-    this.$refs.mytoast.defaultPosition = "toast-bottom-right";
-    this.showTab();
   },
 };
 </script> 
