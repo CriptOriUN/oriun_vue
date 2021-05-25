@@ -254,7 +254,6 @@ export default {
                     alert("ERROR 404:Contraseña Erronea.");
                   if (error.response.status == "406")
                     alert("ERROR 403: Usuario no encontrado.");
-                  this.hCaptchaVerified = false;
                 });
             } else {
               alert("No has verificado tu cuenta.");

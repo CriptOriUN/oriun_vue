@@ -66,7 +66,7 @@
 <script>
 import NavBar from "../components/header/NavBar";
 import axios from "axios";
-
+import {toaster} from './toaster/toaster'
 export default {
   name: "AddLocation",
   components: {
@@ -82,6 +82,7 @@ export default {
       username: "",
       exitoso: false,
       image: "",
+      toaster
     };
   },
   created: function () {
@@ -94,6 +95,7 @@ export default {
     },
     submitFormLocation: function () {
       var self = this;
+      self.toaster.success("hola")
       axios
         .post(
           "https://wise-brook-308119.ue.r.appspot.com/glocationsibu",
