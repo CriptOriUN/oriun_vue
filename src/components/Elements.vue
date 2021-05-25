@@ -9,17 +9,33 @@
 
     <div class="container pt-4 mb-5">
       <div class="row mt-2 justify-content-center">
-        <div class="back pl-4 pr-4">
+        <div class="back px-4">
           <!-- <h3 class="titulos tit-det pt-4 pb-4">Detalles Generales</h3> -->
-          <!-- Buscador -->
-          <input
-            type="search"
-            placeholder="Buscar"
-            class="form-control mt-4"
-            v-model="search"
-          />
+          <div
+            class="d-flex justify-content-between row mt-4 searcher-selector mx-auto"
+          >
+            <!--		Show Numbers Of Rows 		-->
+            <div class="d-flex form-group">
+              <p class="mb-0 pt-2 mr-2">Mostar</p>
+              <select v-model="maxNumRows" class="form-control" id="maxRows">
+                <option value="-98">All</option>
+                <option value="5" selected="selected">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
+              <p class="mb-0 pt-2 ml-2">Filas</p>
+            </div>
+            <!-- Buscador -->
+            <input
+              type="search"
+              placeholder="Buscar"
+              class="form-control"
+              v-model="search"
+            />
+          </div>
           <!-- Lista de Implementos-->
-          <div class="table-responsive mt-4  mb-4">
+          <div class="table-responsive">
             <table
               class="table table-bordered table-hover table-options mx-auto"
             >
@@ -65,14 +81,24 @@
               </tbody>
             </table>
           </div>
+          <div class="mb-5" id="labelPages">
+            <nav aria-label="">
+              <ul class="pagination pagination-sm justify-content-center">
+                <li id="prevLabel" class="page-item disabled" @click="goPrev()">
+                  <a class="page-link">Previous</a>
+                </li>
+                <li v-for="page in pages" class="page-item" :key="page" :ref="'page'+page"><div class="page-link"  @click="currentPage=page">{{page}}</div></li>
+                <li id="nextLabel" class="page-item" @click="goNext()">
+                  <a class="page-link">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
         </div>
         <!-- MODAL -->
         <vue-toastr ref="mytoast"></vue-toastr>
         <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
-        
       </div>
-    </div>
-    <div class="container my-5">
     </div>
   </div>
 </template>
@@ -94,17 +120,34 @@ export default {
       username: "",
       sports: null,
       elements: [],
+      numElements: 3,
       search: "",
+      initElementPage: 0,
+      maxNumRows: 5,
+      numPages: 3,
+      pages: [],
+      currentPage: 1
     };
+  },
+  watch: {
+    maxNumRows() {
+      this.getElements();
+      this.auxListPages();
+      this.currentPage = 1;
+    },
+    currentPage() {
+      this.getElements();
+      this.setPage();
+      // this.$refs['page'+this.currentPage].
+    },
   },
   created: function () {
     this.username = this.$route.params.username;
   },
   mounted: function () {
-    axios
-      .get("https://wise-brook-308119.ue.r.appspot.com/elements/")
-      .then((response) => (this.elements = response.data));
     this.$refs.mytoast.defaultPosition = "toast-bottom-right";
+    this.getNumElements();
+    this.getElements();
   },
   computed: {
     filterElements: function () {
@@ -122,27 +165,108 @@ export default {
     },
   },
   methods: {
+    getElements() {
+      this.initElementPage = (this.currentPage-1) * this.maxNumRows;
+      axios
+        .get(
+          // "http://localhost:8081/elements?init=" +
+          "https://wise-brook-308119.ue.r.appspot.com/elements?init=" +
+            this.initElementPage +
+            "&size=" +
+            this.maxNumRows
+        )
+        .then((response) => (this.elements = response.data));
+    },
+    getNumElements() {
+      axios
+        // .get("http://localhost:8081/nelements")
+        .get("https://wise-brook-308119.ue.r.appspot.com/nelements")
+        .then((response) => (this.numElements = response.data, 
+                             this.auxListPages()));
+    },
+    auxListPages(){
+      this.pages = []
+      this.numPages = Math.ceil(this.numElements/Math.abs(this.maxNumRows));
+      for (let i = 1; i <= this.numPages; i++) {
+        this.pages.push(i);  
+      }
+      this.$nextTick(() =>{
+        this.setPage();
+      });
+    },
+    setPage(){
+      var tempList = document.getElementById('labelPages').getElementsByClassName('active');
+      Array.prototype.forEach.call(tempList, function(element){
+        element.classList.remove('active');
+      });
+      let item = this.$refs['page'+this.currentPage]
+      item[0].classList.add('active')
+      if(this.currentPage > 1 && this.numPages > 1){
+        console.log("1")
+        document.getElementById('prevLabel').classList.remove('disabled');
+      }else{
+        try{
+          document.getElementById('prevLabel').classList.add('disabled');
+        }catch(e){}
+      }
+      if(this.currentPage == this.numPages){
+        console.log("2")
+        document.getElementById('nextLabel').classList.add('disabled');
+      }else{
+        try{
+          document.getElementById('nextLabel').classList.remove('disabled');
+        }catch(e){}
+      }
+      
+      
+    },
+    goPrev(){
+      if(this.currentPage > 1){
+        this.currentPage = this.currentPage - 1;
+      }
+    },
+    goNext(){
+      if(this.currentPage < this.numPages){
+        this.currentPage = this.currentPage + 1;
+      }
+    },
     async requestElement(element) {
       // this.printHello()
       const ok = await this.$refs.confirmDialogue.show({
         title: "Solicitar Elemento",
         message:
           "Detalles de la solicitud: \n" +
-          " <br> <ul><li><b>Implemento: </b>"+ element.element_NAME + "</li>" + 
-          "<li><b>Descripcion: </b>" + element.description + "</li>"+
-          "<li><b>Ubicacion: </b>" + element.name_LOCATION + "</li>"+
-          "<li><b>Deporte: </b>" + element.name_SPORT + "</li>" +
-          "<li><b>Fecha de entrega: </b>" + "?".big().bold() + "</li>"+"</ul>" + 
-          "<img class='d-block mx-auto' alt='Imagen del implemento deportivo' src=' data:image/jpg;base64," + element.element_IMAGE + "' height='200'>",
+          " <br> <ul><li><b>Implemento: </b>" +
+          element.element_NAME +
+          "</li>" +
+          "<li><b>Descripcion: </b>" +
+          element.description +
+          "</li>" +
+          "<li><b>Ubicacion: </b>" +
+          element.name_LOCATION +
+          "</li>" +
+          "<li><b>Deporte: </b>" +
+          element.name_SPORT +
+          "</li>" +
+          "<li><b>Fecha de entrega: </b>" +
+          "?".big().bold() +
+          "</li>" +
+          "</ul>" +
+          "<img class='d-block mx-auto' alt='Imagen del implemento deportivo' src=' data:image/jpg;base64," +
+          element.element_IMAGE +
+          "' style='max-width:90%; max-height:200px'>",
         okButton: "Solicitar",
       });
       // If you throw an error, the method will terminate here unless you surround it wil try/catch
       if (ok) {
         try {
-          await axios.post(
-            // "https://wise-brook-308119.ue.r.appspot.com/nosports?sport=" + String(sport.name_SPORT)
+          await axios
+            .post
+            // "http://localhost:8081/nosports?sport=" + String(sport.name_SPORT)
+            ();
+          this.success(
+            "Solicitud realizada correctamente (No se está realizando ninguna acción)"
           );
-          this.success("Solicitud realizada correctamente (No se está realizando ninguna acción)");
         } catch (error) {
           this.error("Error realizando solcitud");
         }
@@ -221,10 +345,6 @@ export default {
 
 .form-control {
   width: 200px;
-  margin-right: auto;
-  margin-left: auto;
-  margin-top: -15px;
-  margin-bottom: 15px;
 }
 
 table {
@@ -260,5 +380,21 @@ table tr:last-child td:last-child {
 table td:last-child {
   padding-left: 0;
   padding-right: 0;
+}
+
+.searcher-selector {
+  margin-bottom: -15px;
+  width: 90%;
+}
+#maxRows {
+  width: 50px;
+  padding: 2px;
+}
+
+.pagination a{
+  color: black;
+}
+.page-link:hover{
+  cursor: pointer;
 }
 </style>
