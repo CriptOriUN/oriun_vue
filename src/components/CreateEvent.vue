@@ -259,7 +259,7 @@ export default {
   methods: {
     getSports() {
       axios
-        .get("http://localhost:8081/sports")
+        .get("https://wise-brook-308119.ue.r.appspot.com/sports")
         .then((response) => {
           console.log("SPORTS", response);
           this.sports = response.data;
@@ -271,7 +271,7 @@ export default {
     },
     getLocations() {
       axios
-        .get("http://localhost:8081/locationssport")
+        .get("https://wise-brook-308119.ue.r.appspot.com/locationssport")
         .then((response) => {
           // console.log("wihs", response);
           this.locations = response.data;
@@ -397,7 +397,7 @@ export default {
             console.log("quepasa2", JSON.stringify(this.eventForm));
 
             axios
-              .post("http://localhost:8081/event", this.eventForm)
+              .post("https://wise-brook-308119.ue.r.appspot.com/event", this.eventForm)
               .then((response) => {
                 console.log(this.eventForm);
                 this.IDeventCreated = response.data.id_EVENT;
@@ -429,7 +429,7 @@ export default {
           // console.log("quepasa", JSON.stringify(this.eventForm));
 
           axios
-            .post("http://localhost:8081/event", this.eventForm)
+            .post("https://wise-brook-308119.ue.r.appspot.com/event", this.eventForm)
             .then((response) => {
               console.log("EVENTO CREADO: ", response);
               this.IDeventCreated = response.data.id_EVENT;
