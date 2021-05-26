@@ -107,18 +107,25 @@
         </div>
       </div>
     </div>
+    <Websocket />
   </div>
 </template>
 
 <script>
 import NavBar from "../components/header/NavBar";
-
+import Websocket from "../components/Websocket";
 import axios from "axios";
 
 export default {
   name: "Users",
   components: {
     NavBar,
+    Websocket,
+  },
+  watch: {
+    newNotification() {
+      this.notifications.unshift(this.newNotification[0]);
+    },
   },
   data: function () {
     return {
@@ -136,6 +143,7 @@ export default {
       fechaEvento: "",
       horaEvento: "",
       locacionEvento: "",
+      newNotification: null,
     };
   },
   created: function () {
@@ -145,18 +153,25 @@ export default {
     // console.log('holanda')
     this.getEvents();
     this.getNotifications();
+    this.$root.$on("sportNotifications", (sportNotifications) => {
+      console.log("RECEIVED!!!!");
+      this.newNotification = JSON.parse(sportNotifications);
+      console.log(
+        "Received data: ",
+        typeof this.newNotification,
+        this.newNotification
+      );
+      this.notify();
+    });
   },
   methods: {
     getEvents() {
       // console.log('codigo get')
       axios
-        .get(
-          "https://wise-brook-308119.ue.r.appspot.com/events/",
-          self.username
-        )
+        .get("http://localhost:8081/events?init=1&size=-1", self.username)
         .then((response) => {
           // axios
-          //    .get("http://localhost:8081/events/", self.username)
+          //    .get("http://localhost:8081/events?init=1&size=-1/", self.username)
           //    .then((response) => {
           // console.log(response);
           this.events = response.data;
@@ -166,10 +181,7 @@ export default {
     getNotifications() {
       // console.log("codigo get");
       axios
-        .get(
-          "https://wise-brook-308119.ue.r.appspot.com/usernotifications/?user=" +
-            this.username
-        )
+        .get("http://localhost:8081/usernotifications/?user=" + this.username)
         .then((response) => {
           // axios
           //    .get("http://localhost:8081/usernotifications/?user="+ this.username)
@@ -179,6 +191,7 @@ export default {
         })
         .catch((e) => console.log(e));
     },
+
     mostrar(objet) {
       this.isActive = true;
       if (this.pop == "notificacion") {
@@ -197,6 +210,52 @@ export default {
     },
     ocultar() {
       this.isActive = false;
+    },
+    updateNotifications() {
+      console.log("NOTIFICATIONS HAVE CHANGED");
+      console.log("this.newNotification: ", this.newNotification);
+      console.log("this.notifications", this.notifications);
+    },
+    notify() {
+      var title = "OriUN - Evento de "+this.newNotification[0].name_SPORT;
+      // var icon = "../assets/oriun.png";
+      var icon =
+        "https://drive.google.com/uc?export=view&id=1kMJupb5dGtHu-zEQ4xqlktpQHWYfFdJG";
+      // var icon = "https://pics.freeicons.io/uploads/icons/png/5205410931579605509-512.png";
+      var body = this.newNotification[0].notification_DESCRIPTION;
+      // Let's check if the browser supports notifications
+      console.log("We have send you a notification!!!");
+      if (!("Notification" in window)) {
+        alert("This browser does not support desktop notification");
+      }
+
+      // Let's check whether notification permissions have already been granted
+      else if (Notification.permission === "granted") {
+        // If it's okay let's create a notification
+        this.createNotification(body, icon, title);
+      }
+
+      // Otherwise, we need to ask the user for permission
+      else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(function (permission) {
+          // If the user accepts, let's create a notification
+          if (permission === "granted") {
+            this.createNotification(body, icon, title);
+          }
+        });
+      }
+
+      // At last, if the user has denied notifications, and you
+      // want to be respectful there is no need to bother them any more.
+    },
+    createNotification(theBody, theIcon, theTitle) {
+      var options = {
+        body: theBody,
+        icon: theIcon,
+      };
+      var n = new Notification(theTitle, options);
+      setTimeout(n.close.bind(n), 5000);
+      console.log("Notificacion!!!!!");
     },
   },
 };
@@ -294,6 +353,7 @@ export default {
 .titulo-noti-btn:hover {
   text-decoration: underline;
 }
+
 .card {
   border-radius: 30px;
 }

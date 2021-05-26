@@ -6,7 +6,7 @@
         <h2 class="titulo_prin">Crear evento</h2>
       </div>
     </div>
-    <div class="container pt-4"> 
+    <div class="container pt-4">
       <div class="row my-3 justify-content-center">
         <div class="col-md-7 col-10 back pl-4 pr-4">
           <h3 class="titulos tit-det pt-4 pb-4">Detalles Generales</h3>
@@ -70,7 +70,7 @@
                   type="time"
                   class="form-control mb-4"
                   name="hora_incio"
-                  id="hora"
+                  id="horaIni"
                   v-model="eventForm.event_INIT_HOUR"
                   required
                 />
@@ -81,20 +81,41 @@
                   type="time"
                   class="form-control mb-4"
                   name="hora"
-                  id="hora"
+                  id="horaFin"
                   v-model="eventForm.event_FINISH_HOUR"
                   required
                 />
               </div>
             </div>
             <label for="Deporte" class="titulo_bln">Deporte</label>
-            <input type="text" class="form-control" id="Deporte" v-model="eventForm.name_SPORT" @input="filterSports" @focus="modal=true" required>
+            <input
+              type="text"
+              class="form-control"
+              id="Deporte"
+              v-model="eventForm.name_SPORT"
+              @input="filterSports"
+              @focus="modal = true"
+              required
+            />
             <div id="sportsList" v-if="filteredSports.length > 0 && modal">
               <ul class="sportsList">
-                <li v-for="sport in filteredSports" :key="sport.id" @click="setSport(sport)">{{ sport }}</li>
+                <li
+                  v-for="sport in filteredSports"
+                  :key="sport.id"
+                  @click="setSport(sport)"
+                >
+                  {{ sport }}
+                </li>
               </ul>
             </div>
-            <div id="sportsList" v-if="filteredSports.length == 0 && modal && eventForm.name_SPORT != ''">
+            <div
+              id="sportsList"
+              v-if="
+                filteredSports.length == 0 &&
+                modal &&
+                eventForm.name_SPORT != ''
+              "
+            >
               <ul class="sportsList">
                 <li @click="setSport('Otro')">Otro</li>
               </ul>
@@ -135,8 +156,8 @@
 
             <div class="row py-4 seccion">
               <div
-                v-for="loc in locations"
-                :key="loc.id"
+                v-for="(loc, index) in locations"
+                :key="index"
                 class="col-12 col-sm-6 col-lg-3 mb-4"
               >
                 <!-- <a href="#">
@@ -148,7 +169,7 @@
                 <button
                   v-on:click="eventLoc(loc.name_LOC_SPORT)"
                   class="nombre-lugar"
-                  id="button"
+                  :id="'button'+index"
                   type="button"
                 >
                   {{ loc.name_LOC_SPORT }}
@@ -172,6 +193,9 @@
               Finalizar
             </button>
           </div>
+          <!-- Testing Websocket -->
+          <!-- <input v-model="IDeventCreated" type="text" />
+          <button type="button" v-on:click="emitEvent();">Notify</button> -->
         </div>
       </div>
     </div>
@@ -208,6 +232,7 @@ export default {
       sportsNames: [],
       filteredSports: [],
       modal: false,
+      IDeventCreated: null,
     };
   },
   created: function () {
@@ -234,11 +259,11 @@ export default {
   methods: {
     getSports() {
       axios
-        .get("https://wise-brook-308119.ue.r.appspot.com/sports")
+        .get("http://localhost:8081/sports")
         .then((response) => {
-          console.log(response);
+          console.log("SPORTS", response);
           this.sports = response.data;
-          this.sports.forEach(sport => {
+          this.sports.forEach((sport) => {
             this.sportsNames.push(sport.name_SPORT);
           });
         })
@@ -246,18 +271,20 @@ export default {
     },
     getLocations() {
       axios
-        .get("https://wise-brook-308119.ue.r.appspot.com/locationssport")
+        .get("http://localhost:8081/locationssport")
         .then((response) => {
           // console.log("wihs", response);
           this.locations = response.data;
         })
         .catch((e) => console.log(e));
     },
-    test() {
-      this.eventForm.user_NAME = this.username;
-      // this.eventForm.event_INIT_HOUR = this.eventForm.event_INIT_HOUR.concat(':00');
-      console.log(this.eventForm);
+    emitEvent() {
+      console.log(this.IDeventCreated);
+      this.$nextTick(() =>{
+        this.$root.$emit("eventCreated", this.IDeventCreated);
+      });
     },
+    
     hoy() {
       var fecha = new Date();
       var anio = fecha.getFullYear();
@@ -319,9 +346,7 @@ export default {
         this.eventForm.name_SPORT == " "
       ) {
         alert("El campo Deporte esta vacio");
-      } else if (
-        !(this.sportsNames.includes(this.eventForm.name_SPORT))
-      ) {
+      } else if (!this.sportsNames.includes(this.eventForm.name_SPORT)) {
         alert("Si el Deporte seleccionado no esta registrado, elige 'Otro'");
       } else if (
         this.eventForm.capacity == "" ||
@@ -343,10 +368,14 @@ export default {
             this.eventForm.other_SPORT == " "
           ) {
             alert("Por favor escriba otra actividad");
-          }else if (
-            this.sportsNames.map(sport => sport.toLowerCase()).includes(this.eventForm.other_SPORT.toLowerCase())
+          } else if (
+            this.sportsNames
+              .map((sport) => sport.toLowerCase())
+              .includes(this.eventForm.other_SPORT.toLowerCase())
           ) {
-            alert("La actividad eligida se encuentra registrada. Seleccionala en el campo 'Deporte'");
+            alert(
+              "La actividad eligida se encuentra registrada. Seleccionala en el campo 'Deporte'"
+            );
           } else {
             this.eventForm.user_NAME = this.username;
             this.eventForm.event_FINISH_HOUR = this.eventForm.event_FINISH_HOUR.concat(
@@ -368,14 +397,13 @@ export default {
             console.log("quepasa2", JSON.stringify(this.eventForm));
 
             axios
-              .post(
-                "https://wise-brook-308119.ue.r.appspot.com/event",
-                this.eventForm
-              )
+              .post("http://localhost:8081/event", this.eventForm)
               .then((response) => {
                 console.log(this.eventForm);
+                this.IDeventCreated = response.data.id_EVENT;
+                this.emitEvent();
                 alert("Evento Creado con exito");
-                location.href = "../";
+                // location.href = "../";
               })
               .catch((e) => console.log(e));
           }
@@ -401,14 +429,13 @@ export default {
           // console.log("quepasa", JSON.stringify(this.eventForm));
 
           axios
-            .post(
-              "https://wise-brook-308119.ue.r.appspot.com/event",
-              this.eventForm
-            )
+            .post("http://localhost:8081/event", this.eventForm)
             .then((response) => {
-              console.log(this.eventForm);
+              console.log("EVENTO CREADO: ", response);
+              this.IDeventCreated = response.data.id_EVENT;
+              this.emitEvent();
               alert("Evento Creado con exito");
-              location.href = "../";
+              // location.href = "../";
             })
             .catch((e) => console.log(e));
         }
@@ -418,15 +445,17 @@ export default {
       this.eventForm.name_LOC_SPORT = location;
       // console.log("aqui", this.eventForm);
     },
-    filterSports(){
-      this.filteredSports = this.sportsNames.filter(sport =>{
-        return sport.toLowerCase().includes(this.eventForm.name_SPORT.toLowerCase());
+    filterSports() {
+      this.filteredSports = this.sportsNames.filter((sport) => {
+        return sport
+          .toLowerCase()
+          .includes(this.eventForm.name_SPORT.toLowerCase());
       });
     },
-    setSport(sport){
+    setSport(sport) {
       this.eventForm.name_SPORT = sport;
       this.modal = false;
-    }
+    },
   },
 };
 </script>
@@ -491,22 +520,21 @@ export default {
 .subtitulo {
   font-size: 25px;
 }
-.sportsList{
+.sportsList {
   list-style-type: none;
   background-color: white;
-  color:#495057;
-  padding-left:0px;
+  color: #495057;
+  padding-left: 0px;
   border: 1px solid;
   margin-top: -15px;
 }
 
-.sportsList li{
+.sportsList li {
   cursor: pointer;
   padding-left: 15px;
 }
-.sportsList li:hover{
+.sportsList li:hover {
   background: #1e90ff;
   color: white;
-  
 }
 </style>
