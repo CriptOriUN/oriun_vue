@@ -274,7 +274,7 @@ export default {
         return -1;
       };
 
-      let index = this.elementos.deepIndexof(value);
+      let index = this.elementos.deepIndexOf(value);
 
       axios
         .delete(
