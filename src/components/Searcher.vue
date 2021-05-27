@@ -39,12 +39,6 @@
                         <div id="boton-asistir">
                             <button type="button" class="btn btn-primary" @click="asistir(evento.id_EVENT)">Asistir</button>
                         </div>
-                        <div class="pb-5" v-if="exitoso==true">
-                            El usuario fue registrado al evento con exito
-                        </div> 
-                        <div class="pb-5" v-if="noexitoso==true">
-                            El Usuario ya estaba registrado en el evento
-                        </div> 
                     </div>
                 </div>
             </div>
@@ -55,6 +49,7 @@
 <script>
 import NavBar from '../components/header/NavBar'
 import axios from "axios";
+import {toaster} from './toaster/toaster'
 export default {
     name: 'Searcher',
     components: {
@@ -66,15 +61,14 @@ export default {
           eventos:[] ,
           search:'', 
           puedoAsistir:false,
-          exitoso: false,
-          noexitoso: false
+          toaster
       }  
     },
     created: function() {
     this.username = this.$route.params.username;
     let self = this;
     axios
-    .get("https://wise-brook-308119.ue.r.appspot.com/events")
+    .get("https://wise-brook-308119.ue.r.appspot.com/eventsall")
         .then((result) => {
             self.eventos=result.data; 
         }).catch((error) => {
@@ -93,16 +87,10 @@ export default {
             .then((result) => {
                 self.puedoAsistir = result.data;
                 if(self.puedoAsistir==true){
-                    self.exitoso=true;
-                    setTimeout(()=>{
-                    self.exitoso=false;
-                    }, 1500)
+                    self.toaster.success("El usuario ha sido regitrado el evento con exito")
                 }
                 else{
-                    self.noexitoso=true;
-                    setTimeout(()=>{
-                    self.noexitoso=false;
-                    }, 1500)
+                    self.toaster.failure("El Usuario ya estaba registrado en el evento")
                 }
             }).catch((error) => {
                 alert("ERROR Servidor ASISTIR EVENTOS");

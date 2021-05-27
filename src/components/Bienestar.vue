@@ -127,7 +127,7 @@
                     </thead>
                     <tbody v-for="locacion in locaciones" :key="locacion.id">
                       <tr id="usuarioslist">
-                        <td>{{ locacion.name_LOCATION }}</td>
+                        <td>{{ locacion}}</td>
                         <td class="">
                           <!--button that call collapse-->
                           <button
@@ -137,7 +137,7 @@
                             data-toggle="collapse"
                             :data-target="
                               '#details' +
-                              locacion.name_LOCATION.replace(/ /g, '')
+                              locacion.replace(/ /g, '')
                             "
                             aria-controls="details"
                             aria-expanded="false"
@@ -150,7 +150,7 @@
                             <!-- Borrar -->
                             <i
                               class="fa fa-minus-circle"
-                              @click="delLocation(locacion.name_LOCATION)"
+                              @click="delLocation(locacion)"
                             ></i>
                           </button>
                         </td>
@@ -158,7 +158,7 @@
                       <tr
                         class="collapse"
                         v-bind:id="[
-                          'details' + locacion.name_LOCATION.replace(/ /g, ''),
+                          'details' + locacion.replace(/ /g, ''),
                         ]"
                       >
                         <td class="p-3 text-left" colspan="5">
@@ -180,16 +180,16 @@
                               >
                                 <td
                                   v-if="
-                                    element.name_LOCATION ==
-                                    locacion.name_LOCATION
+                                    element[2] ==
+                                    locacion
                                   "
                                 >
-                                  {{ element.element_NAME }}
+                                  {{ element[1] }}
                                 </td>
                                 <td
                                   v-if="
-                                    element.name_LOCATION ==
-                                    locacion.name_LOCATION
+                                    element[2] ==
+                                    locacion
                                   "
                                   class=""
                                 >
@@ -237,6 +237,7 @@ import axios from "axios";
 import { usersfake } from "../fake-data";
 import Spinner from "./spinner/Spinner";
 import Vue from "vue";
+import {toaster} from '../components/toaster/toaster'
 export default {
   name: "Bienestar",
   components: {
@@ -254,6 +255,7 @@ export default {
       isLoadingLoc: true,
       isLoadingEle: true,
       color: "#76232f",
+      toaster
     };
   },
   methods: {
@@ -284,10 +286,10 @@ export default {
         )
         .then((result) => {
           this.$delete(this.elementos, index);
-          this.success("Elemento eliminado con exito");
+          this.toaster.success("Elemento eliminado con exito");
         })
         .catch((error) => {
-          this.failure("Error eliminando Elemento");
+          this.toaster.failure("Error eliminando Elemento");
         });
     },
     delLocation: function (value) {
@@ -303,37 +305,11 @@ export default {
         )
         .then((result) => {
           this.$delete(this.locaciones, index);
-          this.success("Locación eliminada con exito");
+          this.toaster.success("Locación eliminada con exito");
         })
         .catch((error) => {
-          this.failure("Error eliminando Locación");
+          this.toaster.failure("Error eliminando Locación");
         });
-    },
-    success(message) {
-      Vue.toasted.show(message, {
-        position: "bottom-right",
-        icon: "check",
-        type: "success",
-        action: {
-          text: "ok",
-          onClick: (e, toast) => {
-            toast.goAway(0);
-          },
-        },
-      });
-    },
-    failure(message) {
-      Vue.toasted.show(message, {
-        position: "bottom-right",
-        icon: "error_outline",
-        type: "error",
-        action: {
-          text: "ok",
-          onClick: (e, toast) => {
-            toast.goAway(0);
-          },
-        },
-      });
     },
   },
   created: function () {
@@ -349,7 +325,7 @@ export default {
         alert("ERROR Servidor MODERADOR");
       });
     axios
-      .get("https://wise-brook-308119.ue.r.appspot.com/locationssibu")
+      .get("https://wise-brook-308119.ue.r.appspot.com/Singlelsibu")
       .then((result) => {
         self.locaciones = result.data;
         self.isLoadingLoc = false;
@@ -359,7 +335,7 @@ export default {
       });
 
     axios
-      .get("https://wise-brook-308119.ue.r.appspot.com/elements")
+      .get("https://wise-brook-308119.ue.r.appspot.com/Singlelmts")
       .then((result) => {
         self.elementos = result.data;
         self.isLoadingEle = false;
