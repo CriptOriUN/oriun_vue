@@ -280,6 +280,7 @@ export default {
         // })
         // .indexOf(value);
       let index = this.elementos.deepIndexof(value)
+      alert(index[0])
       axios
         .delete(
           "https://wise-brook-308119.ue.r.appspot.com/noelements?id=" + value
@@ -298,8 +299,9 @@ export default {
       //     return e.name_LOCATION;
       //   })
       //   .indexOf(value); 
+      
       let index = this.locaciones.findIndex(value)
-
+      alert(index)
       axios
         .delete(
           "https://wise-brook-308119.ue.r.appspot.com/nolsibu?name=" + value
