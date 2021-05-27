@@ -107,20 +107,18 @@
         </div>
       </div>
     </div>
-    <Websocket />
   </div>
 </template>
 
 <script>
 import NavBar from "../components/header/NavBar";
-import Websocket from "../components/Websocket";
 import axios from "axios";
 
 export default {
   name: "Users",
   components: {
     NavBar,
-    Websocket,
+    
   },
   watch: {
     newNotification() {
