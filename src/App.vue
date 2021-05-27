@@ -1,18 +1,20 @@
 <template>
   <div id="app">
     <router-view v-on:logeado="logIn"></router-view>
+    <Websocket />
   </div>
 </template>
 
 <script>
-import Login from "./components/Login.vue";
-import NavBar from "./components/header/NavBar";
-import CreateEvent from "./components/CreateEvent.vue";
+import Websocket from "./components/Websocket";
 export default {
   data: function () {
     return {
       is_auth: localStorage.getItem("isAuth") || false,
     };
+  },
+  components: {
+    Websocket,
   },
 
   methods: {
@@ -58,6 +60,7 @@ export default {
   created: function () {
     // this.$router.push({name:"root"})
     this.updateAuth();
+    
   },
 };
 </script>
