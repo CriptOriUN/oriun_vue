@@ -127,7 +127,7 @@
                     </thead>
                     <tbody v-for="locacion in locaciones" :key="locacion.id">
                       <tr id="usuarioslist">
-                        <td>{{ locacion}}</td>
+                        <td>{{ locacion }}</td>
                         <td class="">
                           <!--button that call collapse-->
                           <button
@@ -136,8 +136,7 @@
                             type="button"
                             data-toggle="collapse"
                             :data-target="
-                              '#details' +
-                              locacion.replace(/ /g, '')
+                              '#details' + locacion.replace(/ /g, '')
                             "
                             aria-controls="details"
                             aria-expanded="false"
@@ -157,9 +156,7 @@
                       </tr>
                       <tr
                         class="collapse"
-                        v-bind:id="[
-                          'details' + locacion.replace(/ /g, ''),
-                        ]"
+                        v-bind:id="['details' + locacion.replace(/ /g, '')]"
                       >
                         <td class="p-3 text-left" colspan="5">
                           <table
@@ -178,21 +175,10 @@
                                 :key="element.id"
                                 id="usuarioslist"
                               >
-                                <td
-                                  v-if="
-                                    element[2] ==
-                                    locacion
-                                  "
-                                >
+                                <td v-if="element[2] == locacion">
                                   {{ element[1] }}
                                 </td>
-                                <td
-                                  v-if="
-                                    element[2] ==
-                                    locacion
-                                  "
-                                  class=""
-                                >
+                                <td v-if="element[2] == locacion" class="">
                                   <button
                                     class="btn btn-danger"
                                     title="Eliminar"
@@ -237,7 +223,7 @@ import axios from "axios";
 import { usersfake } from "../fake-data";
 import Spinner from "./spinner/Spinner";
 import Vue from "vue";
-import {toaster} from '../components/toaster/toaster'
+import { toaster } from "../components/toaster/toaster";
 export default {
   name: "Bienestar",
   components: {
@@ -255,7 +241,7 @@ export default {
       isLoadingLoc: true,
       isLoadingEle: true,
       color: "#76232f",
-      toaster
+      toaster,
     };
   },
   methods: {
@@ -274,13 +260,22 @@ export default {
       this.success("Moderador eliminado con exito");*/
     },
     delElement: function (value) {
-        // let index = this.elementos
-        // .map(function (e) {
-        //   return e.id_ELEMENT;
-        // })
-        // .indexOf(value);
-      let index = this.elementos.deepIndexof(value)
-      alert(index[0])
+      // let index = this.elementos
+      // .map(function (e) {
+      //   return e.id_ELEMENT;
+      // })
+      // .indexOf(value);
+      Array.prototype.deepIndexOf = function (val) {
+        for (var i = 0; i < this.length; i++) {
+          if (this[i] == val) return [i];
+          var insideIndex = this[i].deepIndexOf ? this[i].deepIndexOf(val) : -1;
+          if (insideIndex != -1) return [i].concat(insideIndex);
+        }
+        return -1;
+      };
+
+      let index = this.elementos.deepIndexof(value);
+
       axios
         .delete(
           "https://wise-brook-308119.ue.r.appspot.com/noelements?id=" + value
@@ -298,10 +293,11 @@ export default {
       //   .map(function (e) {
       //     return e.name_LOCATION;
       //   })
-      //   .indexOf(value); 
-      
-      let index = this.locaciones.findIndex(value)
-      alert(index)
+      //   .indexOf(value);
+
+      let filtro = (element) => element == value;
+      let index = this.locaciones.findIndex(filtro);
+      alert(index);
       axios
         .delete(
           "https://wise-brook-308119.ue.r.appspot.com/nolsibu?name=" + value
