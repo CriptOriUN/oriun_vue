@@ -196,7 +196,7 @@
                                   <button
                                     class="btn btn-danger"
                                     title="Eliminar"
-                                    @click="delElement(element.id_ELEMENT)"
+                                    @click="delElement(element[0])"
                                   >
                                     <!-- Borrar -->
                                     <i class="fa fa-minus-circle"></i>
@@ -274,18 +274,18 @@ export default {
       this.success("Moderador eliminado con exito");*/
     },
     delElement: function (value) {
-      let index = this.elementos
-        .map(function (e) {
-          return e.id_ELEMENT;
-        })
-        .indexOf(value);
-
+        // let index = this.elementos
+        // .map(function (e) {
+        //   return e.id_ELEMENT;
+        // })
+        // .indexOf(value);
+      let index = this.elementos.deepIndexof(value)
       axios
         .delete(
           "https://wise-brook-308119.ue.r.appspot.com/noelements?id=" + value
         )
         .then((result) => {
-          this.$delete(this.elementos, index);
+          this.$delete(this.elementos, index[0]);
           this.toaster.success("Elemento eliminado con exito");
         })
         .catch((error) => {
@@ -293,11 +293,12 @@ export default {
         });
     },
     delLocation: function (value) {
-      let index = this.locaciones
-        .map(function (e) {
-          return e.name_LOCATION;
-        })
-        .indexOf(value);
+      // let index = this.locaciones
+      //   .map(function (e) {
+      //     return e.name_LOCATION;
+      //   })
+      //   .indexOf(value); 
+      let index = this.locaciones.findIndex(value)
 
       axios
         .delete(
