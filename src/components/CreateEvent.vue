@@ -403,7 +403,7 @@ export default {
                 this.IDeventCreated = response.data.id_EVENT;
                 this.emitEvent();
                 alert("Evento Creado con exito");
-                // location.href = "../";
+                location.href = "../";
               })
               .catch((e) => console.log(e));
           }
@@ -435,7 +435,7 @@ export default {
               this.IDeventCreated = response.data.id_EVENT;
               this.emitEvent();
               alert("Evento Creado con exito");
-              // location.href = "../";
+              location.href = "../";
             })
             .catch((e) => console.log(e));
         }

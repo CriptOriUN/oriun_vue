@@ -48,8 +48,8 @@
                   <input id="eventsSelector" type="checkbox" v-model="switchChecked"/>
                   <span class="slider round"></span>
                 </label>
-                <p v-if="switchChecked" class="ml-3">Ver solo activos</p>
-                <p v-else class="ml-3">Ver todos</p>
+                <p v-if="switchChecked" class="ml-3">Mostrando todos</p>
+                <p v-else class="ml-3">Mostrando solo activos</p>
                 <!-- Buscador -->
                 <input
                   type="search"
@@ -236,13 +236,13 @@
                             <!-- <button class="btn btn-primary" title="Añadir"> -->
                             <i class="fa fa-plus-circle"></i>
                           </button>
-                          <button
+                          <!-- <button
                             v-on:click="delSuggestedSport(suggestedSport[0])"
                             class="btn btn-danger"
                             title="Descartar"
                           >
                             <i class="fa fa-minus-circle"></i>
-                          </button>
+                          </button> -->
                         </td>
                       </tr>
                     </tbody>
@@ -311,7 +311,7 @@ export default {
   },
   mounted: function () {
     axios
-      .get("https://wise-brook-308119.ue.r.appspot.com/events/")
+      .get("https://wise-brook-308119.ue.r.appspot.com/events?init=0&size=-1")
       .then((response) => (this.events = response.data));
     axios
       .get("https://wise-brook-308119.ue.r.appspot.com/eventsall/")
