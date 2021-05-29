@@ -7,14 +7,16 @@ import VueToast from 'vue-toast-notification';
 import Toasted from 'vue-toasted';
 //import { VueReCaptcha } from 'vue-recaptcha-v3';
 // import 'vue-toast-notification/dist/dist/theme-default.css';
-
 import router from './router'
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+
 Vue.use(vueRouter)
 Vue.use(VueToast);
 Vue.use(Toasted);
+Vue.use(BootstrapVue)
 //Vue.use(VueReCaptcha, {sitekey: '6Ld0AcsaAAAAAPuanlUIf4OjtLv1O0x8JUDf9DdV'});
 Vue.config.productionTip = false
-
+Vue.use(IconsPlugin)
 /* eslint-disable no-new */
 new Vue({
   router,

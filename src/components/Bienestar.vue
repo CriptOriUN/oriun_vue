@@ -47,6 +47,7 @@
                 <h2>Moderadores</h2>
                 <hr />
               </div>
+
               <div class="card-body">
                 <div v-if="isLoading">
                   <!--<p> Cargando... </p>-->
@@ -64,6 +65,7 @@
                     <thead class="thead-dark text-center">
                       <tr>
                         <th>USERNAME</th>
+                        <th>Activo</th>
                         <th></th>
                       </tr>
                     </thead>
@@ -75,6 +77,16 @@
                       >
                         <td v-if="usuario.rol_NAME == 'Moderador'">
                           {{ usuario.user_NAME }}
+                        </td>
+                        <td v-if="usuario.rol_NAME == 'Moderador'">
+                          <div class="form-check form-switch">
+                            <b-form-checkbox
+                              switch
+                              size="lg"
+                              v-model="usuario.enabled"
+                              @change="toggleenabled(usuario)"
+                            ></b-form-checkbox>
+                          </div>
                         </td>
                         <td v-if="usuario.rol_NAME == 'Moderador'" class="">
                           <button class="btn btn-danger" title="Eliminar">
@@ -309,6 +321,9 @@ export default {
         .catch((error) => {
           this.toaster.failure("Error eliminando Locación");
         });
+    },
+    toggleenabled(user) {
+      //alert(JSON.stringify(user))
     },
   },
   created: function () {
