@@ -18,8 +18,8 @@
             <div class="d-flex form-group">
               <p class="mb-0 pt-2 mr-2">Mostar</p>
               <select v-model="maxNumRows" class="form-control" id="maxRows">
-                <option value="-98">All</option>
-                <option value="5" selected="selected">5</option>
+                <option value="-1">All</option>
+                <option value="5" >5</option>
                 <option value="10">10</option>
                 <option value="20">20</option>
                 <option value="50">50</option>
@@ -87,7 +87,16 @@
                 <li id="prevLabel" class="page-item disabled" @click="goPrev()">
                   <a class="page-link">Previous</a>
                 </li>
-                <li v-for="page in pages" class="page-item" :key="page" :ref="'page'+page"><div class="page-link"  @click="currentPage=page">{{page}}</div></li>
+                <li
+                  v-for="page in pages"
+                  class="page-item"
+                  :key="page"
+                  :ref="'page' + page"
+                >
+                  <div class="page-link" @click="currentPage = page">
+                    {{ page }}
+                  </div>
+                </li>
                 <li id="nextLabel" class="page-item" @click="goNext()">
                   <a class="page-link">Next</a>
                 </li>
@@ -120,13 +129,14 @@ export default {
       username: "",
       sports: null,
       elements: [],
+      elementsAll: [],
       numElements: 3,
       search: "",
       initElementPage: 0,
-      maxNumRows: 5,
+      maxNumRows: 10,
       numPages: 3,
       pages: [],
-      currentPage: 1
+      currentPage: 1,
     };
   },
   watch: {
@@ -148,10 +158,15 @@ export default {
     this.$refs.mytoast.defaultPosition = "toast-bottom-right";
     this.getNumElements();
     this.getElements();
+    this.gelAllElements();
   },
   computed: {
     filterElements: function () {
-      return this.elements.filter((element) => {
+      var elementsArray = this.elements;
+      if(this.search != ""){
+        elementsArray = this.elementsAll;
+      }
+      return elementsArray.filter((element) => {
         if (
           element.name_SPORT.toLowerCase().match(this.search.toLowerCase()) ||
           element.name_LOCATION
@@ -166,67 +181,84 @@ export default {
   },
   methods: {
     getElements() {
-      this.initElementPage = (this.currentPage-1) * this.maxNumRows;
+      if (this.maxNumRows == -1) {
+        this.elements = this.elementsAll;
+      } else {
+        this.initElementPage = (this.currentPage - 1) * this.maxNumRows;
+        axios
+          .get(
+            // "http://localhost:8081/elements?init=" +
+            "https://wise-brook-308119.ue.r.appspot.com/elements?init=" +
+              this.initElementPage +
+              "&size=" +
+              this.maxNumRows
+          )
+          .then((response) => (this.elements = response.data));
+      }
+    },
+    gelAllElements() {
       axios
         .get(
           // "http://localhost:8081/elements?init=" +
-          "https://wise-brook-308119.ue.r.appspot.com/elements?init=" +
-            this.initElementPage +
-            "&size=" +
-            this.maxNumRows
+          "https://wise-brook-308119.ue.r.appspot.com/elements?init=0&size=-1"
         )
-        .then((response) => (this.elements = response.data));
+        .then((response) => (this.elementsAll = response.data));
     },
     getNumElements() {
       axios
         // .get("http://localhost:8081/nelements")
         .get("https://wise-brook-308119.ue.r.appspot.com/nelements")
-        .then((response) => (this.numElements = response.data, 
-                             this.auxListPages()));
+        .then(
+          (response) => (
+            (this.numElements = response.data), this.auxListPages()
+          )
+        );
     },
-    auxListPages(){
-      this.pages = []
-      this.numPages = Math.ceil(this.numElements/Math.abs(this.maxNumRows));
-      for (let i = 1; i <= this.numPages; i++) {
-        this.pages.push(i);  
+    auxListPages() {
+      this.pages = [];
+      if(this.maxNumRows == -1){
+        this.numPages = 1;
+      }else{
+        this.numPages = Math.ceil(this.numElements / Math.abs(this.maxNumRows));
       }
-      this.$nextTick(() =>{
+      for (let i = 1; i <= this.numPages; i++) {
+        this.pages.push(i);
+      }
+      this.$nextTick(() => {
         this.setPage();
       });
     },
-    setPage(){
-      var tempList = document.getElementById('labelPages').getElementsByClassName('active');
-      Array.prototype.forEach.call(tempList, function(element){
-        element.classList.remove('active');
+    setPage() {
+      var tempList = document
+        .getElementById("labelPages")
+        .getElementsByClassName("active");
+      Array.prototype.forEach.call(tempList, function (element) {
+        element.classList.remove("active");
       });
-      let item = this.$refs['page'+this.currentPage]
-      item[0].classList.add('active')
-      if(this.currentPage > 1 && this.numPages > 1){
-        console.log("1")
-        document.getElementById('prevLabel').classList.remove('disabled');
-      }else{
-        try{
-          document.getElementById('prevLabel').classList.add('disabled');
-        }catch(e){}
+      let item = this.$refs["page" + this.currentPage];
+      item[0].classList.add("active");
+      if (this.currentPage > 1 && this.numPages > 1) {
+        document.getElementById("prevLabel").classList.remove("disabled");
+      } else {
+        try {
+          document.getElementById("prevLabel").classList.add("disabled");
+        } catch (e) {}
       }
-      if(this.currentPage == this.numPages){
-        console.log("2")
-        document.getElementById('nextLabel').classList.add('disabled');
-      }else{
-        try{
-          document.getElementById('nextLabel').classList.remove('disabled');
-        }catch(e){}
+      if (this.currentPage == this.numPages) {
+        document.getElementById("nextLabel").classList.add("disabled");
+      } else {
+        try {
+          document.getElementById("nextLabel").classList.remove("disabled");
+        } catch (e) {}
       }
-      
-      
     },
-    goPrev(){
-      if(this.currentPage > 1){
+    goPrev() {
+      if (this.currentPage > 1) {
         this.currentPage = this.currentPage - 1;
       }
     },
-    goNext(){
-      if(this.currentPage < this.numPages){
+    goNext() {
+      if (this.currentPage < this.numPages) {
         this.currentPage = this.currentPage + 1;
       }
     },
@@ -391,10 +423,10 @@ table td:last-child {
   padding: 2px;
 }
 
-.pagination a{
+.pagination a {
   color: black;
 }
-.page-link:hover{
+.page-link:hover {
   cursor: pointer;
 }
 </style>
