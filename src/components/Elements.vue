@@ -49,7 +49,12 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="element in filterElements" :key="element.id_ELEMENT">
+                <tr v-if="loadingElements" style="height: 100px">
+                  <td class="align-middle text-center" colspan="4">
+                    <Spinner :color="color"/>
+                  </td>                 
+                </tr>
+                <tr v-else v-for="element in filterElements" :key="element.id_ELEMENT">
                   <td class="align-middle">{{ element.name_LOCATION }}</td>
                   <td class="align-middle">{{ element.element_NAME }}</td>
                   <td class="align-middle">
@@ -60,7 +65,7 @@
                       class="btn btn-success"
                       title="Solicitar"
                       v-if="element.available"
-                      v-on:click="requestElement(element)"
+                      v-on:click="getElementByID(element.id_ELEMENT)"
                     >
                       <!-- Borrar -->
                       <!-- <i class="fa fa-minus-circle"></i> -->
@@ -72,7 +77,7 @@
                   </td>
                 </tr>
               </tbody>
-              <tbody v-if="filterElements.length == 0">
+              <tbody v-if="filterElements.length == 0 && !loadingElements">
                 <tr style="height: 100px">
                   <td class="align-middle text-center" colspan="4">
                     No hay Implementos para mostrar
@@ -105,7 +110,6 @@
           </div>
         </div>
         <!-- MODAL -->
-        <vue-toastr ref="mytoast"></vue-toastr>
         <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
       </div>
     </div>
@@ -116,13 +120,15 @@
 import NavBar from "../components/header/NavBar";
 import axios from "axios";
 import ConfirmDialogue from "../components/modal/ConfirmDialogue";
+import {toaster} from './toaster/toaster'
+import Spinner from "../components/spinner/Spinner";
 
 export default {
   name: "CreateEvents",
   components: {
     NavBar,
     ConfirmDialogue,
-    "vue-toastr": window.VueToastr,
+    Spinner,
   },
   data: function () {
     return {
@@ -130,6 +136,7 @@ export default {
       sports: null,
       elements: [],
       elementsAll: [],
+      elementShow: null,
       numElements: 3,
       search: "",
       initElementPage: 0,
@@ -137,6 +144,9 @@ export default {
       numPages: 3,
       pages: [],
       currentPage: 1,
+      toaster,
+      loadingElements: true,
+      color: "#94B43B",
     };
   },
   watch: {
@@ -150,14 +160,16 @@ export default {
       this.setPage();
       // this.$refs['page'+this.currentPage].
     },
+    elementShow(){
+      this.requestElement(this.elementShow);
+    }
   },
   created: function () {
     this.username = this.$route.params.username;
-  },
-  mounted: function () {
-    this.$refs.mytoast.defaultPosition = "toast-bottom-right";
     this.getNumElements();
     this.getElements();
+  },
+  mounted: function () {
     this.gelAllElements();
   },
   computed: {
@@ -180,6 +192,12 @@ export default {
     },
   },
   methods: {
+    getElementByID(elementID){
+      axios
+        // .get("http://localhost:8081/MyElement?id=" + elementID)
+        .get("https://wise-brook-308119.ue.r.appspot.com/MyElement?id=" + elementID)
+        .then((response) => (this.elementShow = response.data));
+    },
     getElements() {
       if (this.maxNumRows == -1) {
         this.elements = this.elementsAll;
@@ -187,20 +205,20 @@ export default {
         this.initElementPage = (this.currentPage - 1) * this.maxNumRows;
         axios
           .get(
-            // "http://localhost:8081/elements?init=" +
-            "https://wise-brook-308119.ue.r.appspot.com/elements?init=" +
+            // "http://localhost:8081/Singlelmts?init=" +
+            "https://wise-brook-308119.ue.r.appspot.com/Singlelmts?init=" +
               this.initElementPage +
               "&size=" +
               this.maxNumRows
           )
-          .then((response) => (this.elements = response.data));
+          .then((response) => (this.elements = response.data, this.loadingElements = false));
       }
     },
     gelAllElements() {
       axios
         .get(
-          // "http://localhost:8081/elements?init=" +
-          "https://wise-brook-308119.ue.r.appspot.com/elements?init=0&size=-1"
+          // "http://localhost:8081/Singlelmts?init=0&size=-1"
+          "https://wise-brook-308119.ue.r.appspot.com/Singlelmts?init=0&size=-1"
         )
         .then((response) => (this.elementsAll = response.data));
     },
@@ -263,7 +281,7 @@ export default {
       }
     },
     async requestElement(element) {
-      // this.printHello()
+      console.log("element", element)
       const ok = await this.$refs.confirmDialogue.show({
         title: "Solicitar Elemento",
         message:
@@ -296,37 +314,14 @@ export default {
             .post
             // "http://localhost:8081/nosports?sport=" + String(sport.name_SPORT)
             ();
-          this.success(
+          this.toaster.success(
             "Solicitud realizada correctamente (No se está realizando ninguna acción)"
           );
         } catch (error) {
-          this.error("Error realizando solcitud");
+          // this.toaster.failure("Error realizando solcitud");
+          this.toaster.failure("Falta hacer post para solicitar elemento");
         }
       }
-    },
-    success(msg) {
-      this.$refs.mytoast.s({
-        msg: msg,
-        progressbar: false,
-      });
-    },
-    error(msg) {
-      this.$refs.mytoast.e({
-        msg: msg,
-        progressbar: false,
-      });
-    },
-    warning(msg) {
-      this.$refs.mytoast.w({
-        msg: msg,
-        progressbar: false,
-      });
-    },
-    info(msg) {
-      this.$refs.mytoast.i({
-        msg: msg,
-        progressbar: false,
-      });
     },
   },
 };
@@ -429,4 +424,6 @@ table td:last-child {
 .page-link:hover {
   cursor: pointer;
 }
+
+
 </style>

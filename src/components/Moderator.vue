@@ -45,7 +45,11 @@
               </div>
               <div class="row">
                 <label class="switch">
-                  <input id="eventsSelector" type="checkbox" v-model="switchChecked"/>
+                  <input
+                    id="eventsSelector"
+                    type="checkbox"
+                    v-model="switchChecked"
+                  />
                   <span class="slider round"></span>
                 </label>
                 <p v-if="switchChecked" class="ml-3">Mostrando todos</p>
@@ -71,7 +75,19 @@
                         <th></th>
                       </tr>
                     </thead>
-                    <tbody v-for="event in filterEvents" :key="event.id_EVENT" v-bind:id="event.id_EVENT">
+                    <tbody v-if="loadingEvents">
+                      <tr style="height: 100px">
+                        <td class="align-middle text-center" colspan="5">
+                          <Spinner :color="color" />
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tbody
+                      v-else
+                      v-for="event in filterEvents"
+                      :key="event.id_EVENT"
+                      v-bind:id="event.id_EVENT"
+                    >
                       <tr>
                         <td>{{ event.user_NAME }}</td>
                         <td>{{ event.event_INIT }}</td>
@@ -148,7 +164,7 @@
                         </td>
                       </tr>
                     </tbody>
-                    <tbody v-if="filterEvents.length == 0">
+                    <tbody v-if="filterEvents.length == 0 && !loadingEvents">
                       <tr style="height: 100px">
                         <td class="align-middle text-center" colspan="5">
                           No hay Eventos para mostrar
@@ -184,7 +200,13 @@
                       </tr>
                     </thead>
                     <tbody id="sportsTableRows">
+                      <tr v-if="loadingSports" style="height: 100px">
+                        <td class="align-middle text-center" colspan="2">
+                          <Spinner :color="color" />
+                        </td>
+                      </tr>
                       <tr
+                        v-else
                         v-for="(sport, index) in sportsData"
                         :key="index"
                         v-bind:id="[sport.name_SPORT]"
@@ -220,13 +242,19 @@
                       </tr>
                     </thead>
                     <tbody>
+                      <tr v-if="loadingSuggSports" style="height: 100px">
+                        <td class="align-middle text-center" colspan="3">
+                          <Spinner :color="color" />
+                        </td>
+                      </tr>
                       <tr
+                        v-else
                         v-for="(suggestedSport, index) in suggestedSports"
                         :key="index"
                         v-bind:id="'sugg' + suggestedSport[0]"
                       >
                         <td>{{ suggestedSport[0] }}</td>
-                        <td>{{ suggestedSport[1] }}</td>
+                        <td class="text-center">{{ suggestedSport[1] }}</td>
                         <td>
                           <button
                             v-on:click="addSport(suggestedSport[0])"
@@ -245,6 +273,14 @@
                           </button> -->
                         </td>
                       </tr>
+                      <tr
+                        v-if="suggestedSports.length == 0 && !loadingSuggSports"
+                        style="height: 100px"
+                      >
+                        <td class="align-middle text-center" colspan="3">
+                          No hay sugerencias para mostrar
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -254,7 +290,6 @@
         </div>
 
         <!-- MODAL -->
-        <vue-toastr ref="mytoast"></vue-toastr>
         <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
       </div>
 
@@ -275,15 +310,16 @@
 <script>
 import NavBarModerator from "../components/header/NavBarModerator.vue";
 import axios from "axios";
-import Vue from "vue";
 import ConfirmDialogue from "../components/modal/ConfirmDialogue";
+import { toaster } from "./toaster/toaster";
+import Spinner from "../components/spinner/Spinner";
 
 export default {
   name: "Moderator",
   components: {
     NavBarModerator,
     ConfirmDialogue,
-    "vue-toastr": window.VueToastr,
+    Spinner,
   },
 
   data: function () {
@@ -295,6 +331,11 @@ export default {
       suggestedSports: [],
       search: "",
       switchChecked: false,
+      toaster,
+      loadingEvents: true,
+      loadingSports: true,
+      loadingSuggSports: true,
+      color: "#76232F",
     };
   },
   watch: {
@@ -303,28 +344,43 @@ export default {
       handler(tab) {
         this.showTab();
       },
-    },  
-
+    },
   },
   created: function () {
     this.username = this.$route.params.username;
   },
   mounted: function () {
     axios
-      .get("https://wise-brook-308119.ue.r.appspot.com/events?init=0&size=-1")
+      // .get("https://wise-brook-308119.ue.r.appspot.com/events?init=0&size=-1")
+      .get("http://localhost:8081/events?init=0&size=-1")
       .then((response) => (this.events = response.data));
     axios
-      .get("https://wise-brook-308119.ue.r.appspot.com/eventsall/")
-      .then((response) => (this.allevents = response.data));
+      // .get("https://wise-brook-308119.ue.r.appspot.com/eventsall/")
+      .get("http://localhost:8081/eventsall/")
+      .then(
+        (response) => (
+          (this.allevents = response.data), (this.loadingEvents = false)
+        )
+      );
     axios
-      .get("https://wise-brook-308119.ue.r.appspot.com/sports/")
-      .then((response) => (this.sportsData = response.data));
+      // .get("https://wise-brook-308119.ue.r.appspot.com/sports/")
+      .get("http://localhost:8081/sports/")
+      .then(
+        (response) => (
+          (this.sportsData = response.data), (this.loadingSports = false)
+        )
+      );
 
     axios
-      .get("https://wise-brook-308119.ue.r.appspot.com/otherscount/")
-      .then((response) => (this.suggestedSports = response.data));
+      // .get("https://wise-brook-308119.ue.r.appspot.com/otherscount/")
+      .get("http://localhost:8081/otherscount/")
+      .then(
+        (response) => (
+          (this.suggestedSports = response.data),
+          (this.loadingSuggSports = false)
+        )
+      );
 
-    this.$refs.mytoast.defaultPosition = "toast-bottom-right";
     this.showTab();
   },
   methods: {
@@ -348,12 +404,12 @@ export default {
           row.innerHTML = table.lastChild.innerHTML;
           row.id = suggestedSport;
           row.firstChild.innerHTML = suggestedSport;
-          this.success("Deporte Registrado");
+          this.toaster.success("Deporte Registrado");
           setTimeout(() => {
             location.reload();
           }, 1000);
         } catch (error) {
-          this.error("Error registrando deporte");
+          this.toaster.failure("Error registrando deporte");
         }
       } else {
       }
@@ -372,18 +428,20 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "https://wise-brook-308119.ue.r.appspot.com/nosports?sport=" + String(sport.name_SPORT)
+            // "https://wise-brook-308119.ue.r.appspot.com/nosports?sport=" + String(sport.name_SPORT)
+            "http://localhost:8081/nosports?sport=" + String(sport.name_SPORT)
           );
           document.getElementById(sport.name_SPORT).remove();
-          this.success("Deporte Eliminado");
+          this.toaster.success("Deporte Eliminado");
           setTimeout(() => {
             location.reload();
           }, 1000);
         } catch (error) {
-          this.error("Error eliminando deporte");
-          this.warning(
+          this.toaster.failure("Error eliminando deporte");
+          this.toaster.info(
             "Intente eliminando primero los eventos asociados a este deporte"
           );
+          this.toaster.info("Revisar borrado en cascada en API");
         }
       }
     },
@@ -399,15 +457,17 @@ export default {
       // If you throw an error, the method will terminate here unless you surround it wil try/catch
       if (ok) {
         try {
-          await axios
-            .delete("https://wise-brook-308119.ue.r.appspot.com/NoEvent?id_event=" + event.id_EVENT)
+          await axios.delete(
+            "https://wise-brook-308119.ue.r.appspot.com/NoEvent?id_event=" +
+              event.id_EVENT
+          );
           document.getElementById(event.id_EVENT).remove();
-          this.success("Evento eliminado");
+          this.toaster.success("Evento eliminado");
           setTimeout(() => {
             location.reload();
           }, 1000);
         } catch (error) {
-          this.error("Error eliminando evento");
+          this.toaster.failure("Error eliminando evento");
         }
       } else {
       }
@@ -425,43 +485,18 @@ export default {
       // If you throw an error, the method will terminate here unless you surround it wil try/catch
       if (ok) {
         try {
-          console.log("Registrar evento - Error Intencionado", e);
+          console.log("Descartar sugerencia - Error Intencionado", e);
           document.getElementById(suggestedSport).remove();
-          this.success("Evento eliminado");
+          this.toaster.success("Sugerencia descartada");
           location.reload();
         } catch (error) {
-          this.error("Error descartando sugerencia");
-          this.warning(
-            "Intente eliminando primero los eventos asociados a este deporte"
+          this.toaster.failure("Error descartando sugerencia");
+          this.toaster.failure(
+            "Elimine primero los eventos asociados a este deporte"
           );
         }
       } else {
       }
-    },
-
-    success(msg) {
-      this.$refs.mytoast.s({
-        msg: msg,
-        progressbar: false,
-      });
-    },
-    error(msg) {
-      this.$refs.mytoast.e({
-        msg: msg,
-        progressbar: false,
-      });
-    },
-    warning(msg) {
-      this.$refs.mytoast.w({
-        msg: msg,
-        progressbar: false,
-      });
-    },
-    info(msg) {
-      this.$refs.mytoast.i({
-        msg: msg,
-        progressbar: false,
-      });
     },
     getParameterByName(name, url) {
       if (!url) url = window.location.href;
@@ -492,7 +527,7 @@ export default {
   computed: {
     filterEvents: function () {
       var target = this.events;
-      if(this.switchChecked){
+      if (this.switchChecked) {
         target = this.allevents;
       }
       return target.filter((event) => {
