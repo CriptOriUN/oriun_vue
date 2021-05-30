@@ -175,7 +175,6 @@ export default {
       if(this.search != ""){
         elementsArray = this.elementsAll;
       }
-      console.log("elements", this.elements)
       return elementsArray.filter((element) => {
         if (
           element.name_SPORT.toLowerCase().match(this.search.toLowerCase()) ||
@@ -196,12 +195,12 @@ export default {
         .get("https://wise-brook-308119.ue.r.appspot.com/MyElement?id=" + elementID)
         .then((response) => (this.elementShow = response.data));
     },
-    async getElements() {
+    getElements() {
       if (this.maxNumRows == -1) {
         this.elements = this.elementsAll;
       } else {
         this.initElementPage = (this.currentPage - 1) * this.maxNumRows;
-        await axios
+        axios
           .get(
             // "http://localhost:8081/Singlelmts?init=" +
             "https://wise-brook-308119.ue.r.appspot.com/Singlelmts?init=" +
@@ -209,7 +208,7 @@ export default {
               "&size=" +
               this.maxNumRows
           )
-          .then((response) => (this.elements = response.data, console.log("Get Elementos", response.data), this.loadingElements = false, console.log("loadingElements",this.loadingElements)));
+          .then((response) => (this.elements = response.data, this.loadingElements = false));
       }
     },
     getAllElements() {
