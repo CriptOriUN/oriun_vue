@@ -174,7 +174,6 @@ export default {
       var elementsArray = this.elements;
       if(this.search != ""){
         elementsArray = this.elementsAll;
-        console.log("elementsAll", this.elementsAll)
       }
       return elementsArray.filter((element) => {
         if (
@@ -196,7 +195,7 @@ export default {
         .get("https://wise-brook-308119.ue.r.appspot.com/MyElement?id=" + elementID)
         .then((response) => (this.elementShow = response.data));
     },
-    getElements() {
+    async getElements() {
       if (this.maxNumRows == -1) {
         this.elements = this.elementsAll;
       } else {
