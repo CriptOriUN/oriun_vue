@@ -209,7 +209,7 @@ export default {
               "&size=" +
               this.maxNumRows
           )
-          .then((response) => (this.elements = response.data, console.log("Get Elementos"), this.loadingElements = false));
+          .then((response) => (this.elements = response.data, console.log("Get Elementos", response.data), this.loadingElements = false, console.log("loadingElements",this.loadingElements)));
       }
     },
     getAllElements() {
