@@ -1,6 +1,7 @@
 <template>
   <div class="user">
     <NavBar :username="username" />
+    <Websocket />
     <div id="thewelcome">
       <h6>
         Hola,
@@ -113,12 +114,13 @@
 <script>
 import NavBar from "../components/header/NavBar";
 import axios from "axios";
+import Websocket from "../components/Websocket";
 
 export default {
   name: "Users",
   components: {
     NavBar,
-    
+    Websocket,
   },
   watch: {
     newNotification() {
@@ -166,7 +168,7 @@ export default {
     getEvents() {
       // console.log('codigo get')
       axios
-        .get("https://wise-brook-308119.ue.r.appspot.com/events?init=1&size=-1", self.username)
+        .get("http://localhost:8081/events?init=1&size=-1", self.username)
         .then((response) => {
           // axios
           //    .get("http://localhost:8081/events?init=1&size=-1/", self.username)
@@ -179,7 +181,7 @@ export default {
     getNotifications() {
       // console.log("codigo get");
       axios
-        .get("https://wise-brook-308119.ue.r.appspot.com/usernotifications/?user=" + this.username)
+        .get("http://localhost:8081/usernotifications/?user=" + this.username)
         .then((response) => {
           // axios
           //    .get("http://localhost:8081/usernotifications/?user="+ this.username)
