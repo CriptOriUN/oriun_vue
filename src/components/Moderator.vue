@@ -351,20 +351,20 @@ export default {
   },
   mounted: function () {
     axios
-      // .get("https://wise-brook-308119.ue.r.appspot.com/events?init=0&size=-1")
-      .get("http://localhost:8081/events?init=0&size=-1")
+      .get("https://wise-brook-308119.ue.r.appspot.com/events?init=0&size=-1")
+      // .get("http://localhost:8081/events?init=0&size=-1")
       .then((response) => (this.events = response.data));
     axios
-      // .get("https://wise-brook-308119.ue.r.appspot.com/eventsall/")
-      .get("http://localhost:8081/eventsall/")
+      .get("https://wise-brook-308119.ue.r.appspot.com/eventsall/")
+      // .get("http://localhost:8081/eventsall/")
       .then(
         (response) => (
           (this.allevents = response.data), (this.loadingEvents = false)
         )
       );
     axios
-      // .get("https://wise-brook-308119.ue.r.appspot.com/sports/")
-      .get("http://localhost:8081/sports/")
+      .get("https://wise-brook-308119.ue.r.appspot.com/sports/")
+      // .get("http://localhost:8081/sports/")
       .then(
         (response) => (
           (this.sportsData = response.data), (this.loadingSports = false)
@@ -372,8 +372,8 @@ export default {
       );
 
     axios
-      // .get("https://wise-brook-308119.ue.r.appspot.com/otherscount/")
-      .get("http://localhost:8081/otherscount/")
+      .get("https://wise-brook-308119.ue.r.appspot.com/otherscount/")
+      // .get("http://localhost:8081/otherscount/")
       .then(
         (response) => (
           (this.suggestedSports = response.data),
@@ -428,8 +428,8 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            // "https://wise-brook-308119.ue.r.appspot.com/nosports?sport=" + String(sport.name_SPORT)
-            "http://localhost:8081/nosports?sport=" + String(sport.name_SPORT)
+            "https://wise-brook-308119.ue.r.appspot.com/nosports?sport=" + String(sport.name_SPORT)
+            // "http://localhost:8081/nosports?sport=" + String(sport.name_SPORT)
           );
           document.getElementById(sport.name_SPORT).remove();
           this.toaster.success("Deporte Eliminado");
