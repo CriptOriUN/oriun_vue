@@ -168,9 +168,7 @@ export default {
     this.username = this.$route.params.username;
     this.getNumElements();
     this.getElements();
-  },
-  mounted: function () {
-    this.gelAllElements();
+    this.getAllElements();
   },
   computed: {
     filterElements: function () {
@@ -214,7 +212,7 @@ export default {
           .then((response) => (this.elements = response.data, this.loadingElements = false));
       }
     },
-    gelAllElements() {
+    getAllElements() {
       axios
         .get(
           // "http://localhost:8081/Singlelmts?init=0&size=-1"
