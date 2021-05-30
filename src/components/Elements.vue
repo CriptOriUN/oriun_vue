@@ -175,6 +175,7 @@ export default {
       if(this.search != ""){
         elementsArray = this.elementsAll;
       }
+      console.log("elements", this.elements)
       return elementsArray.filter((element) => {
         if (
           element.name_SPORT.toLowerCase().match(this.search.toLowerCase()) ||
@@ -200,7 +201,7 @@ export default {
         this.elements = this.elementsAll;
       } else {
         this.initElementPage = (this.currentPage - 1) * this.maxNumRows;
-        axios
+        await axios
           .get(
             // "http://localhost:8081/Singlelmts?init=" +
             "https://wise-brook-308119.ue.r.appspot.com/Singlelmts?init=" +
