@@ -139,7 +139,7 @@ export default {
       numElements: 3,
       search: "",
       initElementPage: 0,
-      maxNumRows: 10,
+      maxNumRows: 5,
       numPages: 3,
       pages: [],
       currentPage: 1,
