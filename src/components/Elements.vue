@@ -133,7 +133,6 @@ export default {
   data: function () {
     return {
       username: "",
-      sports: null,
       elements: [],
       elementsAll: [],
       elementShow: null,
@@ -175,6 +174,7 @@ export default {
       var elementsArray = this.elements;
       if(this.search != ""){
         elementsArray = this.elementsAll;
+        console.log("elementsAll", this.elementsAll)
       }
       return elementsArray.filter((element) => {
         if (
