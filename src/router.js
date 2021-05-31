@@ -12,12 +12,12 @@ import AddLocation from './components/AddLocation'
 import Searcher from './components/Searcher'
 import Elements from './components/Elements'
 import Confirmation from './components/Confirmation'
+import DispEspacio from './components/DispEspacio'
 
 const router = new vueRouter({
     mode: 'history',
     base: __dirname,
-    routes: [
-        {
+    routes: [{
             path: '/',
             name: "root",
             component: App
@@ -51,36 +51,41 @@ const router = new vueRouter({
             path: '/:username/bienestar',
             name: "Bienestar",
             component: Bienestar
-        }, 
+        },
         {
-            path:'/:username/registermoderator',
-            name: "RegisterModerator", 
+            path: '/:username/registermoderator',
+            name: "RegisterModerator",
             component: RegisterModerator
-        }, 
+        },
         {
-            path:'/:username/addstock',
-            name: "AddStock", 
+            path: '/:username/addstock',
+            name: "AddStock",
             component: AddStock
-        }, 
+        },
         {
-            path:'/:username/addlocation',
-            name: "AddLocation", 
+            path: '/:username/addlocation',
+            name: "AddLocation",
             component: AddLocation
-        }, 
+        },
         {
-            path:'/:username/searcher', 
-            name: "Searcher", 
+            path: '/:username/searcher',
+            name: "Searcher",
             component: Searcher
-        }, 
+        },
         {
-            path:'/:username/elements', 
-            name: "Elements", 
+            path: '/:username/elements',
+            name: "Elements",
             component: Elements
-        }, 
+        },
         {
-            path:'/confirm-account', 
-            name: "Confirmation", 
+            path: '/confirm-account',
+            name: "Confirmation",
             component: Confirmation
+        },
+        {
+            path: '/:username/DispEspacio',
+            name: "DispEspacio",
+            component: DispEspacio
         },
         // {
         //     path: '/:pathMatch(.*)*',

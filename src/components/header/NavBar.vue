@@ -32,9 +32,7 @@
               <router-link
                 :to="{ name: 'User', params: { username: this.username } }"
               >
-                <a href="# " class="nav-link btn-menu"
-                  >Inicio</a
-                >
+                <a href="# " class="nav-link btn-menu">Inicio</a>
               </router-link>
             </li>
             <li class="nav-item mx-4">
@@ -54,6 +52,18 @@
                 <a href="#" class="nav-link btn-menu">Crear Evento</a>
               </router-link>
             </li>
+
+             <li class="nav-item active mx-4">
+              <router-link
+                :to="{
+                  name: 'DispEspacio',
+                  params: { username: this.username },
+                }"
+              >
+                <a href="#" class="nav-link btn-menu">Disponibilidad de Espacio</a>
+              </router-link>
+            </li>
+
             <li class="nav-item mx-4">
               <router-link
                 :to="{ name: 'Searcher', params: { username: this.username } }"
@@ -187,9 +197,8 @@ export default {
       localStorage.removeItem("isAuth");
       localStorage.removeItem("current_username");
       localStorage.removeItem("my_role");
-      self.$router.push({ name: "root" }).catch(()=>{});
+      self.$router.push({ name: "root" }).catch(() => {});
     },
-
   },
   created: function () {
     this.role = localStorage.getItem("my_role");
