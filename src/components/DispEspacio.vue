@@ -234,7 +234,7 @@ export default {
 </script>
 
 <style>
-/* .horario {
+.horario {
   background-color: #94b43b00;
   border-radius: 10px;
 }
@@ -272,7 +272,7 @@ export default {
   --blue: #0000ff;
   --white: #fff;
   --shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-  --font-family: cursive;
+  /* --font-family: cursive; */
 }
 
 .dark {
@@ -301,7 +301,7 @@ html,
 body {
   height: 100vh;
   display: grid;
-  font-family: var(--font-family);
+  /* font-family: var(--font-family); */
   background-color: var(--bg-body);
 }
 
@@ -567,7 +567,7 @@ body {
 
 .loc {
   padding: 15px;
-} */
+}
 
 /*# sourceMappingURL=DispoEspacio.css.map */
 </style>
