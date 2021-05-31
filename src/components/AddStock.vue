@@ -260,7 +260,10 @@
                     ></textarea>
                   </div>
                   <div class="text-center pt-2 pb-1">
-                    <button type="submit" class="btn btn-primary">
+                    <button
+                      type="submit"
+                      class="btn btn-primary"
+                    >
                       Actualizar Inventario
                     </button>
                   </div>
@@ -328,9 +331,7 @@ export default {
     let self = this;
     // Get de la lista de elementos
     axios
-      .get(
-        "https://wise-brook-308119.ue.r.appspot.com/Singlelmts?init=-1&size=-1"
-      )
+      .get("https://wise-brook-308119.ue.r.appspot.com/Singlelmts?init=-1&size=-1")
       .then((result) => {
         self.elementos = result.data;
         self.isLoadingEle = false;
@@ -376,15 +377,12 @@ export default {
     submitFormElement: function () {
       var self = this;
       axios
-        .post(
-          "https://wise-brook-308119.ue.r.appspot.com/element",
-          self.stockform
-        )
+        .post("https://wise-brook-308119.ue.r.appspot.com/element", self.stockform)
         .then((result) => {
           self.stockform.name_LOCATION = self.stockform.name_SPORT = self.stockform.element_NAME = self.stockform.description = self.image =
             "";
           self.stockform.available = false;
-          self.toaster.success("Registro de elemento exitoso");
+          self.toaster.success("Registro de elemento exitoso")
         })
         .catch((error) => {
           self.toaster.failure("Error no esperado en el servidor.");
@@ -400,7 +398,7 @@ export default {
           self.updateform.name_LOCATION = self.updateform.name_SPORT = self.updateform.id_ELEMENT = self.updateform.description = self.image =
             "";
           self.updateform.available = false;
-          self.toaster.success("Elemento Actualizado con exito");
+          self.toaster.success("Elemento Actualizado con exito")
         })
         .catch((error) => {
           self.toaster.failure("Error no esperado en el servidor.");
@@ -439,9 +437,7 @@ export default {
       //alert(value)
       if (value != "") {
         axios
-          .get(
-            "https://wise-brook-308119.ue.r.appspot.com/MyElement?id=" + value
-          )
+          .get("https://wise-brook-308119.ue.r.appspot.com/MyElement?id=" + value)
           .then((result) => {
             console.log(result.data.name_LOCATION);
             this.lookother = true;
