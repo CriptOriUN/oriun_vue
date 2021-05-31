@@ -234,7 +234,7 @@ export default {
 </script>
 
 <style>
-.horario {
+/* .horario {
   background-color: #94b43b00;
   border-radius: 10px;
 }
@@ -313,7 +313,6 @@ body {
   padding: 20px;
   position: relative;
   overflow: hidden;
-  /* transform: scale(1.25); */
 }
 
 .light .calendar {
@@ -364,7 +363,6 @@ body {
   position: relative;
   cursor: pointer;
   animation: to-top 1s forwards;
-  /* border-radius: 50%; */
 }
 
 .calendar-days div span {
@@ -569,7 +567,7 @@ body {
 
 .loc {
   padding: 15px;
-}
+} */
 
 /*# sourceMappingURL=DispoEspacio.css.map */
 </style>
