@@ -11,7 +11,7 @@
          <div class="row w-100">
             <div class="col-md-6 mb-6">
                <div class="mis-eventos">
-                  <h4 class="titulo-eventos">Mis eventos de esta semana</h4>
+                  <h4 class="titulo-eventos">Mis eventos</h4>
                   <hr />
                   <div class="row ml-4 mr-4 d-flex bd-highlight">
                      <div
