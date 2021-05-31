@@ -187,14 +187,17 @@
                                 :key="element.id"
                                 id="usuarioslist"
                               >
-                                <td v-if="element[2] == locacion">
-                                  {{ element[1] }}
+                                <td v-if="element.name_LOCATION == locacion">
+                                  {{ element.element_NAME }}
                                 </td>
-                                <td v-if="element[2] == locacion" class="">
+                                <td
+                                  v-if="element.name_LOCATION == locacion"
+                                  class=""
+                                >
                                   <button
                                     class="btn btn-danger"
                                     title="Eliminar"
-                                    @click="delElement(element[0])"
+                                    @click="delElement(element.id_ELEMENT)"
                                   >
                                     <!-- Borrar -->
                                     <i class="fa fa-minus-circle"></i>
@@ -272,28 +275,28 @@ export default {
       this.success("Moderador eliminado con exito");*/
     },
     delElement: function (value) {
-      // let index = this.elementos
-      // .map(function (e) {
-      //   return e.id_ELEMENT;
-      // })
-      // .indexOf(value);
-      Array.prototype.deepIndexOf = function (val) {
-        for (var i = 0; i < this.length; i++) {
-          if (this[i] == val) return [i];
-          var insideIndex = this[i].deepIndexOf ? this[i].deepIndexOf(val) : -1;
-          if (insideIndex != -1) return [i].concat(insideIndex);
-        }
-        return -1;
-      };
+      let index = this.elementos
+        .map(function (e) {
+          return e.id_ELEMENT;
+        })
+        .indexOf(value);
+      // Array.prototype.deepIndexOf = function (val) {
+      //   for (var i = 0; i < this.length; i++) {
+      //     if (this[i] == val) return [i];
+      //     var insideIndex = this[i].deepIndexOf ? this[i].deepIndexOf(val) : -1;
+      //     if (insideIndex != -1) return [i].concat(insideIndex);
+      //   }
+      //   return -1;
+      // };
 
-      let index = this.elementos.deepIndexOf(value);
+      // let index = this.elementos.deepIndexOf(value);
 
       axios
         .delete(
           "https://wise-brook-308119.ue.r.appspot.com/noelements?id=" + value
         )
         .then((result) => {
-          this.$delete(this.elementos, index[0]);
+          this.$delete(this.elementos, index);
           this.toaster.success("Elemento eliminado con exito");
         })
         .catch((error) => {
@@ -339,7 +342,9 @@ export default {
         alert("ERROR Servidor MODERADOR");
       });
     axios
-      .get("https://wise-brook-308119.ue.r.appspot.com/Singlelsibu")
+      .get(
+        "https://wise-brook-308119.ue.r.appspot.com/Singlelsibu?init=-1&size=-1"
+      )
       .then((result) => {
         self.locaciones = result.data;
         self.isLoadingLoc = false;
@@ -349,7 +354,9 @@ export default {
       });
 
     axios
-      .get("https://wise-brook-308119.ue.r.appspot.com/Singlelmts")
+      .get(
+        "https://wise-brook-308119.ue.r.appspot.com/Singlelmts?init=-1&size=-1"
+      )
       .then((result) => {
         self.elementos = result.data;
         self.isLoadingEle = false;

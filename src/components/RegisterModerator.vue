@@ -153,6 +153,10 @@ button,
   margin-bottom: 20px;
 }
 
+button:hover {
+  background-color: gray;
+}
+
 .form-control {
   border-radius: 10px;
   width: 80%;

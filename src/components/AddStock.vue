@@ -49,7 +49,10 @@
               role="tabpanel"
               aria-labelledby="pills-login-tab"
             >
-              <Spinner :color="color" v-if="isLoadingLoc && isLoadingSports && isLoadingEle" />
+              <Spinner
+                :color="color"
+                v-if="isLoadingLoc && isLoadingSports && isLoadingEle"
+              />
               <form v-else v-on:submit.prevent="submitFormElement">
                 <div class="form-group">
                   <input
@@ -147,9 +150,6 @@
                   </button>
                 </div>
               </form>
-              <div class="pb-5 my-check" v-if="exitoso == true">
-                El elemento fue registrado con exito
-              </div>
             </div>
 
             <!--Pill de actualizacion-->
@@ -162,9 +162,7 @@
               <form v-on:submit.prevent="updateFormElement">
                 <Spinner :color="color" v-if="isLoadingEle" />
                 <div v-else class="form-group">
-                  <label for="Elemento " class="titulo_bln my-check"
-                    >Elemento</label
-                  >
+                  <label class="titulo_bln my-check">Elemento</label>
                   <select
                     name=""
                     class="form-control"
@@ -241,7 +239,7 @@
                   </div>
                   <div class="form-group">
                     <div class="my-check">
-                      <label for="locationimage">Imagen: </label>
+                      <label>Imagen: </label>
                       <input
                         type="file"
                         id="locationimage"
@@ -262,19 +260,12 @@
                     ></textarea>
                   </div>
                   <div class="text-center pt-2 pb-1">
-                    <button
-                      type="submit"
-                      class="btn btn-primary"
-                      v-on:click="getAdd2"
-                    >
+                    <button type="submit" class="btn btn-primary">
                       Actualizar Inventario
                     </button>
                   </div>
                 </div>
               </form>
-              <div class="pb-5 my-check" v-if="exitoso == true">
-                El elemento fue actualizado con exito
-              </div>
             </div>
           </div>
         </div>
@@ -289,6 +280,7 @@ import axios from "axios";
 import Spinner from "../components/spinner/Spinner";
 //import {elementsfake} from '../fake-data'
 //import {locationsfake} from '../fake-data'
+import { toaster } from "./toaster/toaster";
 export default {
   name: "AddStock",
   components: {
@@ -318,7 +310,6 @@ export default {
       deportes: [],
       elementos: [],
       username: "",
-      exitoso: false,
       image: "",
       imageupd: "",
       isLoadingEle: true,
@@ -328,7 +319,8 @@ export default {
       //elementsfake ,
       selectedindex: "",
       color: "#94B43B",
-      //locationsfake
+      //locationsfake ,
+      toaster,
     };
   },
   created: function () {
@@ -336,7 +328,9 @@ export default {
     let self = this;
     // Get de la lista de elementos
     axios
-      .get("https://wise-brook-308119.ue.r.appspot.com/elements")
+      .get(
+        "https://wise-brook-308119.ue.r.appspot.com/Singlelmts?init=-1&size=-1"
+      )
       .then((result) => {
         self.elementos = result.data;
         self.isLoadingEle = false;
@@ -390,13 +384,10 @@ export default {
           self.stockform.name_LOCATION = self.stockform.name_SPORT = self.stockform.element_NAME = self.stockform.description = self.image =
             "";
           self.stockform.available = false;
-          self.exitoso = true;
-          setTimeout(() => {
-            self.exitoso = false;
-          }, 1500);
+          self.toaster.success("Registro de elemento exitoso");
         })
         .catch((error) => {
-          alert("Error no esperado en el servidor.");
+          self.toaster.failure("Error no esperado en el servidor.");
         });
     },
 
@@ -409,13 +400,10 @@ export default {
           self.updateform.name_LOCATION = self.updateform.name_SPORT = self.updateform.id_ELEMENT = self.updateform.description = self.image =
             "";
           self.updateform.available = false;
-          self.exitoso = true;
-          setTimeout(() => {
-            self.exitoso = false;
-          }, 1500);
+          self.toaster.success("Elemento Actualizado con exito");
         })
         .catch((error) => {
-          alert("Error no esperado en el servidor.");
+          self.toaster.failure("Error no esperado en el servidor.");
         });
     },
 
@@ -448,35 +436,58 @@ export default {
   // verifica las cosas que se hacen al seleccionar el elemento
   watch: {
     "updateform.id_ELEMENT"(value) {
-      this.selectedindex = this.elementos
-        .map(function (e) {
-          return e.id_ELEMENT;
-        })
-        .indexOf(value);
-      //alert(this.selectedindex);
+      //alert(value)
       if (value != "") {
-        this.lookother = true;
-        this.updateform.name_LOCATION = this.elementos[
-          this.selectedindex
-        ].name_LOCATION;
-        this.updateform.name_SPORT = this.elementos[
-          this.selectedindex
-        ].name_SPORT;
-        this.updateform.available = this.elementos[
-          this.selectedindex
-        ].available;
-        this.updateform.description = this.elementos[
-          this.selectedindex
-        ].description;
-        this.updateform.element_IMAGE = this.elementos[
-          this.selectedindex
-        ].element_IMAGE;
-        this.imageupd =
-          "data:image/png;base64," +
-          this.elementos[this.selectedindex].element_IMAGE;
+        axios
+          .get(
+            "https://wise-brook-308119.ue.r.appspot.com/MyElement?id=" + value
+          )
+          .then((result) => {
+            console.log(result.data.name_LOCATION);
+            this.lookother = true;
+            this.updateform.name_LOCATION = result.data.name_LOCATION;
+            this.updateform.name_SPORT = result.data.name_SPORT;
+            this.updateform.available = result.data.available;
+            this.updateform.description = result.data.description;
+            this.updateform.element_IMAGE = result.data.element_IMAGE;
+            this.imageupd =
+              "data:image/png;base64," + result.data.element_IMAGE;
+          })
+          .catch((error) => {
+            toaster.failure("Hubo un error de busqueda en el sistema");
+          });
       } else {
         this.lookother = false;
       }
+      // this.selectedindex = this.elementos
+      //   .map(function (e) {
+      //     return e.id_ELEMENT;
+      //   })
+      //   .indexOf(value);
+      // //alert(this.selectedindex);
+      // if (value != "") {
+      //   this.lookother = true;
+      //   this.updateform.name_LOCATION = this.elementos[
+      //     this.selectedindex
+      //   ].name_LOCATION;
+      //   this.updateform.name_SPORT = this.elementos[
+      //     this.selectedindex
+      //   ].name_SPORT;
+      //   this.updateform.available = this.elementos[
+      //     this.selectedindex
+      //   ].available;
+      //   this.updateform.description = this.elementos[
+      //     this.selectedindex
+      //   ].description;
+      //   this.updateform.element_IMAGE = this.elementos[
+      //     this.selectedindex
+      //   ].element_IMAGE;
+      //   this.imageupd =
+      //     "data:image/png;base64," +
+      //     this.elementos[this.selectedindex].element_IMAGE;
+      // } else {
+      //   this.lookother = false;
+      // }
     },
   },
 };
@@ -512,6 +523,10 @@ button,
   margin-top: 40px;
   width: 80%;
   margin-bottom: 20px;
+}
+
+button:hover {
+  background-color: gray;
 }
 
 .form-control {

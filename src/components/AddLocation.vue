@@ -3,74 +3,182 @@
     <NavBar :username="username" />
     <div class="container pt-4 text-center">
       <div class="pb-5">
-        <h2>Agregar Locación</h2>
+        <h2>Agregar y Modificar Locacion</h2>
       </div>
+
+      <!--Guia para llevar a cada Pill-->
       <div class="card mx-auto">
-        <div class="title">
-          <br />
-        </div>
-        <form v-on:submit.prevent="submitFormLocation">
-          <div class="form-group">
-            <input
-              type="text"
-              name="locationname"
-              id="name"
-              class="form-control"
-              placeholder="Nombre Locacion"
-              v-model="locationform.name_LOCATION"
-              required
-              autofocus
-            />
-          </div>
-          <div class="form-group">
-            <div class="form-check form-switch my-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="flexSwitchCheckDefault"
-                v-model="locationform.open"
-              />
-              <label class="form-check-label" for="flexSwitchCheckDefault"
-                >Abierto</label
+        <div class="card-header border-bottom-0 bg-transparent">
+          <ul
+            class="nav nav-tabs justify-content-center"
+            id="pills-tab"
+            role="tablist"
+          >
+            <li class="nav-item text-center" id="login-tab">
+              <a
+                class="nav-link active text-primary"
+                id="pills-login-tab"
+                data-toggle="pill"
+                href="#pills-login"
+                role="tab"
+                aria-controls="pills-login"
+                aria-selected="true"
+                >Agregar</a
               >
+            </li>
+            <li class="nav-item text-center">
+              <a
+                class="nav-link text-primary"
+                id="pills-register-tab"
+                data-toggle="pill"
+                href="#pills-register"
+                role="tab"
+                aria-controls="pills-register"
+                aria-selected="false"
+                >Actualizar</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="card-body pb-4">
+          <!--Pill de creacion-->
+          <div class="tab-content" id="pills-tabContent">
+            <div
+              class="tab-pane fade show active"
+              id="pills-login"
+              role="tabpanel"
+              aria-labelledby="pills-login-tab"
+            >
+              <form v-on:submit.prevent="submitFormLocation">
+                <div class="form-group">
+                  <input
+                    type="text"
+                    name="locationname"
+                    id="name"
+                    class="form-control"
+                    placeholder="Nombre Locacion"
+                    v-model="locationform.name_LOCATION"
+                    required
+                    autofocus
+                  />
+                </div>
+                <div class="form-group">
+                  <div class="form-check form-switch my-check">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="flexSwitchCheckDefault"
+                      v-model="locationform.open"
+                    />
+                    <label class="form-check-label" for="flexSwitchCheckDefault"
+                      >Abierto</label
+                    >
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="my-check">
+                    <label for="locationimage">Imagen: </label>
+                    <input
+                      type="file"
+                      id="locationimage"
+                      name="locationimage"
+                      accept="image/*"
+                      @change="fileSelected"
+                      required
+                    />
+                  </div>
+                  <img v-if="image" :src="image" />
+                </div>
+                <div class="text-center pt-2 pb-1">
+                  <button type="submit" class="btn btn-primary">
+                    Añadir Locacion
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!--Pill de actualizacion-->
+            <div
+              class="tab-pane fade"
+              id="pills-register"
+              role="tabpanel"
+              aria-labelledby="pills-register-tab"
+            >
+              <form v-on:submit.prevent="submitupdlocationform">
+                <Spinner :color="color" v-if="isLoadingLoc" />
+                <div v-else class="form-group">
+                  <label class="titulo_bln my-check">Locación</label>
+                  <select
+                    name=""
+                    class="form-control"
+                    id="Elemento"
+                    v-model="updatelocationform.name_LOCATION"
+                    required
+                  >
+                    <option disabled value="">Seleccione una locación</option>
+                    <option
+                      v-for="locacion in locaciones"
+                      :key="locacion.id"
+                      :value="locacion"
+                    >
+                      {{ locacion }}
+                    </option>
+                  </select>
+                  <div v-if="lookother">
+                    <div class="form-group">
+                      <div class="form-check form-switch my-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="flexSwitchCheckDefault"
+                          v-model="updatelocationform.open"
+                        />
+                        <label
+                          class="form-check-label"
+                          for="flexSwitchCheckDefault"
+                          >Abierto</label
+                        >
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="my-check">
+                        <label for="locationimage">Imagen: </label>
+                        <input
+                          type="file"
+                          id="locationimage"
+                          name="locationimage"
+                          accept="image/*"
+                          @change="fileSelectedupd"
+                        />
+                      </div>
+                      <img v-if="imageupd" :src="imageupd" />
+                    </div>
+                    <div class="text-center pt-2 pb-1">
+                      <button type="submit" class="btn btn-primary">
+                        Actualizar Inventario
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
-          <div class="form-group">
-            <div class="my-check">
-              <label for="locationimage">Imagen: </label>
-              <input
-                type="file"
-                id="locationimage"
-                name="locationimage"
-                accept="image/*"
-                @change="fileSelected"
-                required
-              />
-            </div>
-            <img v-if="image" :src="image" />
-          </div>
-          <div class="text-center pt-2 pb-1">
-            <button type="submit" class="btn btn-primary">
-              Añadir Locacion
-            </button>
-          </div>
-        </form>
-        <div class="pb-5 my-check" v-if="exitoso == true">
-          La Locacion fue regitrada con exito
         </div>
       </div>
     </div>
   </div>
-</template> 
+</template>
 
 <script>
 import NavBar from "../components/header/NavBar";
 import axios from "axios";
-import {toaster} from './toaster/toaster'
+import { toaster } from "./toaster/toaster";
+import Spinner from "./spinner/Spinner";
 export default {
   name: "AddLocation",
   components: {
     NavBar,
+    Spinner,
   },
   data: function () {
     return {
@@ -79,14 +187,36 @@ export default {
         open: false,
         image_LOCATION: "",
       },
+      updatelocationform: {
+        name_LOCATION: "",
+        open: false,
+        image_LOCATION: "",
+      },
       username: "",
-      exitoso: false,
       image: "",
-      toaster
+      toaster,
+      locaciones: [],
+      lookother: false,
+      isLoadingLoc: true,
+      color: "#94B43B",
+      selectedindex: "",
+      imageupd: "",
     };
   },
   created: function () {
     this.username = this.$route.params.username;
+    let self = this;
+    axios
+      .get(
+        "https://wise-brook-308119.ue.r.appspot.com/Singlelsibu?init=-1&size=-1"
+      )
+      .then((result) => {
+        self.locaciones = result.data;
+        self.isLoadingLoc = false;
+      })
+      .catch((error) => {
+        alert("ERROR Servidor LOCACION");
+      });
   },
   methods: {
     getAdd: function () {
@@ -95,7 +225,6 @@ export default {
     },
     submitFormLocation: function () {
       var self = this;
-      self.toaster.success("hola")
       axios
         .post(
           "https://wise-brook-308119.ue.r.appspot.com/glocationsibu",
@@ -104,13 +233,33 @@ export default {
         .then((result) => {
           self.locationform.name_LOCATION = "";
           self.locationform.open = false;
-          self.exitoso = true;
-          setTimeout(() => {
-            self.exitoso = false;
-          }, 1500);
+          this.toaster.success("Locacion Agregada con exito");
         })
         .catch((error) => {
-          alert("Error no esperado en el servidor.");
+          this.toaster.failure(
+            "Error en el sistema, la locacion no se registro con exito"
+          );
+        });
+    },
+    submitupdlocationform: function () {
+      var self = this;
+      axios
+        .put(
+          "https://wise-brook-308119.ue.r.appspot.com/updlocation",
+          self.updatelocationform
+        )
+        .then((result) => {
+          //self.locaciones[self.selectedindex] = self.updatelocationform
+          //alert(JSON.stringify(self.locaciones[self.selectedindex]))
+          self.updatelocationform.name_LOCATION = "";
+          self.updatelocationform.open = false;
+          self.toaster.success("Locacion Actualizada con exito");
+          self.lookother = false;
+        })
+        .catch((error) => {
+          this.toaster.failure(
+            "Error en el sistema, la locacion no se actualizo con exito"
+          );
         });
     },
     fileSelected(event) {
@@ -123,6 +272,42 @@ export default {
       this.image = event.target.result;
       let imagen = event.target.result.split(",", 2);
       this.locationform.image_LOCATION = imagen[1];
+    },
+    // SEleccion de imagen de actualizacion
+    fileSelectedupd(event) {
+      const fileupd = event.target.files.item(0);
+      const readerupd = new FileReader();
+      readerupd.addEventListener("load", this.imageLoadedupd);
+      readerupd.readAsDataURL(fileupd);
+    },
+    imageLoadedupd(event) {
+      this.imageupd = event.target.result;
+      let imagen = event.target.result.split(",", 2);
+      this.updatelocationform.image_LOCATION = imagen[1];
+    },
+  },
+  watch: {
+    "updatelocationform.name_LOCATION"(value) {
+      if (value != "") {
+        axios
+          .get(
+            "https://wise-brook-308119.ue.r.appspot.com/myLSbyId/?name=" + value
+          )
+          .then((result) => {
+            this.lookother = true;
+
+            this.updatelocationform.open = result.data.open;
+
+            this.updatelocationform.image_LOCATION = result.data.image_LOCATION;
+            this.imageupd =
+              "data:image/png;base64," + result.data.image_LOCATION;
+          })
+          .catch((error) => {
+            toaster.failure("Hubo un error de busqueda en el sistema");
+          });
+      } else {
+        this.lookother = false;
+      }
     },
   },
 };
@@ -155,6 +340,10 @@ button,
   margin-top: 40px;
   width: 80%;
   margin-bottom: 20px;
+}
+
+button:hover {
+  background-color: gray;
 }
 
 .form-control {
@@ -193,7 +382,7 @@ li.nav-item {
 }
 
 .nav-link {
-  background-color: #466b3f;
+  background-color: #76232f;
   border-bottom: 1px;
 }
 
