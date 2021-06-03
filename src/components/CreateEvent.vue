@@ -560,6 +560,9 @@ export default {
   border: 1px solid;
   margin-top: -15px;
 }
+.nombre-lugar:focus {
+  color: green;
+}
 
 .sportsList li {
   cursor: pointer;
