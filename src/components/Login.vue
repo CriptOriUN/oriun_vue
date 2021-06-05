@@ -177,15 +177,17 @@
         </div>
       </div>
     </div>
+    <MySocialChat />
   </div>
 </template> 
 
 <script>
 import axios from "axios";
 import VueHcaptcha from "@hcaptcha/vue-hcaptcha";
+import MySocialChat from "../components/social-chat/MySocialChat";
 export default {
   name: "Login",
-  components: { VueHcaptcha },
+  components: { VueHcaptcha, MySocialChat },
   data: function () {
     return {
       rules: [
@@ -233,7 +235,8 @@ export default {
         var self = this;
         axios
           .get(
-            "https://wise-brook-308119.ue.r.appspot.com/userstate?user=" + self.loginform.user_name
+            "https://wise-brook-308119.ue.r.appspot.com/userstate?user=" +
+              self.loginform.user_name
           )
           .then((result) => {
             if (result.data) {

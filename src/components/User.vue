@@ -108,6 +108,7 @@
         </div>
       </div>
     </div>
+    <MySocialChat />
   </div>
 </template>
 
@@ -115,12 +116,13 @@
 import NavBar from "../components/header/NavBar";
 import axios from "axios";
 import Websocket from "../components/Websocket";
-
+import MySocialChat from "../components/social-chat/MySocialChat";
 export default {
   name: "Users",
   components: {
     NavBar,
     Websocket,
+    MySocialChat,
   },
   watch: {
     newNotification() {

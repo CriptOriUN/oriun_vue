@@ -304,6 +304,7 @@
         />
       </div>
     </div>
+    <MySocialChat />
   </div>
 </template> 
 
@@ -313,13 +314,14 @@ import axios from "axios";
 import ConfirmDialogue from "../components/modal/ConfirmDialogue";
 import { toaster } from "./toaster/toaster";
 import Spinner from "../components/spinner/Spinner";
-
+import MySocialChat from "../components/social-chat/MySocialChat";
 export default {
   name: "Moderator",
   components: {
     NavBarModerator,
     ConfirmDialogue,
     Spinner,
+    MySocialChat,
   },
 
   data: function () {

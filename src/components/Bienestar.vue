@@ -229,6 +229,7 @@
         />
       </div>
     </div>
+    <MySocialChat />
   </div>
 </template> 
 
@@ -239,12 +240,14 @@ import { usersfake } from "../fake-data";
 import Spinner from "./spinner/Spinner";
 import Vue from "vue";
 import { toaster } from "../components/toaster/toaster";
+import MySocialChat from "../components/social-chat/MySocialChat";
 export default {
   name: "Bienestar",
   components: {
     NavBar,
     usersfake,
     Spinner,
+    MySocialChat,
   },
   data: function () {
     return {
