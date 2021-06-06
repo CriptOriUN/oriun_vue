@@ -278,6 +278,11 @@ export default {
     } else {
       var mes = _mes.toString;
     }
+    if(dia < 10){
+       var dia = "0" + dia;
+    }else{
+       var dia = dia.toString;
+    }
     document.getElementById("fecha_incio_ce").min =
       anio + "-" + mes + "-" + dia;
     document.getElementById("fecha_fin_ce").min = anio + "-" + mes + "-" + dia;
