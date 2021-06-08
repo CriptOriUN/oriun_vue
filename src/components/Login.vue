@@ -79,7 +79,10 @@
                   >
                   </vue-hcaptcha>
                 </div>
-                <div class="text-center pt-4">
+                <div v-if="loadingElements" class="text-center pt-4">
+                  <Spinner :color="color"/>
+                </div>
+                <div class="text-center">
                   <button type="submit" class="btn btn-primary">Login</button>
                 </div>
 
@@ -185,9 +188,11 @@
 import axios from "axios";
 import VueHcaptcha from "@hcaptcha/vue-hcaptcha";
 import MySocialChat from "../components/social-chat/MySocialChat";
+import Spinner from "../components/spinner/Spinner";
+
 export default {
   name: "Login",
-  components: { VueHcaptcha, MySocialChat },
+  components: { VueHcaptcha, MySocialChat, Spinner, },
   data: function () {
     return {
       rules: [
@@ -208,6 +213,8 @@ export default {
       },
       validregex: false,
       hCaptchaVerified: false,
+      loadingElements: false,
+      color: "#466B3F",
     };
   },
   computed: {
@@ -233,6 +240,7 @@ export default {
       //alert(JSON.stringify(this.loginform))
       if (this.hCaptchaVerified == true) {
         var self = this;
+        this.loadingElements = true;
         axios
           .get(
             "https://oriun-api.herokuapp.com/userstate?user=" +
@@ -251,6 +259,7 @@ export default {
                     self.loginform.user_name,
                     result.data.ROL_NAME
                   );
+                  this.loadingElements =  false;
                 })
                 .catch((error) => {
                   if (error.response.status == "404")

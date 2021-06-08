@@ -4,7 +4,7 @@
     <SocialChat :attendants="attendants" class="oriun-chat">
       <p slot="header">Haz click en uno de nuestros representantes para chatear con el.</p>
       <template v-slot:button="{ open }">
-        <span v-show="!open">Necesitas Ayuda!</span>
+        <span v-show="!open">Necesitas Ayuda?</span>
         <span v-show="open">Cerrar</span>
       </template>
       <small slot="footer">Servicio Disponible las 24 Horas</small>
