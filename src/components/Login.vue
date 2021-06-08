@@ -235,14 +235,14 @@ export default {
         var self = this;
         axios
           .get(
-            "https://wise-brook-308119.ue.r.appspot.com/userstate?user=" +
+            "https://oriun-api.herokuapp.com/userstate?user=" +
               self.loginform.user_name
           )
           .then((result) => {
             if (result.data) {
               axios
                 .post(
-                  "https://wise-brook-308119.ue.r.appspot.com/userlog/",
+                  "https://oriun-api.herokuapp.com/userlog/",
                   self.loginform
                 )
                 .then((result) => {
@@ -275,7 +275,7 @@ export default {
         if (self.validregex == true) {
           axios
             .post(
-              "https://wise-brook-308119.ue.r.appspot.com/userreg?user=" +
+              "https://oriun-api.herokuapp.com/userreg?user=" +
                 self.registerform.user_name +
                 "&password=" +
                 self.registerform.password +

@@ -68,7 +68,7 @@ export default {
     this.username = this.$route.params.username;
     let self = this;
     axios
-    .get("https://wise-brook-308119.ue.r.appspot.com/eventsall")
+    .get("https://oriun-api.herokuapp.com/eventsall")
         .then((result) => {
             self.eventos=result.data; 
         }).catch((error) => {
@@ -79,7 +79,7 @@ export default {
       asistir: function(id_EVENT){
         let self = this;
         axios
-        .post("https://wise-brook-308119.ue.r.appspot.com/asistirevent?id_user="+self.username+"&id_event="+id_EVENT,{
+        .post("https://oriun-api.herokuapp.com/asistirevent?id_user="+self.username+"&id_event="+id_EVENT,{
             params: {
                 id_user: self.username, 
                 id_event: id_EVENT

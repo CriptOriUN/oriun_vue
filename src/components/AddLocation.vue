@@ -208,7 +208,7 @@ export default {
     let self = this;
     axios
       .get(
-        "https://wise-brook-308119.ue.r.appspot.com/Singlelsibu?init=-1&size=-1"
+        "https://oriun-api.herokuapp.com/Singlelsibu?init=-1&size=-1"
       )
       .then((result) => {
         self.locaciones = result.data;
@@ -227,7 +227,7 @@ export default {
       var self = this;
       axios
         .post(
-          "https://wise-brook-308119.ue.r.appspot.com/glocationsibu",
+          "https://oriun-api.herokuapp.com/glocationsibu",
           self.locationform
         )
         .then((result) => {
@@ -245,7 +245,7 @@ export default {
       var self = this;
       axios
         .put(
-          "https://wise-brook-308119.ue.r.appspot.com/updlocation",
+          "https://oriun-api.herokuapp.com/updlocation",
           self.updatelocationform
         )
         .then((result) => {
@@ -291,7 +291,7 @@ export default {
       if (value != "") {
         axios
           .get(
-            "https://wise-brook-308119.ue.r.appspot.com/myLSbyId/?name=" + value
+            "https://oriun-api.herokuapp.com/myLSbyId/?name=" + value
           )
           .then((result) => {
             this.lookother = true;

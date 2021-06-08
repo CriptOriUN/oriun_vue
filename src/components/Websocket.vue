@@ -30,7 +30,7 @@ export default {
       }
     },
     connect() {
-      this.socket = new SockJS("https://wise-brook-308119.ue.r.appspot.com/websocket");
+      this.socket = new SockJS("https://oriun-api.herokuapp.com/websocket");
       this.stompClient = Stomp.over(this.socket);
       this.stompClient.connect(
         {},

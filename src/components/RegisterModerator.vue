@@ -104,7 +104,7 @@ export default {
       ) {
         axios
           .post(
-            "https://wise-brook-308119.ue.r.appspot.com/modreg?user=" +
+            "https://oriun-api.herokuapp.com/modreg?user=" +
               self.registerform.user_name +
               "&password=" +
               self.registerform.password,

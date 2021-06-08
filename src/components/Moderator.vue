@@ -353,11 +353,11 @@ export default {
   },
   mounted: function () {
     axios
-      .get("https://wise-brook-308119.ue.r.appspot.com/events?init=0&size=-1")
+      .get("https://oriun-api.herokuapp.com/events?init=0&size=-1")
       // .get("http://localhost:8081/events?init=0&size=-1")
       .then((response) => (this.events = response.data));
     axios
-      .get("https://wise-brook-308119.ue.r.appspot.com/eventsall/")
+      .get("https://oriun-api.herokuapp.com/eventsall/")
       // .get("http://localhost:8081/eventsall/")
       .then(
         (response) => (
@@ -365,7 +365,7 @@ export default {
         )
       );
     axios
-      .get("https://wise-brook-308119.ue.r.appspot.com/sports/")
+      .get("https://oriun-api.herokuapp.com/sports/")
       // .get("http://localhost:8081/sports/")
       .then(
         (response) => (
@@ -374,7 +374,7 @@ export default {
       );
 
     axios
-      .get("https://wise-brook-308119.ue.r.appspot.com/otherscount/")
+      .get("https://oriun-api.herokuapp.com/otherscount/")
       // .get("http://localhost:8081/otherscount/")
       .then(
         (response) => (
@@ -397,7 +397,7 @@ export default {
       });
       if (ok) {
         try {
-          await axios.post("https://wise-brook-308119.ue.r.appspot.com/g/", {
+          await axios.post("https://oriun-api.herokuapp.com/g/", {
             name_SPORT: suggestedSport,
           });
 
@@ -430,7 +430,7 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "https://wise-brook-308119.ue.r.appspot.com/nosports?sport=" + String(sport.name_SPORT)
+            "https://oriun-api.herokuapp.com/nosports?sport=" + String(sport.name_SPORT)
             // "http://localhost:8081/nosports?sport=" + String(sport.name_SPORT)
           );
           document.getElementById(sport.name_SPORT).remove();
@@ -460,7 +460,7 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "https://wise-brook-308119.ue.r.appspot.com/NoEvent?id_event=" +
+            "https://oriun-api.herokuapp.com/NoEvent?id_event=" +
               event.id_EVENT
           );
           document.getElementById(event.id_EVENT).remove();

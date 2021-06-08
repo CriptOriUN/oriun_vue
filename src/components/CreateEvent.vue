@@ -290,7 +290,7 @@ export default {
   methods: {
     getSports() {
       axios
-        .get("https://wise-brook-308119.ue.r.appspot.com/sports")
+        .get("https://oriun-api.herokuapp.com/sports")
         .then((response) => {
           console.log("SPORTS", response);
           this.sports = response.data;
@@ -302,7 +302,7 @@ export default {
     },
     getLocations() {
       axios
-        .get("https://wise-brook-308119.ue.r.appspot.com/locationssport")
+        .get("https://oriun-api.herokuapp.com/locationssport")
         .then((response) => {
           // console.log("wihs", response);
           this.locations = response.data;
@@ -429,7 +429,7 @@ export default {
 
             axios
               .post(
-                "https://wise-brook-308119.ue.r.appspot.com/event",
+                "https://oriun-api.herokuapp.com/event",
                 this.eventForm
               )
               .then((response) => {
@@ -464,7 +464,7 @@ export default {
 
           axios
             .post(
-              "https://wise-brook-308119.ue.r.appspot.com/event",
+              "https://oriun-api.herokuapp.com/event",
               this.eventForm
             )
             .then((response) => {

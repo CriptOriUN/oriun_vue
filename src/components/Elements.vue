@@ -192,7 +192,7 @@ export default {
     getElementByID(elementID){
       axios
         // .get("http://localhost:8081/MyElement?id=" + elementID)
-        .get("https://wise-brook-308119.ue.r.appspot.com/MyElement?id=" + elementID)
+        .get("https://oriun-api.herokuapp.com/MyElement?id=" + elementID)
         .then((response) => (this.elementShow = response.data));
     },
     getElements() {
@@ -203,7 +203,7 @@ export default {
         axios
           .get(
             // "http://localhost:8081/Singlelmts?init=" +
-            "https://wise-brook-308119.ue.r.appspot.com/Singlelmts?init=" +
+            "https://oriun-api.herokuapp.com/Singlelmts?init=" +
               this.initElementPage +
               "&size=" +
               this.maxNumRows
@@ -215,14 +215,14 @@ export default {
       axios
         .get(
           // "http://localhost:8081/Singlelmts?init=0&size=-1"
-          "https://wise-brook-308119.ue.r.appspot.com/Singlelmts?init=0&size=-1"
+          "https://oriun-api.herokuapp.com/Singlelmts?init=0&size=-1"
         )
         .then((response) => (this.elementsAll = response.data));
     },
     getNumElements() {
       axios
         // .get("http://localhost:8081/nelements")
-        .get("https://wise-brook-308119.ue.r.appspot.com/nelements")
+        .get("https://oriun-api.herokuapp.com/nelements")
         .then(
           (response) => (
             (this.numElements = response.data), this.auxListPages()

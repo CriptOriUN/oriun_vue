@@ -296,7 +296,7 @@ export default {
 
       axios
         .delete(
-          "https://wise-brook-308119.ue.r.appspot.com/noelements?id=" + value
+          "https://oriun-api.herokuapp.com/noelements?id=" + value
         )
         .then((result) => {
           this.$delete(this.elementos, index);
@@ -318,7 +318,7 @@ export default {
       alert(index);
       axios
         .delete(
-          "https://wise-brook-308119.ue.r.appspot.com/nolsibu?name=" + value
+          "https://oriun-api.herokuapp.com/nolsibu?name=" + value
         )
         .then((result) => {
           this.$delete(this.locaciones, index);
@@ -336,7 +336,7 @@ export default {
     this.username = this.$route.params.username;
     let self = this;
     axios
-      .get("https://wise-brook-308119.ue.r.appspot.com/user")
+      .get("https://oriun-api.herokuapp.com/user")
       .then((result) => {
         self.usuarios = result.data;
         self.isLoading = false;
@@ -346,7 +346,7 @@ export default {
       });
     axios
       .get(
-        "https://wise-brook-308119.ue.r.appspot.com/Singlelsibu?init=-1&size=-1"
+        "https://oriun-api.herokuapp.com/Singlelsibu?init=-1&size=-1"
       )
       .then((result) => {
         self.locaciones = result.data;
@@ -358,7 +358,7 @@ export default {
 
     axios
       .get(
-        "https://wise-brook-308119.ue.r.appspot.com/Singlelmts?init=-1&size=-1"
+        "https://oriun-api.herokuapp.com/Singlelmts?init=-1&size=-1"
       )
       .then((result) => {
         self.elementos = result.data;

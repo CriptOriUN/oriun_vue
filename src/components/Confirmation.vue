@@ -46,7 +46,7 @@ export default {
 
   created: function () {
     axios
-      .post("https://wise-brook-308119.ue.r.appspot.com/confirm-account", null, {
+      .post("https://oriun-api.herokuapp.com/confirm-account", null, {
         method: "post",
         params: {
           token: this.$route.query.token,

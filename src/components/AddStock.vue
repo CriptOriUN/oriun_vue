@@ -331,7 +331,7 @@ export default {
     let self = this;
     // Get de la lista de elementos
     axios
-      .get("https://wise-brook-308119.ue.r.appspot.com/Singlelmts?init=-1&size=-1")
+      .get("https://oriun-api.herokuapp.com/Singlelmts?init=-1&size=-1")
       .then((result) => {
         self.elementos = result.data;
         self.isLoadingEle = false;
@@ -342,7 +342,7 @@ export default {
 
     // Get de la lista de locaciones
     axios
-      .get("https://wise-brook-308119.ue.r.appspot.com/locationssibu")
+      .get("https://oriun-api.herokuapp.com/locationssibu")
       .then((result) => {
         self.locaciones = result.data;
         self.isLoadingLoc = false;
@@ -352,7 +352,7 @@ export default {
       });
     // get de la lista de Ddeportes
     axios
-      .get("https://wise-brook-308119.ue.r.appspot.com/sports")
+      .get("https://oriun-api.herokuapp.com/sports")
       .then((result) => {
         self.deportes = result.data;
         self.isLoadingSports = false;
@@ -377,7 +377,7 @@ export default {
     submitFormElement: function () {
       var self = this;
       axios
-        .post("https://wise-brook-308119.ue.r.appspot.com/element", self.stockform)
+        .post("https://oriun-api.herokuapp.com/element", self.stockform)
         .then((result) => {
           self.stockform.name_LOCATION = self.stockform.name_SPORT = self.stockform.element_NAME = self.stockform.description = self.image =
             "";
@@ -393,7 +393,7 @@ export default {
     updateFormElement: function () {
       var self = this;
       axios
-        .put("https://wise-brook-308119.ue.r.appspot.com/a", self.updateform)
+        .put("https://oriun-api.herokuapp.com/a", self.updateform)
         .then((result) => {
           self.updateform.name_LOCATION = self.updateform.name_SPORT = self.updateform.id_ELEMENT = self.updateform.description = self.image =
             "";
@@ -437,7 +437,7 @@ export default {
       //alert(value)
       if (value != "") {
         axios
-          .get("https://wise-brook-308119.ue.r.appspot.com/MyElement?id=" + value)
+          .get("https://oriun-api.herokuapp.com/MyElement?id=" + value)
           .then((result) => {
             console.log(result.data.name_LOCATION);
             this.lookother = true;

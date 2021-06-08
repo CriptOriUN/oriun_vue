@@ -196,7 +196,7 @@ export default {
       // console.log(this.username, "hola", self.username);
       axios
         .get(
-          "https://wise-brook-308119.ue.r.appspot.com/userevents/?user=" +
+          "https://oriun-api.herokuapp.com/userevents/?user=" +
             this.username
         )
         .then((response) => {
@@ -212,7 +212,7 @@ export default {
       // console.log(this.username, "hola", self.username);
       axios
         .get(
-          "https://wise-brook-308119.ue.r.appspot.com/usersports/?user=" +
+          "https://oriun-api.herokuapp.com/usersports/?user=" +
             this.username
         )
         .then((response) => {
@@ -227,7 +227,7 @@ export default {
     getSports() {
       axios
         // .get("http://localhost:8081/sports")
-        .get("https://wise-brook-308119.ue.r.appspot.com/sports")
+        .get("https://oriun-api.herokuapp.com/sports")
         .then((response) => {
           console.log(response);
           this.sports = response.data;
@@ -267,7 +267,7 @@ export default {
       } else {
         axios
           .post(
-            "https://wise-brook-308119.ue.r.appspot.com/usersportsreg/?user=" +
+            "https://oriun-api.herokuapp.com/usersportsreg/?user=" +
               this.username +
               "&sport=" +
               this.deporteNuevo
@@ -297,7 +297,7 @@ export default {
     quitarNuevo(deporte) {
       axios
         .delete(
-          "https://wise-brook-308119.ue.r.appspot.com/usersportsdel/?user=" +
+          "https://oriun-api.herokuapp.com/usersportsdel/?user=" +
             this.username +
             "&sport=" +
             deporte
@@ -338,7 +338,7 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "https://wise-brook-308119.ue.r.appspot.com/NoEvent?id_event=" +
+            "https://oriun-api.herokuapp.com/NoEvent?id_event=" +
               event.id_EVENT
           );
           document.getElementById(event.id_EVENT).remove();
