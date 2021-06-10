@@ -80,7 +80,7 @@
         </div>
       </div>
     </div>
-    <button @click="emitGreeting">Greet</button>
+    <!-- <button @click="emitGreeting">Greet</button> -->
     <div class="overlay" v-bind:class="{ active: isActive }">
       <div class="popup">
         <a
