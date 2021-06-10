@@ -145,6 +145,7 @@ export default {
       locacionEvento: "",
       newNotification: null,
       userSports: [],
+      notificationsAllowed: false,
     };
   },
   created: function () {
@@ -155,20 +156,26 @@ export default {
     this.getEvents();
     this.getNotifications();
     this.getUserSports();
+    if(!this.notificationsAllowed){
+      this.requestNotificationPermission();
+    }
+
     this.$root.$on("sportNotifications", (sportNotifications, userCreator) => {
       console.log("RECEIVED!!!!");
       this.newNotification = JSON.parse(sportNotifications);
       console.log(
         "Received data: ",
         typeof this.newNotification,
-        this.newNotification, 'userCreator: ', userCreator
+        this.newNotification,
+        "userCreator: ",
+        userCreator
       );
       // if(this.userSports.includes(this.newNotification[0].name_SPORT)){
-      if(userCreator !== this.username){
+      if (userCreator !== this.username) {
         this.notify();
-        console.log('New notification')
-      }else{
-        console.log('You created this event')
+        console.log("New notification");
+      } else {
+        console.log("You created this event");
       }
       // }else{
       //   console.log('This notification doesnt apply for this user');
@@ -176,14 +183,17 @@ export default {
     });
   },
   methods: {
-    emitGreeting(){
+    emitGreeting() {
       this.$root.$emit("Greeting");
       this.notifyTEST();
     },
     getEvents() {
       // console.log('codigo get')
       axios
-        .get("https://oriun-api.herokuapp.com/events?init=1&size=-1", self.username)
+        .get(
+          "https://oriun-api.herokuapp.com/events?init=1&size=-1",
+          self.username
+        )
         .then((response) => {
           // axios
           //    .get("http://localhost:8081/events?init=1&size=-1/", self.username)
@@ -196,7 +206,10 @@ export default {
     getNotifications() {
       // console.log("codigo get");
       axios
-        .get("https://oriun-api.herokuapp.com/usernotifications/?user=" + this.username)
+        .get(
+          "https://oriun-api.herokuapp.com/usernotifications/?user=" +
+            this.username
+        )
         .then((response) => {
           // axios
           //    .get("http://localhost:8081/usernotifications/?user="+ this.username)
@@ -206,13 +219,16 @@ export default {
         })
         .catch((e) => console.log(e));
     },
-    getUserSports(){
-      axios.get("https://oriun-api.herokuapp.com/usersports/?user=" + this.username)
-      .then((response) => {
-        response.data.forEach(element => {
-          this.userSports.push(element.name_SPORT)
-        })
-      })
+    getUserSports() {
+      axios
+        .get(
+          "https://oriun-api.herokuapp.com/usersports/?user=" + this.username
+        )
+        .then((response) => {
+          response.data.forEach((element) => {
+            this.userSports.push(element.name_SPORT);
+          });
+        });
     },
     mostrar(objet) {
       this.isActive = true;
@@ -238,43 +254,49 @@ export default {
       console.log("this.newNotification: ", this.newNotification);
       console.log("this.notifications", this.notifications);
     },
-    notify() {
-      var title = "OriUN - Evento de "+this.newNotification[0].name_SPORT;
-      // var icon = "../assets/oriun.png";
-      var icon =
-        "https://i.ibb.co/ScF3rnx/oriun.png";
-        // "https://drive.google.com/uc?export=view&id=1kMJupb5dGtHu-zEQ4xqlktpQHWYfFdJG";
-      var body = this.newNotification[0].notification_DESCRIPTION;
+    requestNotificationPermission() {
       // Let's check if the browser supports notifications
-      console.log("We have send you a notification!!!");
       if (!("Notification" in window)) {
-        alert("This browser does not support desktop notification");
+        console.log("This browser does not support desktop notification");
       }
-
-      // Let's check whether notification permissions have already been granted
+      // Let's check whether notification permissions have alredy been granted
       else if (Notification.permission === "granted") {
         // If it's okay let's create a notification
-        this.createNotification(body, icon, title);
+        this.notificationsAllowed = true;
       }
-
       // Otherwise, we need to ask the user for permission
-      else if (Notification.permission !== "denied") {
-        Notification.requestPermission().then(function (permission) {
+      else if (
+        Notification.permission !== "denied" ||
+        Notification.permission === "default"
+      ) {
+        Notification.requestPermission(function (permission) {
           // If the user accepts, let's create a notification
           if (permission === "granted") {
-            this.createNotification(body, icon, title);
+            this.notificationsAllowed = true;
           }
         });
       }
-
       // At last, if the user has denied notifications, and you
       // want to be respectful there is no need to bother them any more.
+    },
+    notify() {
+      var title = "OriUN - Evento de " + this.newNotification[0].name_SPORT;
+      // var icon = "../assets/oriun.png";
+      var icon = "https://i.ibb.co/ScF3rnx/oriun.png";
+      // "https://drive.google.com/uc?export=view&id=1kMJupb5dGtHu-zEQ4xqlktpQHWYfFdJG";
+      var body = this.newNotification[0].notification_DESCRIPTION;
+      
+      // Let's check whether notification permissions have already been granted
+      if (this.notificationsAllowed) {
+        // If it's okay let's create a notification
+        this.createNotification(body, icon, title);
+        console.log("We have send you a notification!!!");
+      }
     },
     notifyTEST() {
       var title = "OriUN - Notification TESTS";
       // var icon = "../assets/oriun.png";
-      var icon =
-        "https://i.ibb.co/ScF3rnx/oriun.png";
+      var icon = "https://i.ibb.co/ScF3rnx/oriun.png";
       // var icon = "https://pics.freeicons.io/uploads/icons/png/5205410931579605509-512.png";
       var body = "Testing image notifications";
       // Let's check if the browser supports notifications
