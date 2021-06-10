@@ -1,7 +1,6 @@
 <template>
   <div class="user">
     <NavBar :username="username" />
-    <Websocket />
     <div id="thewelcome">
       <h6>
         Hola,
@@ -115,13 +114,11 @@
 <script>
 import NavBar from "../components/header/NavBar";
 import axios from "axios";
-import Websocket from "../components/Websocket";
 import MySocialChat from "../components/social-chat/MySocialChat";
 export default {
   name: "Users",
   components: {
     NavBar,
-    Websocket,
     MySocialChat,
   },
   watch: {
@@ -146,6 +143,7 @@ export default {
       horaEvento: "",
       locacionEvento: "",
       newNotification: null,
+      userSports: [],
     };
   },
   created: function () {
@@ -155,18 +153,32 @@ export default {
     // console.log('holanda')
     this.getEvents();
     this.getNotifications();
-    this.$root.$on("sportNotifications", (sportNotifications) => {
+    this.getUserSports();
+    this.$root.$on("sportNotifications", (sportNotifications, userCreator) => {
       console.log("RECEIVED!!!!");
       this.newNotification = JSON.parse(sportNotifications);
       console.log(
         "Received data: ",
         typeof this.newNotification,
-        this.newNotification
+        this.newNotification, 'userCreator: ', userCreator
       );
-      this.notify();
+      // if(this.userSports.includes(this.newNotification[0].name_SPORT)){
+      if(userCreator !== this.username){
+        this.notify();
+        console.log('New notification')
+      }else{
+        console.log('You created this event')
+      }
+      // }else{
+      //   console.log('This notification doesnt apply for this user');
+      // }
     });
   },
   methods: {
+    emitGreeting(){
+      this.$root.$emit("Greeting");
+      this.notifyTEST();
+    },
     getEvents() {
       // console.log('codigo get')
       axios
@@ -193,7 +205,14 @@ export default {
         })
         .catch((e) => console.log(e));
     },
-
+    getUserSports(){
+      axios.get("https://oriun-api.herokuapp.com/usersports/?user=" + this.username)
+      .then((response) => {
+        response.data.forEach(element => {
+          this.userSports.push(element.name_SPORT)
+        })
+      })
+    },
     mostrar(objet) {
       this.isActive = true;
       if (this.pop == "notificacion") {
@@ -222,9 +241,41 @@ export default {
       var title = "OriUN - Evento de "+this.newNotification[0].name_SPORT;
       // var icon = "../assets/oriun.png";
       var icon =
-        "https://drive.google.com/uc?export=view&id=1kMJupb5dGtHu-zEQ4xqlktpQHWYfFdJG";
-      // var icon = "https://pics.freeicons.io/uploads/icons/png/5205410931579605509-512.png";
+        "https://i.ibb.co/ScF3rnx/oriun.png";
+        // "https://drive.google.com/uc?export=view&id=1kMJupb5dGtHu-zEQ4xqlktpQHWYfFdJG";
       var body = this.newNotification[0].notification_DESCRIPTION;
+      // Let's check if the browser supports notifications
+      console.log("We have send you a notification!!!");
+      if (!("Notification" in window)) {
+        alert("This browser does not support desktop notification");
+      }
+
+      // Let's check whether notification permissions have already been granted
+      else if (Notification.permission === "granted") {
+        // If it's okay let's create a notification
+        this.createNotification(body, icon, title);
+      }
+
+      // Otherwise, we need to ask the user for permission
+      else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(function (permission) {
+          // If the user accepts, let's create a notification
+          if (permission === "granted") {
+            this.createNotification(body, icon, title);
+          }
+        });
+      }
+
+      // At last, if the user has denied notifications, and you
+      // want to be respectful there is no need to bother them any more.
+    },
+    notifyTEST() {
+      var title = "OriUN - Notification TESTS";
+      // var icon = "../assets/oriun.png";
+      var icon =
+        "https://i.ibb.co/ScF3rnx/oriun.png";
+      // var icon = "https://pics.freeicons.io/uploads/icons/png/5205410931579605509-512.png";
+      var body = "Testing image notifications";
       // Let's check if the browser supports notifications
       console.log("We have send you a notification!!!");
       if (!("Notification" in window)) {

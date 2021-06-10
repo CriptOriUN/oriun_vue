@@ -1,17 +1,21 @@
 <template>
   <div id="app">
     <router-view v-on:logeado="logIn"></router-view>
+    <Websocket />
   </div>
 </template>
 
 <script>
+import Websocket from "./components/Websocket";
 export default {
   data: function () {
     return {
       is_auth: localStorage.getItem("isAuth") || false,
     };
   },
-
+  components: {
+    Websocket,
+  },
   methods: {
     // esto nos lleva a user_auth si no esta autenticado, en caso contrario al usuario actual
     updateAuth: function () {

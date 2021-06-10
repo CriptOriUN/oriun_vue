@@ -278,10 +278,10 @@ export default {
     } else {
       var mes = _mes.toString;
     }
-    if(dia < 10){
-       var dia = "0" + dia;
-    }else{
-       var dia = dia.toString;
+    if (dia < 10) {
+      var dia = "0" + dia;
+    } else {
+      var dia = dia.toString;
     }
     document.getElementById("fecha_incio_ce").min =
       anio + "-" + mes + "-" + dia;
@@ -310,10 +310,13 @@ export default {
         .catch((e) => console.log(e));
     },
     emitEvent() {
-      console.log(this.IDeventCreated);
-      this.$nextTick(() => {
-        this.$root.$emit("eventCreated", this.IDeventCreated);
-      });
+      console.log("IDeventCreated: ", this.IDeventCreated);
+      this.$root.$emit(
+        "eventCreated",
+        this.IDeventCreated,
+        this.username,
+        this.eventForm.name_SPORT
+      );
     },
 
     hoy() {
@@ -409,70 +412,56 @@ export default {
             );
           } else {
             this.eventForm.user_NAME = this.username;
-            this.eventForm.event_FINISH_HOUR = this.eventForm.event_FINISH_HOUR.concat(
-              ":00"
-            );
-            this.eventForm.event_INIT_HOUR = this.eventForm.event_INIT_HOUR.concat(
-              ":00"
-            );
+            this.eventForm.event_FINISH_HOUR =
+              this.eventForm.event_FINISH_HOUR.concat(":00");
+            this.eventForm.event_INIT_HOUR =
+              this.eventForm.event_INIT_HOUR.concat(":00");
 
-            this.eventForm.event_FINISH_HOUR = this.eventForm.event_FINISH_HOUR.substring(
-              0,
-              8
-            );
-            this.eventForm.event_INIT_HOUR = this.eventForm.event_INIT_HOUR.substring(
-              0,
-              8
-            );
+            this.eventForm.event_FINISH_HOUR =
+              this.eventForm.event_FINISH_HOUR.substring(0, 8);
+            this.eventForm.event_INIT_HOUR =
+              this.eventForm.event_INIT_HOUR.substring(0, 8);
 
             console.log("quepasa2", JSON.stringify(this.eventForm));
 
             axios
-              .post(
-                "https://oriun-api.herokuapp.com/event",
-                this.eventForm
-              )
+              .post("https://oriun-api.herokuapp.com/event", this.eventForm)
               .then((response) => {
                 console.log(this.eventForm);
                 this.IDeventCreated = response.data.id_EVENT;
                 this.emitEvent();
                 alert("Evento Creado con exito");
-                location.href = "../";
+                this.$nextTick(() => {
+                  location.href = "../";
+                });
               })
               .catch((e) => console.log(e));
           }
         } else {
           // this.eventForm.other_SPORT = null;
           this.eventForm.user_NAME = this.username;
-          this.eventForm.event_FINISH_HOUR = this.eventForm.event_FINISH_HOUR.concat(
-            ":00"
-          );
-          this.eventForm.event_INIT_HOUR = this.eventForm.event_INIT_HOUR.concat(
-            ":00"
-          );
+          this.eventForm.event_FINISH_HOUR =
+            this.eventForm.event_FINISH_HOUR.concat(":00");
+          this.eventForm.event_INIT_HOUR =
+            this.eventForm.event_INIT_HOUR.concat(":00");
 
-          this.eventForm.event_FINISH_HOUR = this.eventForm.event_FINISH_HOUR.substring(
-            0,
-            8
-          );
-          this.eventForm.event_INIT_HOUR = this.eventForm.event_INIT_HOUR.substring(
-            0,
-            8
-          );
+          this.eventForm.event_FINISH_HOUR =
+            this.eventForm.event_FINISH_HOUR.substring(0, 8);
+          this.eventForm.event_INIT_HOUR =
+            this.eventForm.event_INIT_HOUR.substring(0, 8);
 
           // console.log("quepasa", JSON.stringify(this.eventForm));
 
           axios
-            .post(
-              "https://oriun-api.herokuapp.com/event",
-              this.eventForm
-            )
+            .post("https://oriun-api.herokuapp.com/event", this.eventForm)
             .then((response) => {
               console.log("EVENTO CREADO: ", response);
               this.IDeventCreated = response.data.id_EVENT;
               this.emitEvent();
               alert("Evento Creado con exito");
-              location.href = "../";
+              this.$nextTick(() => {
+                location.href = "../";
+              });
             })
             .catch((e) => console.log(e));
         }

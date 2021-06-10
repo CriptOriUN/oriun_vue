@@ -1,6 +1,5 @@
 <template>
-  <div>
-  </div>
+  <div></div>
 </template>
 
 <script>
@@ -11,13 +10,15 @@ import CreateEvent from "../components/CreateEvent";
 export default {
   name: "websocketdemo",
   components: {
-    CreateEvent
+    CreateEvent,
   },
   data() {
     return {
       received_messages: [],
       send_message: null,
-      connected: false
+      connected: false,
+      userCreator: '',
+      connectedUsers: [],
     };
   },
   methods: {
@@ -30,21 +31,30 @@ export default {
       }
     },
     connect() {
-      this.socket = new SockJS("https://oriun-api.herokuapp.com/websocket");
+      console.log('Connecting...')
+      this.connectedUsers.push(this.$route.params.username)
+      this.socket = new SockJS(
+        "https://oriun-api-test-diego.herokuapp.com/websocket"
+      );
       this.stompClient = Stomp.over(this.socket);
+      var headers = {
+        user: this.$route.params.username,
+      };
       this.stompClient.connect(
-        {},
-        frame => {
+        headers,
+        (frame) => {
           this.connected = true;
           console.log(frame);
-          this.stompClient.subscribe("/topic/notifications", tick => {
+          console.log("MY TEST", headers.user);
+          this.stompClient.subscribe("/topic/notifications", (tick) => {
             console.log(tick);
             var sportNotifications = tick.body;
-            this.$root.$emit('sportNotifications', sportNotifications);
+            this.$root.$emit("sportNotifications", sportNotifications, this.userCreator);
+
             this.received_messages.push(tick.body);
           });
         },
-        error => {
+        (error) => {
           console.log(error);
           this.connected = false;
         }
@@ -58,15 +68,24 @@ export default {
     },
     tickleConnection() {
       this.connected ? this.disconnect() : this.connect();
-    }
+    },
   },
   mounted() {
     this.connect();
-    this.$root.$on('eventCreated', (sport_test) => {
-      this.send_message = sport_test;
-      this.send();
+    this.$root.$on("eventCreated", (IDeventCreated, userCreator, eventSport) => {
+      this.send_message = IDeventCreated;
+      this.userCreator = userCreator;
+      console.log('userCreator on eventCreated: ', userCreator)
+      console.log('eventSport on eventCreated: ', eventSport)
+      this.$nextTick(() => {
+        this.send();
+      });
     });
-
+  },
+  watch:{
+    connectedUsers(){
+      console.log('ConnectedUsers: ', this.connectedUsers)
+    }
   }
 };
 </script>
