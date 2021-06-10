@@ -276,12 +276,12 @@ export default {
       //ahora le agregas un 0 para el formato date
       var mes = "0" + _mes;
     } else {
-      var mes = _mes.toString;
+      var mes = _mes.toString();
     }
     if (dia < 10) {
       var dia = "0" + dia;
     } else {
-      var dia = dia.toString;
+      var dia = dia.toString();
     }
     document.getElementById("fecha_incio_ce").min =
       anio + "-" + mes + "-" + dia;
@@ -329,7 +329,7 @@ export default {
         //ahora le agregas un 0 para el formato date
         var mes = "0" + _mes;
       } else {
-        var mes = _mes.toString;
+        var mes = _mes.toString();
       }
       document.getElementById("fecha_fin_ce").min = this.eventForm.event_INIT;
       // console.log("llega aqui papu", this.eventForm.event_INIT);
