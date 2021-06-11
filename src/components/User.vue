@@ -192,12 +192,12 @@ export default {
       // console.log('codigo get')
       axios
         .get(
-          "https://oriun-api.herokuapp.com//events?init=1&size=-1",
+          "https://oriun-api.herokuapp.com/events?init=1&size=-1",
           self.username
         )
         .then((response) => {
           // axios
-          //    .get("https://oriun-api.herokuapp.com//events?init=1&size=-1/", self.username)
+          //    .get("https://oriun-api.herokuapp.com/events?init=1&size=-1/", self.username)
           //    .then((response) => {
           // console.log(response);
           this.events = response.data;
@@ -208,12 +208,12 @@ export default {
       // console.log("codigo get");
       axios
         .get(
-          "https://oriun-api.herokuapp.com//usernotifications/?user=" +
+          "https://oriun-api.herokuapp.com/usernotifications/?user=" +
             this.username
         )
         .then((response) => {
           // axios
-          //    .get("https://oriun-api.herokuapp.com//usernotifications/?user="+ this.username)
+          //    .get("https://oriun-api.herokuapp.com/usernotifications/?user="+ this.username)
           // .then((response) => {
           console.log(response);
           this.notifications = response.data;
@@ -223,7 +223,7 @@ export default {
     getUserSports() {
       axios
         .get(
-          "https://oriun-api.herokuapp.com//usersports/?user=" + this.username
+          "https://oriun-api.herokuapp.com/usersports/?user=" + this.username
         )
         .then((response) => {
           response.data.forEach((element) => {
