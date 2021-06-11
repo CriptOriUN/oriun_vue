@@ -65,7 +65,7 @@ export default {
     changeDate() {
       axios
         // .get("https://wise-brook-308119.ue.r.appspot.com/sports")
-        .get("http://localhost:8081/dateevents/?date=" + this.date)
+        .get("https://oriun-api.herokuapp.com/dateevents/?date=" + this.date)
         .then((response) => {
           this.locations = response.data;
           console.log(this.date);
@@ -94,7 +94,7 @@ export default {
       this.date = hoy;
       axios
         // .get("https://wise-brook-308119.ue.r.appspot.com/sports")
-        .get("http://localhost:8081/dateevents/?date=" + hoy)
+        .get("https://oriun-api.herokuapp.com/dateevents/?date=" + hoy)
         .then((response) => {
           this.locations = response.data;
         })
