@@ -262,16 +262,19 @@ export default {
                   this.loadingElements =  false;
                 })
                 .catch((error) => {
+                  this.loadingElements =  false;
                   if (error.response.status == "404")
                     alert("ERROR 404:Contraseña Erronea.");
                   if (error.response.status == "406")
                     alert("ERROR 403: Usuario no encontrado.");
                 });
             } else {
+              this.loadingElements =  false;
               alert("No has verificado tu cuenta.");
             }
           });
       } else {
+        this.loadingElements = false;
         alert("El Captcha no se ha verificado o se hizo de manera incorrecta");
       }
     },
