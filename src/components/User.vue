@@ -150,6 +150,7 @@ export default {
   },
   created: function () {
     this.username = this.$route.params.username;
+    
   },
   mounted() {
     // console.log('holanda')
@@ -191,12 +192,12 @@ export default {
       // console.log('codigo get')
       axios
         .get(
-          "https://oriun-api.herokuapp.com/events?init=1&size=-1",
+          "https://oriun-api.herokuapp.com//events?init=1&size=-1",
           self.username
         )
         .then((response) => {
           // axios
-          //    .get("http://localhost:8081/events?init=1&size=-1/", self.username)
+          //    .get("https://oriun-api.herokuapp.com//events?init=1&size=-1/", self.username)
           //    .then((response) => {
           // console.log(response);
           this.events = response.data;
@@ -207,12 +208,12 @@ export default {
       // console.log("codigo get");
       axios
         .get(
-          "https://oriun-api.herokuapp.com/usernotifications/?user=" +
+          "https://oriun-api.herokuapp.com//usernotifications/?user=" +
             this.username
         )
         .then((response) => {
           // axios
-          //    .get("http://localhost:8081/usernotifications/?user="+ this.username)
+          //    .get("https://oriun-api.herokuapp.com//usernotifications/?user="+ this.username)
           // .then((response) => {
           console.log(response);
           this.notifications = response.data;
@@ -222,7 +223,7 @@ export default {
     getUserSports() {
       axios
         .get(
-          "https://oriun-api.herokuapp.com/usersports/?user=" + this.username
+          "https://oriun-api.herokuapp.com//usersports/?user=" + this.username
         )
         .then((response) => {
           response.data.forEach((element) => {
@@ -255,6 +256,7 @@ export default {
       console.log("this.notifications", this.notifications);
     },
     requestNotificationPermission() {
+      console.log("Notification.permission: ", Notification.permission)
       // Let's check if the browser supports notifications
       if (!("Notification" in window)) {
         console.log("This browser does not support desktop notification");
@@ -269,12 +271,16 @@ export default {
         Notification.permission !== "denied" ||
         Notification.permission === "default"
       ) {
-        Notification.requestPermission(function (permission) {
+        console.log("this.notificationsAllowed - before: ", this.notificationsAllowed)
+
+        Notification.requestPermission((permission) => {
           // If the user accepts, let's create a notification
           if (permission === "granted") {
             this.notificationsAllowed = true;
+            console.log("this.notificationsAllowed - after: ", this.notificationsAllowed)
           }
         });
+        
       }
       // At last, if the user has denied notifications, and you
       // want to be respectful there is no need to bother them any more.
