@@ -10,6 +10,13 @@
       <div class="container">
         <div class="row mt-5 justify-content-center">
           <div class="col-5 col-md-4 col-xl-4 col-lg-4">
+            <toggle-switch
+              :options="myOptions"
+              :disabled="false"
+              v-model="optionDate"
+              v-on:change="changeDate()"
+              class="toggle justify-content-center d-flex py-4"
+            />
             <input
               type="date"
               class="form-control mb-5"
@@ -36,7 +43,6 @@
             </div>
           </div>
         </div>
-        <div class="row"></div>
       </div>
     </div>
   </div>
@@ -47,6 +53,7 @@ import NavBar from "../components/header/NavBar";
 import axios from "axios";
 export default {
   name: "DispEspacio",
+
   components: {
     NavBar,
   },
@@ -54,23 +61,63 @@ export default {
     return {
       date: "",
       locations: "",
+      myOptions: "",
+      optionDate: "dia",
     };
   },
   created: function () {
     this.username = this.$route.params.username;
     this.getToday();
+    this.myOptions = {
+      layout: {
+        color: "#94b43b",
+        backgroundColor: "#24372000",
+        selectedColor: "white",
+        selectedBackgroundColor: "green",
+        borderColor: "#94b43b",
+        fontFamily: "Arial",
+        fontWeight: "normal",
+        fontWeightSelected: "bold",
+        squareCorners: false,
+        noBorder: false,
+      },
+      size: {
+        fontSize: 1,
+        height: 2.5,
+        padding: 0.5,
+        width: 13,
+      },
+      items: {
+        delay: 0.4,
+        preSelected: "Dia",
+        disabled: false,
+        labels: [
+          { name: "Dia", color: "white", backgroundColor: "#94b43b" },
+          { name: "Semana", color: "white", backgroundColor: "#94b43b" },
+        ],
+      },
+    };
   },
   mounted: function () {},
   methods: {
     changeDate() {
-      axios
-        // .get("https://wise-brook-308119.ue.r.appspot.com/sports")
-        .get("https://oriun-api.herokuapp.com/dateevents/?date=" + this.date)
-        .then((response) => {
-          this.locations = response.data;
-          console.log(this.date);
-        })
-        .catch((e) => console.log(e));
+      if (this.optionDate == "Dia") {
+        axios
+          // .get("https://wise-brook-308119.ue.r.appspot.com/sports")
+          .get("https://oriun-api.herokuapp.com/dateevents/?date=" + this.date)
+          .then((response) => {
+            this.locations = response.data;
+          })
+          .catch((e) => console.log(e));
+      } else if (this.optionDate == "Semana") {
+        axios
+          // .get("https://wise-brook-308119.ue.r.appspot.com/sports")
+          .get("https://oriun-api.herokuapp.com/weekevents/?date=" + this.date)
+          .then((response) => {
+            this.locations = response.data;
+          })
+          .catch((e) => console.log(e));
+      }
     },
     getToday() {
       var fecha = new Date();
@@ -96,16 +143,9 @@ export default {
         // .get("https://wise-brook-308119.ue.r.appspot.com/sports")
         .get("https://oriun-api.herokuapp.com/dateevents/?date=" + hoy)
         .then((response) => {
-          this.locations = response.data;
+          this.locationsDay = response.data;
         })
         .catch((e) => console.log(e));
-    },
-    getMap() {
-      var coor = { lat: "", lon: "" };
-      var map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 10,
-        center: coor,
-      });
     },
   },
 };
@@ -149,6 +189,7 @@ export default {
 
 .localizaciones {
   color: #fff;
+  text-align: center;
 }
 
 .loc {

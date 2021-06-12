@@ -6,6 +6,7 @@ import vueRouter from 'vue-router'
 import VueToast from 'vue-toast-notification';
 import Toasted from 'vue-toasted';
 import VueSocialChat from 'vue-social-chat';
+import ToggleSwitch from 'vuejs-toggle-switch'
 //import { VueReCaptcha } from 'vue-recaptcha-v3';
 // import 'vue-toast-notification/dist/dist/theme-default.css';
 import router from './router'
@@ -16,6 +17,7 @@ Vue.use(VueToast);
 Vue.use(Toasted);
 Vue.use(BootstrapVue)
 Vue.use(VueSocialChat)
+Vue.use(ToggleSwitch)
 //Vue.use(VueReCaptcha, {sitekey: '6Ld0AcsaAAAAAPuanlUIf4OjtLv1O0x8JUDf9DdV'});
 Vue.config.productionTip = false
 Vue.use(IconsPlugin)
