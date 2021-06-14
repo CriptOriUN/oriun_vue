@@ -38,7 +38,36 @@
                 v-for="loc in locations"
                 :key="loc.id"
               >
-                <h4 class="localizaciones">{{ loc[5] }}</h4>
+                <h4
+                  class="localizaciones"
+                  @mouseover="
+                    hover = true;
+                    onlyID(loc[5]);
+                  "
+                  @mouseleave="hover = false"
+                >
+                  {{ loc[5] }}
+                </h4>
+                <span
+                  class="more-info"
+                  v-if="hover & (loc[5] == locaName)"
+                  key="loc[5]"
+                  v-bind:id="loc[5]"
+                >
+                  Fecha Inicial: {{ loc[1] }}<br />
+                  Fecha Final: {{ loc[3] }}<br />
+                  Hora Inicial: {{ loc[2] }}<br />
+                  Hora Final: {{ loc[4] }}
+                </span>
+              </div>
+              <div
+                v-if="locations.length == 0"
+                class="loc flex-fill bd-highlight p-5"
+              >
+                <h4 class="localizaciones">Sin resultados</h4>
+                <h4 class="localizaciones">
+                  <i class="fa fa-search"></i>
+                </h4>
               </div>
             </div>
           </div>
@@ -63,6 +92,8 @@ export default {
       locations: "",
       myOptions: "",
       optionDate: "dia",
+      hover: false,
+      locaName: "",
     };
   },
   created: function () {
@@ -115,6 +146,7 @@ export default {
           .get("https://oriun-api.herokuapp.com/weekevents/?date=" + this.date)
           .then((response) => {
             this.locations = response.data;
+            console.log(this.locations);
           })
           .catch((e) => console.log(e));
       }
@@ -146,6 +178,10 @@ export default {
           this.locationsDay = response.data;
         })
         .catch((e) => console.log(e));
+    },
+    onlyID(loc) {
+      this.locaName = loc;
+      console.log(this.locaName);
     },
   },
 };
@@ -192,8 +228,28 @@ export default {
   text-align: center;
 }
 
+.localizaciones:hover {
+  cursor: help;
+}
+
 .loc {
   padding: 15px;
+}
+
+.more-info {
+  display: flex;
+  position: absolute;
+  background-color: #466b3f;
+  color: #fff;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  height: 120px;
+  width: 240px;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
 /*# sourceMappingURL=DispoEspacio.css.map */
