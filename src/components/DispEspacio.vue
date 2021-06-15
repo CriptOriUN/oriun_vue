@@ -49,7 +49,7 @@
                   {{ loc[5] }}
                 </h4>
                 <span
-                  class="more-info"
+                  class="more-info py-3"
                   v-if="hover & (loc[5] == locaName)"
                   key="loc[5]"
                   v-bind:id="loc[5]"
@@ -57,7 +57,9 @@
                   Fecha Inicial: {{ loc[1] }}<br />
                   Fecha Final: {{ loc[3] }}<br />
                   Hora Inicial: {{ loc[2] }}<br />
-                  Hora Final: {{ loc[4] }}
+                  Hora Final: {{ loc[4] }} <br />
+                  Asistentes: <br />
+                  {{ asistents[0].user_NAME }}
                 </span>
               </div>
               <div
@@ -71,6 +73,12 @@
               </div>
             </div>
           </div>
+          <!-- <span class="more-info py-3">
+            Fecha Inicial: holaaaa<br />
+            Fecha Final: holaaaa<br />
+            Hora Inicial: holaaaa<br />
+            Hora Final: holaaaa
+          </span> -->
         </div>
       </div>
     </div>
@@ -94,6 +102,7 @@ export default {
       optionDate: "dia",
       hover: false,
       locaName: "",
+      asistents: "",
     };
   },
   created: function () {
@@ -134,7 +143,6 @@ export default {
     changeDate() {
       if (this.optionDate == "Dia") {
         axios
-          // .get("https://wise-brook-308119.ue.r.appspot.com/sports")
           .get("https://oriun-api.herokuapp.com/dateevents/?date=" + this.date)
           .then((response) => {
             this.locations = response.data;
@@ -142,11 +150,9 @@ export default {
           .catch((e) => console.log(e));
       } else if (this.optionDate == "Semana") {
         axios
-          // .get("https://wise-brook-308119.ue.r.appspot.com/sports")
           .get("https://oriun-api.herokuapp.com/weekevents/?date=" + this.date)
           .then((response) => {
             this.locations = response.data;
-            console.log(this.locations);
           })
           .catch((e) => console.log(e));
       }
@@ -181,7 +187,19 @@ export default {
     },
     onlyID(loc) {
       this.locaName = loc;
-      console.log(this.locaName);
+      for (var i = 0; i < this.locations.length; i++) {
+        if (this.locations[i][5] == loc) {
+          axios
+            .get(
+              "https://oriun-api.herokuapp.com/asistents/?id_event=" +
+                this.locations[i][0]
+            )
+            .then((response) => {
+              this.asistents = response.data;
+            })
+            .catch((e) => console.log(e));
+        }
+      }
     },
   },
 };
@@ -243,8 +261,8 @@ export default {
   color: #fff;
   justify-content: center;
   text-align: center;
-  align-items: center;
-  height: 120px;
+  /* align-items: center; */
+  height: auto;
   width: 240px;
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
