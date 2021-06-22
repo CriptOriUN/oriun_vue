@@ -54,7 +54,7 @@
                   v-model="eventForm.event_INIT"
                   v-on:change="hoy()"
                   required
-                  min="2021-05-01"
+                  min="2021-06-"
                 />
               </div>
 
@@ -164,7 +164,7 @@
               v-model="eventForm.capacity"
               required
               class="form-control"
-              min="1"
+              min="2"
               max="100"
             />
 
@@ -228,115 +228,171 @@
 </template>
 
 
+
 <script>
 import NavBar from "../components/header/NavBar";
+
 import axios from "axios";
 
 export default {
   name: "CreateEvents",
+
   components: {
     NavBar,
   },
+
   data: function () {
     return {
       username: "",
+
       sports: [],
+
       locations: null,
+
       eventForm: {
         user_NAME: "",
+
         name_LOC_SPORT: "",
+
         name_SPORT: "",
+
         event_DESCRIPTION: "",
+
         event_INIT: "",
+
         event_END: "",
+
         capacity: 0,
+
         other_SPORT: null,
+
         event_INIT_HOUR: "",
+
         event_FINISH_HOUR: "",
+
         event_TITLE: "",
       },
+
       sportsNames: [],
+
       filteredSports: [],
+
       modal: false,
+
       IDeventCreated: null,
     };
   },
+
   created: function () {
     this.username = this.$route.params.username;
   },
+
   mounted() {
     this.getSports();
+
     this.getLocations();
+
     var fecha = new Date();
+
     var anio = fecha.getFullYear();
+
     var dia = fecha.getDate();
+
     var _mes = fecha.getMonth(); //viene con valores de 0 al 11
+
     _mes = _mes + 1; //ahora lo tienes de 1 al 12
+
     if (_mes < 10) {
       //ahora le agregas un 0 para el formato date
+
       var mes = "0" + _mes;
     } else {
       var mes = _mes.toString();
     }
+
     if (dia < 10) {
       var dia = "0" + dia;
     } else {
       var dia = dia.toString();
     }
+
     document.getElementById("fecha_incio_ce").min =
       anio + "-" + mes + "-" + dia;
+
+    //  console.log("fechaaa",document.getElementById("fecha_incio_ce").min)
+
     document.getElementById("fecha_fin_ce").min = anio + "-" + mes + "-" + dia;
   },
+
   methods: {
     getSports() {
       axios
+
+        // .get("https://wise-brook-308119.ue.r.appspot.com/sports")
+
         .get("https://oriun-api.herokuapp.com/sports")
+
         .then((response) => {
           console.log("SPORTS", response);
+
           this.sports = response.data;
+
           this.sports.forEach((sport) => {
             this.sportsNames.push(sport.name_SPORT);
           });
         })
+
         .catch((e) => console.log(e));
     },
+
     getLocations() {
       axios
+
+        // .get("https://wise-brook-308119.ue.r.appspot.com/locationssport")
+
         .get("https://oriun-api.herokuapp.com/locationssport")
+
         .then((response) => {
           // console.log("wihs", response);
+
           this.locations = response.data;
         })
+
         .catch((e) => console.log(e));
     },
+
     emitEvent() {
-      console.log("IDeventCreated: ", this.IDeventCreated);
-      this.$root.$emit(
-        "eventCreated",
-        this.IDeventCreated,
-        this.username,
-        this.eventForm.name_SPORT
-      );
+      console.log(this.IDeventCreated);
+
+      this.$nextTick(() => {
+        this.$root.$emit("eventCreated", this.IDeventCreated);
+      });
     },
 
     hoy() {
       var fecha = new Date();
+
       var anio = fecha.getFullYear();
+
       var dia = fecha.getDate();
+
       var _mes = fecha.getMonth(); //viene con valores de 0 al 11
+
       _mes = _mes + 1; //ahora lo tienes de 1 al 12
+
       if (_mes < 10) {
         //ahora le agregas un 0 para el formato date
+
         var mes = "0" + _mes;
       } else {
         var mes = _mes.toString();
       }
+
       document.getElementById("fecha_fin_ce").min = this.eventForm.event_INIT;
-      // console.log("llega aqui papu", this.eventForm.event_INIT);
     },
+
     submitEventForm: function () {
       console.log(JSON.stringify(this.eventForm));
-      // this.eventForm.name_LOC_SPORT = "Cancha IEI";
 
       if (
         this.eventForm.event_TITLE == "" ||
@@ -404,7 +460,9 @@ export default {
             alert("Por favor escriba otra actividad");
           } else if (
             this.sportsNames
+
               .map((sport) => sport.toLowerCase())
+
               .includes(this.eventForm.other_SPORT.toLowerCase())
           ) {
             alert(
@@ -412,158 +470,259 @@ export default {
             );
           } else {
             this.eventForm.user_NAME = this.username;
+
             this.eventForm.event_FINISH_HOUR =
               this.eventForm.event_FINISH_HOUR.concat(":00");
+
             this.eventForm.event_INIT_HOUR =
               this.eventForm.event_INIT_HOUR.concat(":00");
 
             this.eventForm.event_FINISH_HOUR =
               this.eventForm.event_FINISH_HOUR.substring(0, 8);
+
             this.eventForm.event_INIT_HOUR =
               this.eventForm.event_INIT_HOUR.substring(0, 8);
 
-            console.log("quepasa2", JSON.stringify(this.eventForm));
-
-            axios
-              .post("https://oriun-api.herokuapp.com/event", this.eventForm)
-              .then((response) => {
-                console.log(this.eventForm);
-                this.IDeventCreated = response.data.id_EVENT;
-                this.emitEvent();
-                alert("Evento Creado con exito");
-                this.$nextTick(() => {
-                  location.href = "../";
-                });
-              })
-              .catch((e) => console.log(e));
+            this.send();
           }
         } else {
           // this.eventForm.other_SPORT = null;
+
           this.eventForm.user_NAME = this.username;
+
           this.eventForm.event_FINISH_HOUR =
             this.eventForm.event_FINISH_HOUR.concat(":00");
+
           this.eventForm.event_INIT_HOUR =
             this.eventForm.event_INIT_HOUR.concat(":00");
 
           this.eventForm.event_FINISH_HOUR =
             this.eventForm.event_FINISH_HOUR.substring(0, 8);
+
           this.eventForm.event_INIT_HOUR =
             this.eventForm.event_INIT_HOUR.substring(0, 8);
 
-          // console.log("quepasa", JSON.stringify(this.eventForm));
-
-          axios
-            .post("https://oriun-api.herokuapp.com/event", this.eventForm)
-            .then((response) => {
-              console.log("EVENTO CREADO: ", response);
-              this.IDeventCreated = response.data.id_EVENT;
-              this.emitEvent();
-              alert("Evento Creado con exito");
-              this.$nextTick(() => {
-                location.href = "../";
-              });
-            })
-            .catch((e) => console.log(e));
+          this.send();
         }
       }
     },
+
     eventLoc(location) {
       this.eventForm.name_LOC_SPORT = location;
+
       // console.log("aqui", this.eventForm);
     },
+
     filterSports() {
       this.filteredSports = this.sportsNames.filter((sport) => {
         return sport
+
           .toLowerCase()
+
           .includes(this.eventForm.name_SPORT.toLowerCase());
       });
     },
+
     setSport(sport) {
       this.eventForm.name_SPORT = sport;
+
       this.modal = false;
+    },
+
+    send() {
+      axios
+
+        .get(
+          "https://oriun-api.herokuapp.com/location_sport?sport=" +
+            this.eventForm.name_SPORT +
+            "&location=" +
+            this.eventForm.name_LOC_SPORT
+        )
+
+        .then((response) => {
+          if (response.status == 200) {
+            alert("el evento se puede crear correctamente");
+
+            axios
+
+              .post("https://oriun-api.herokuapp.com/event", this.eventForm)
+
+              .then((response) => {
+                console.log(this.eventForm);
+
+                this.IDeventCreated = response.data.id_EVENT;
+
+                this.emitEvent();
+
+                alert("Evento Creado con exito");
+
+                location.href = "../";
+              })
+
+              .catch((e) => console.log(e));
+
+            alert("Evento Creado con exito");
+
+            location.href = "../";
+          }
+        })
+
+        .catch((error) => {
+          console.log(error.response.status, "coñoooo");
+
+          if (error.response.status == 404) {
+            console.log("holaaaaaaaa", error.response.data);
+
+            var str =
+              "Se aconseja practicar " +
+              error.response.data +
+              ", ¿Desea continuar con el deporte seleccionado?";
+
+            if (confirm(str)) {
+              axios
+
+                .post("https://oriun-api.herokuapp.com/event", this.eventForm)
+
+                .then((response) => {
+                  console.log(this.eventForm);
+
+                  this.IDeventCreated = response.data.id_EVENT;
+
+                  this.emitEvent();
+
+                  alert("Evento Creado con exito");
+
+                  location.href = "../";
+                })
+
+                .catch((e) => console.log(e));
+
+              alert("Evento Creado con exito");
+
+              location.href = "../";
+            }
+          }
+        });
     },
   },
 };
 </script>
 
+
+
 <style scoped>
 /* * {
+
    font-size: 14pt;
+
 } */
 
 .back {
   color: #fff;
+
   background-color: #94b43b;
+
   border-radius: 10px;
+
   box-shadow: 10px 10px #466b3f;
 }
+
 .back .titulos {
   padding-left: 10px;
+
   margin-top: 20px;
+
   margin-bottom: 20px;
 }
+
 .back .titulo_bln {
   padding-left: 10px;
+
   margin-bottom: 10px;
 }
+
 .back .form-control {
   margin-bottom: 15px;
 }
+
 .back .nombre-lugar {
   text-align: center;
+
   color: #fff;
+
   background: rgba(255, 255, 255, 0);
+
   border-color: rgba(255, 255, 255, 0);
+
   font-size: 25px;
 }
-.back #button:active {
-  color: #550000;
-  background: rgba(255, 255, 255, 0);
-  border-color: rgba(255, 255, 255, 0);
-}
-.back #button:active {
-  color: #550000;
-  background: rgba(255, 255, 255, 0);
-  border-color: rgba(255, 255, 255, 0);
-}
-.tit-det {
-  font-size: 30px;
-}
-.titulo_prin {
-  font-size: 30px;
-}
-.descripcion {
-  max-height: 60px;
-  min-height: 50px;
-}
-.boton {
-  background: #565a5c;
-  color: #fff;
-  width: 150px;
-  padding-right: 15px;
-  text-align: center;
-}
-.subtitulo {
-  font-size: 25px;
-}
-.sportsList {
-  list-style-type: none;
-  background-color: white;
-  color: #495057;
-  padding-left: 0px;
-  border: 1px solid;
-  margin-top: -15px;
-}
+
 .nombre-lugar:focus {
   color: green;
 }
 
+.back #button:active {
+  color: #550000;
+
+  background: rgba(255, 255, 255, 0);
+
+  border-color: rgba(255, 255, 255, 0);
+}
+
+.tit-det {
+  font-size: 30px;
+}
+
+.titulo_prin {
+  font-size: 30px;
+}
+
+.descripcion {
+  max-height: 60px;
+
+  min-height: 50px;
+}
+
+.boton {
+  background: #565a5c;
+
+  color: #fff;
+
+  width: 150px;
+
+  padding-right: 15px;
+
+  text-align: center;
+}
+
+.subtitulo {
+  font-size: 25px;
+}
+
+.sportsList {
+  list-style-type: none;
+
+  background-color: white;
+
+  color: #495057;
+
+  padding-left: 0px;
+
+  border: 1px solid;
+
+  margin-top: -15px;
+}
+
 .sportsList li {
   cursor: pointer;
+
   padding-left: 15px;
 }
+
 .sportsList li:hover {
   background: #1e90ff;
+
   color: white;
 }
 </style>
+
