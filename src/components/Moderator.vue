@@ -187,7 +187,7 @@
 
               <div class="card-body">
                 <!-- Lista de Deportes registrados-->
-                <div class="table-responsive float-left col-5">
+                <div class="table-responsive float-left col-md-5">
                   <table
                     id="SportsTable"
                     class="table table-bordered table-hover"
@@ -196,7 +196,15 @@
                     <thead class="thead-dark text-center">
                       <tr>
                         <th>REGISTRADOS</th>
-                        <th></th>
+                        <th class="py-0">
+                          <button
+                            v-on:click="newSport()"
+                            class="btn text-white newSport"
+                            title="Nuevo"
+                          >
+                            <i class="fa fa-plus-circle"></i>
+                          </button>
+                        </th>
                       </tr>
                     </thead>
                     <tbody id="sportsTableRows">
@@ -229,7 +237,7 @@
                   </table>
                 </div>
 
-                <div class="table-responsive float-right col-7">
+                <div class="table-responsive float-right col-md-7">
                   <table
                     id="SugestionsTable"
                     class="table table-bordered table-hover table-options"
@@ -330,6 +338,7 @@ export default {
       events: [],
       allevents: [],
       sportsData: [],
+      sportsNames: [],
       suggestedSports: [],
       search: "",
       switchChecked: false,
@@ -338,6 +347,8 @@ export default {
       loadingSports: true,
       loadingSuggSports: true,
       color: "#76232F",
+      newSportInput: null,
+      newSportInputValid: false,
     };
   },
   watch: {
@@ -354,11 +365,9 @@ export default {
   mounted: function () {
     axios
       .get("https://oriun-api.herokuapp.com/events?init=0&size=-1")
-      // .get("http://localhost:8081/events?init=0&size=-1")
       .then((response) => (this.events = response.data));
     axios
       .get("https://oriun-api.herokuapp.com/eventsall/")
-      // .get("http://localhost:8081/eventsall/")
       .then(
         (response) => (
           (this.allevents = response.data), (this.loadingEvents = false)
@@ -366,16 +375,17 @@ export default {
       );
     axios
       .get("https://oriun-api.herokuapp.com/sports/")
-      // .get("http://localhost:8081/sports/")
-      .then(
-        (response) => (
-          (this.sportsData = response.data), (this.loadingSports = false)
-        )
-      );
+      .then((response) => {
+          this.sportsData = response.data;
+          this.loadingSports = false;
+          this.sportsData.forEach(element => {
+            this.sportsNames.push(element.name_SPORT)  
+          });
+          
+        });
 
     axios
       .get("https://oriun-api.herokuapp.com/otherscount/")
-      // .get("http://localhost:8081/otherscount/")
       .then(
         (response) => (
           (this.suggestedSports = response.data),
@@ -431,7 +441,6 @@ export default {
         try {
           await axios.delete(
             "https://oriun-api.herokuapp.com/nosports?sport=" + String(sport.name_SPORT)
-            // "http://localhost:8081/nosports?sport=" + String(sport.name_SPORT)
           );
           document.getElementById(sport.name_SPORT).remove();
           this.toaster.success("Deporte Eliminado");
@@ -460,8 +469,7 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "https://oriun-api.herokuapp.com/NoEvent?id_event=" +
-              event.id_EVENT
+            "https://oriun-api.herokuapp.com/NoEvent?id_event=" + event.id_EVENT
           );
           document.getElementById(event.id_EVENT).remove();
           this.toaster.success("Evento eliminado");
@@ -499,6 +507,73 @@ export default {
         }
       } else {
       }
+    },
+    newSport() {
+      var formExists = document.getElementById("newSportName") || false;
+
+      if (!formExists) {
+        var table = document.getElementById("sportsTableRows");
+        var row = table.insertRow(0);
+        row.innerHTML =
+          '<tr><td colspan="2"><div class="input-group"><input type="text" id="newSportName" class="mr-4 form-control" name="newSport" placeholder="Deporte" autocomplete="off"><div id="newSportInvalidFeedback" class="order-last invalid-feedback"></div><div class="input-group-append my-auto"><button title="Registrar" id="newSportSubmit" class="btn btn-primary p-0 mr-2" style="height: 30px;width: 30px; visibility:hidden"><i class="fa fa-check"></i></button><button title="Cancelar" id="newSportCancel" class="btn btn-secondary p-0" style="height: 30px;width: 30px" ><i class="fa fa-times"></i></button></div></div></td></tr>';
+        
+        this.$nextTick(() => {
+          document.getElementById("newSportName").addEventListener("input", () => {
+            this.checkInput();
+          });
+          document.getElementById("newSportSubmit").addEventListener("click", () => {
+            this.newSportSubmit();
+          });
+          document.getElementById("newSportCancel").addEventListener("click", () => {
+            row.remove();
+          });
+        });
+      }
+    },
+    checkInput(){
+      var newSportName = document.getElementById('newSportName').value.trim();
+      this.newSportInput = newSportName;
+      if(newSportName != ''){
+        if(this.sportsNames.includes(newSportName)){
+          this.newSportInputValid = false;
+          console.log(this.sportsNames, newSportName)
+          try{
+            document.getElementById('newSportInvalidFeedback').innerText = 'Este deporte ya está registrado';
+            document.getElementById('newSportName').classList.add('is-invalid');
+            document.getElementById('newSportSubmit').style.visibility = "hidden";
+            
+          }catch(error){}
+        }else{
+          this.newSportInputValid = true;
+          try{
+            document.getElementById('newSportName').classList.remove('is-invalid');
+            document.getElementById('newSportSubmit').style.visibility = "visible";
+          }catch(error){}
+        }
+      }else{
+          this.newSportInputValid = false;
+          try{
+            document.getElementById('newSportInvalidFeedback').innerText = 'No debe estar vacio';
+            document.getElementById('newSportName').classList.add('is-invalid');
+            document.getElementById('newSportSubmit').style.visibility = "hidden";
+          }catch(error){}
+      }
+    },
+    async newSportSubmit() {
+      if(this.newSportInputValid){
+        try {
+          await axios.post("https://oriun-api.herokuapp.com/g/", {
+            name_SPORT: this.newSportInput,
+          });
+
+          this.toaster.success("Deporte Registrado");
+          setTimeout(() => {
+            location.reload();
+          }, 1000);
+        } catch (error) {
+          this.toaster.failure("Error registrando deporte");
+        }
+      }      
     },
     getParameterByName(name, url) {
       if (!url) url = window.location.href;
@@ -625,6 +700,10 @@ export default {
   padding: 0 0.53rem;
   /* font-size: 1rem; */
   transition: 0.1s;
+}
+
+.newSport {
+  margin-top: -28px;
 }
 
 #SportsTable td:last-child {
