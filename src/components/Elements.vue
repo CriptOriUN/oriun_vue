@@ -63,15 +63,17 @@
                   <td class="align-middle d-flex justify-content-center">
                     <button
                       class="btn btn-success"
-                      title="Solicitar"
+                      title="Reservar"
+                      :id="element.id_ELEMENT"
                       v-if="element.available"
                       v-on:click="getElementByID(element.id_ELEMENT)"
+                      style="width:100px"
                     >
-                      <!-- Borrar -->
-                      <!-- <i class="fa fa-minus-circle"></i> -->
-                      Solicitar
+                      <span v-if="loadingBooking && element.id_ELEMENT == bookingElementID" class="spinner-border spinner-border-sm" role="status"></span>
+                      <span v-else>Reservar</span>
+
                     </button>
-                    <span class="btn" title="Solicitar" v-else>
+                    <span class="btn" title="Reservar" v-else>
                       No disponible
                     </span>
                   </td>
@@ -145,7 +147,10 @@ export default {
       currentPage: 1,
       toaster,
       loadingElements: true,
+      loadingBooking: false,
       color: "#94B43B",
+      bookingElementID: -1,
+      rentDate: new Date(),
     };
   },
   watch: {
@@ -168,6 +173,7 @@ export default {
     this.getNumElements();
     this.getElements();
     this.getAllElements();
+    
   },
   computed: {
     filterElements: function () {
@@ -188,12 +194,20 @@ export default {
       });
     },
   },
+  mounted(){
+    this.$root.$on("updateBookingDate", (rentDate) => {
+      this.rentDate = rentDate;
+      console.log("DATE RECEIVED!", rentDate)
+    });
+  },
   methods: {
     getElementByID(elementID){
+      this.loadingBooking = true;
+      this.bookingElementID = elementID;
       axios
-        // .get("http://localhost:8081/MyElement?id=" + elementID)
-        .get("https://oriun-api.herokuapp.com/MyElement?id=" + elementID)
-        .then((response) => (this.elementShow = response.data));
+        // .get("https://oriunapi.herokuapp.com/MyElement?id=" + elementID)
+        .get("https://oriunapi.herokuapp.com/MyElement?id=" + elementID)
+        .then((response) => (this.elementShow = response.data, this.loadingBooking = false));
     },
     getElements() {
       if (this.maxNumRows == -1) {
@@ -202,8 +216,8 @@ export default {
         this.initElementPage = (this.currentPage - 1) * this.maxNumRows;
         axios
           .get(
-            // "http://localhost:8081/Singlelmts?init=" +
-            "https://oriun-api.herokuapp.com/Singlelmts?init=" +
+            // "https://oriunapi.herokuapp.com/Singlelmts?init=" +
+            "https://oriunapi.herokuapp.com/Singlelmts?init=" +
               this.initElementPage +
               "&size=" +
               this.maxNumRows
@@ -214,15 +228,15 @@ export default {
     getAllElements() {
       axios
         .get(
-          // "http://localhost:8081/Singlelmts?init=0&size=-1"
-          "https://oriun-api.herokuapp.com/Singlelmts?init=0&size=-1"
+          // "https://oriunapi.herokuapp.com/Singlelmts?init=0&size=-1"
+          "https://oriunapi.herokuapp.com/Singlelmts?init=0&size=-1"
         )
         .then((response) => (this.elementsAll = response.data));
     },
     getNumElements() {
       axios
-        // .get("http://localhost:8081/nelements")
-        .get("https://oriun-api.herokuapp.com/nelements")
+        // .get("https://oriunapi.herokuapp.com/nelements")
+        .get("https://oriunapi.herokuapp.com/nelements")
         .then(
           (response) => (
             (this.numElements = response.data), this.auxListPages()
@@ -277,46 +291,54 @@ export default {
         this.currentPage = this.currentPage + 1;
       }
     },
+    
     async requestElement(element) {
-      console.log("element", element)
+      console.log("element", element);
+      this.$root.$emit("newBooking",element);
       const ok = await this.$refs.confirmDialogue.show({
-        title: "Solicitar Elemento",
-        message:
-          "Detalles de la solicitud: \n" +
-          " <br> <ul><li><b>Implemento: </b>" +
-          element.element_NAME +
-          "</li>" +
-          "<li><b>Descripcion: </b>" +
-          element.description +
-          "</li>" +
-          "<li><b>Ubicacion: </b>" +
-          element.name_LOCATION +
-          "</li>" +
-          "<li><b>Deporte: </b>" +
-          element.name_SPORT +
-          "</li>" +
-          "<li><b>Fecha de entrega: </b>" +
-          "?".big().bold() +
-          "</li>" +
-          "</ul>" +
-          "<img class='d-block mx-auto' alt='Imagen del implemento deportivo' src=' data:image/jpg;base64," +
-          element.element_IMAGE +
-          "' style='max-width:90%; max-height:200px'>",
-        okButton: "Solicitar",
+        title: "Detalles de la reserva",
+        message: "Booking form",
+          // "<div class='row'><div class='col-6'><ul style='list-style-type:none;'><li><b>Implemento: </b>" +
+          // element.element_NAME +
+          // "</li>" +
+          // "<li><b>Descripcion: </b>" +
+          // element.description +
+          // "</li>" +
+          // "<li><b>Ubicacion: </b>" +
+          // element.name_LOCATION +
+          // "</li>" +
+          // "<li><b>Deporte: </b>" +
+          // element.name_SPORT +
+          // "</li>" +
+          // "<li><b>Retiro: </b> <br>" +
+          // "<div class='ml-3'>" +
+          // "<label class='mr-5' for='bookingDate'>Dia </label><input id='bookingDate' class='ml-3' type='date' name='bookingDate'><br>" +
+          // "</div>" + 
+          // "<div class='mt-3 ml-3'>" +
+          // "<label class='' for='bookingTime'>Hora </label><input @focus='limitDate()' id='bookingTime' class='ml-3' type='time' name='bookingTime'>" +
+          // "</div>" + 
+          // "</li>" +
+          // "</ul></div>" +
+          // "<div class='col-6'><img class='d-block mx-auto' alt='Imagen' src=' data:image/jpg;base64," +
+          // element.element_IMAGE +
+          // "' onerror=\"this.onerror=null; this.alt='Image Not Found'; this.src=\'https://i.ibb.co/sFpkRp3/no-image.png\'\" style='max-width:90%; max-height:200px'></div></div>",
+        okButton: "Reservar",
       });
+      
+      
+      
       // If you throw an error, the method will terminate here unless you surround it wil try/catch
       if (ok) {
         try {
           await axios
-            .post
-            // "http://localhost:8081/nosports?sport=" + String(sport.name_SPORT)
-            ();
+            .post(
+            "https://oriunapi.herokuapp.com/gAlquiler", {user_NAME: this.username, id_ELEMENT: element.id_ELEMENT, rent_DATE: this.rentDate}
+            );
           this.toaster.success(
-            "Solicitud realizada correctamente (No se está realizando ninguna acción)"
+            "Reserva realizada correctamente"
           );
         } catch (error) {
-          // this.toaster.failure("Error realizando solcitud");
-          this.toaster.failure("Falta hacer post para solicitar elemento");
+          this.toaster.failure("Error realizando reserva");
         }
       }
     },

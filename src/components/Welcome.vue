@@ -117,9 +117,39 @@
           </div>
         </div>
       </div>
+
+      <div class="row w-100">
+        <div class="col-6 w-auto"></div>
+        <div class="col-6 float-right">
+          <div class="mis-eventos">
+            <h4 class="titulo-eventos">Mis Reservas</h4>
+
+            <hr class="mb-1" />
+
+            <div class="px-4">
+              <div
+                v-for="(booking,index) in myBooking"
+                :key="index"
+              >
+                <div :id="'booking' + booking.id_RENT" v-on:click="pop='booking'; mostrar(booking);" class="row myBooking" title="Ver detalles">
+                  <div class="col-9">
+                    <h5 class="titulo-dep">
+                      {{ booking.element_NAME }}
+                    </h5>
+                  </div>
+                  <div class="col-3">
+                    <span>{{ booking.rent_DATE }}</span>
+                  </div>
+                </div>
+                <hr v-if="index != myBooking.length - 1" class="w-75 mx-auto my-0" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="overlay" v-bind:class="{ active: isActive }">
+    <div class="overlay" v-if="pop=='evento'" v-bind:class="{ active: isActive }">
       <div class="popup">
         <a
           href="#"
@@ -128,23 +158,76 @@
           v-on:click="ocultar()"
           >X</a
         >
-
         <h3>Detalles del evento</h3>
-
         <h6>Nombre: {{ nombreEvento }}</h6>
-
         <h6>Deporte: {{ deporteEvento }}</h6>
-
         <h6>Organizador: {{ organizadorEvento }}</h6>
-
         <h6>Fecha: {{ fechaEvento }}</h6>
-
         <h6>Hora: {{ horaEvento }}</h6>
-
         <h6>Locación: {{ locacionEvento }}</h6>
       </div>
     </div>
 
+  <div class="overlay" v-if="pop=='booking'" v-bind:class="{ active: isActive }">
+      <div class="popup">
+        <div class="position-relative">
+        <h3 class="mx-auto">Detalles de la Reserva</h3>
+        <a
+          href="#"
+          id="btn-cerrar-popup"
+          class="btn-cerrar-popup h3 position-absolute"
+          v-on:click="ocultar()"
+          style="top: 0px; right: 0px;"
+          >&times;</a
+        >
+        </div>
+        <hr>
+        <div class="row mx-auto">
+          <div class="my-auto mt-3 ml-4 col-6">
+            <div class="row">
+              <h6 class="col-4 mb-1 pb-0 text-left">Elemento: </h6>
+              <p class="col-8 mb-1  text-left">{{bookingElement}}</p>
+            </div>
+            <div class="row">
+              <h6 class="col-4 mb-1 text-left">Ubicacion: </h6>
+              <p class="col-8 mb-1  text-left">{{bookingLocation}}</p>
+            </div>
+            <div class="row">
+              <h6 class="col-4 mb-1 text-left">Deporte: </h6>
+              <p class="col-8 mb-1 text-left">{{bookingSport}}</p>
+            </div>
+            <div class="row">
+              <h6 class="col-4 mb-1 text-left">Fecha: </h6>
+              <p class="col-8 mb-1 text-left">{{bookingDate}}</p>
+            </div>
+          </div>
+          <div class="col-5">
+            <img
+              class="d-block mx-auto my-auto"
+              alt="Imagen"
+              :src="'data:image/jpg;base64,' + bookingImage"
+              onerror="this.onerror=null; this.alt='Image Not Found';
+                      this.src='https://i.ibb.co/sFpkRp3/no-image.png'"
+              style="max-width: 90%; max-height: 200px"
+            />
+          </div>
+        </div>
+        <hr>
+        <div>
+          <input class="btn btn-danger" type="button" id="deleteBookingButton" @click="deleteBookingConfirm()" value="Cancelar Reserva">          
+          <div class="row mx-5 d-none" id="deleteBookingConfirmBlock">
+            <div class="form-group col-7 ">
+              <small><p  class="mb-1">Escriba <strong>{{bookingElement}}</strong> para confirmar</p></small>
+              <input class="form-control form-control-sm mt-0" type="text" id="confirmDelete" v-model="confirmDelete" autocomplete="off">
+            </div>
+            <input class="btn btn-danger col-4 my-auto ml-3" type="button" @click="deleteBooking(bookingId)" value="Cancelar Reserva" style="height: 40px;" :disabled="confirmDelete != bookingElement">
+          </div>
+          
+        </div>
+        
+
+        </div>
+    </div>
     <!-- MODAL -->
 
     <vue-toastr ref="mytoast"></vue-toastr>
@@ -180,6 +263,15 @@ export default {
       userSport: null,
       agregarDep: false,
       deporteNuevo: "",
+      myBooking: null,
+      pop: '',
+      bookingElement: '',
+      bookingLocation: '',
+      bookingSport: '',
+      bookingImage: null,
+      bookingDate: '',
+      bookingId: null,
+      confirmDelete: null,
     };
   },
   created: function () {
@@ -189,36 +281,23 @@ export default {
     this.getEvents();
     this.getUserSports();
     this.getSports();
+    this.getBooking();
     this.$refs.mytoast.defaultPosition = "toast-bottom-right";
   },
   methods: {
     getEvents() {
-      // console.log(this.username, "hola", self.username);
       axios
-        .get(
-          "https://oriun-api.herokuapp.com/userevents/?user=" +
-            this.username
-        )
+        .get("https://oriunapi.herokuapp.com/userevents/?user=" + this.username)
         .then((response) => {
-          // axios
-          // .get("http://localhost:8081/userevents/?user=" + this.username)
-          // .then((response) => {
           console.log(response);
           this.events = response.data;
         })
         .catch((e) => console.log(e));
     },
     getUserSports() {
-      // console.log(this.username, "hola", self.username);
       axios
-        .get(
-          "https://oriun-api.herokuapp.com/usersports/?user=" +
-            this.username
-        )
+        .get("https://oriunapi.herokuapp.com/usersports/?user=" + this.username)
         .then((response) => {
-          // axios
-          //    .get("http://localhost:8081/usersports/?user=" + this.username)
-          //    .then((response) => {
           console.log(response);
           this.userSport = response.data;
         })
@@ -226,24 +305,59 @@ export default {
     },
     getSports() {
       axios
-        // .get("http://localhost:8081/sports")
-        .get("https://oriun-api.herokuapp.com/sports")
+        .get("https://oriunapi.herokuapp.com/sports")
         .then((response) => {
           console.log(response);
           this.sports = response.data;
         })
         .catch((e) => console.log(e));
     },
-    mostrar(objet) {
+    getBooking() {
+      axios
+        .get("https://oriunapi.herokuapp.com/laUser?user=" + this.username)
+        .then((response) => {
+          this.myBooking = response.data;
+        });
+    },
+    deleteBookingConfirm(){
+      document.getElementById('deleteBookingConfirmBlock').classList.remove('d-none')
+      document.getElementById('deleteBookingButton').classList.add('d-none')
+    },
+    async deleteBooking(bookingId){
+      try {
+        await axios.delete("https://oriunapi.herokuapp.com/noAlquiler?id=" + bookingId).then(() => {
+          this.ocultar();
+          document.getElementById('booking'+bookingId).remove();
+        })
+        this.success("Reserva cancelada");
+      } catch (error) {
+        this.error("Error cancelando reserva");
+      }
+    },
+    mostrar(object) {
       this.isActive = true;
+      console.log(object)
+      if(this.pop == 'event'){
+        this.nombreEvento = object.event_TITLE;
+        this.deporteEvento = object.name_SPORT;
+        this.organizadorEvento = object.user_NAME;
+        this.fechaEvento = object.event_INIT;
+        this.horaEvento = object.event_INIT_HOUR;
+        this.locacionEvento = object.name_LOC_SPORT;
+      }
 
-      console.log(objet);
-      this.nombreEvento = objet.event_TITLE;
-      this.deporteEvento = objet.name_SPORT;
-      this.organizadorEvento = objet.user_NAME;
-      this.fechaEvento = objet.event_INIT;
-      this.horaEvento = objet.event_INIT_HOUR;
-      this.locacionEvento = objet.name_LOC_SPORT;
+      if(this.pop == 'booking'){
+        try{
+          document.getElementById('deleteBookingConfirmBlock').classList.add('d-none')
+          document.getElementById('deleteBookingButton').classList.remove('d-none')
+        }catch(error){}
+        this.bookingElement = object.element_NAME;
+        this.bookingLocation = object.name_LOCATION;
+        this.bookingSport = object.name_SPORT;
+        this.bookingImage = object.element_IMAGE;
+        this.bookingDate = object.rent_DATE;
+        this.bookingId = object.id_RENT;
+      }
     },
     ocultar() {
       this.isActive = false;
@@ -267,21 +381,21 @@ export default {
       } else {
         axios
           .post(
-            "https://oriun-api.herokuapp.com/usersportsreg/?user=" +
+            "https://oriunapi.herokuapp.com/usersportsreg/?user=" +
               this.username +
               "&sport=" +
               this.deporteNuevo
           )
-          // .get("http://localhost:8081/sports")
+          // .get("https://oriunapi.herokuapp.com/sports")
           .then((response) => {
             // axios
             //    .post(
-            //       "http://localhost:8081/usersportsreg/?user=" +
+            //       "https://oriunapi.herokuapp.com/usersportsreg/?user=" +
             //          this.username +
             //          "&sport=" +
             //          this.deporteNuevo
             //    )
-            //    // .get("http://localhost:8081/sports")
+            //    // .get("https://oriunapi.herokuapp.com/sports")
             //    .then((response) => {
             console.log(response);
             // this.userSport = response.data;
@@ -297,7 +411,7 @@ export default {
     quitarNuevo(deporte) {
       axios
         .delete(
-          "https://oriun-api.herokuapp.com/usersportsdel/?user=" +
+          "https://oriunapi.herokuapp.com/usersportsdel/?user=" +
             this.username +
             "&sport=" +
             deporte
@@ -305,7 +419,7 @@ export default {
         .then((response) => {
           // axios
           //    .delete(
-          //       "http://localhost:8081/usersportsdel/?user=" +
+          //       "https://oriunapi.herokuapp.com/usersportsdel/?user=" +
           //          this.username +
           //          "&sport=" +
           //          deporte
@@ -313,7 +427,7 @@ export default {
           alert("deporte eliminado correctamente");
           location.href = "../";
         })
-        // .get("http://localhost:8081/sports")
+        // .get("https://oriunapi.herokuapp.com/sports")
         // .then((response) => {
         //    console.log(response);
         //    this.userSport = response.data;
@@ -338,8 +452,7 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "https://oriun-api.herokuapp.com/NoEvent?id_event=" +
-              event.id_EVENT
+            "https://oriunapi.herokuapp.com/NoEvent?id_event=" + event.id_EVENT
           );
           document.getElementById(event.id_EVENT).remove();
           this.success("Evento eliminado");
@@ -492,5 +605,17 @@ export default {
 }
 .quitar:hover {
   background-color: #a12121;
+}
+
+.myBooking {
+  padding-top: 15px;
+  padding-bottom: 10px;
+  margin-bottom: 0px;
+  border-radius: 10px;
+}
+
+.myBooking:hover {
+  cursor: pointer;
+  background-color: rgba(70, 107, 63, 0.5);
 }
 </style>
