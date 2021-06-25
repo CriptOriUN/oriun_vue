@@ -379,7 +379,7 @@ export default {
           this.sportsData = response.data;
           this.loadingSports = false;
           this.sportsData.forEach(element => {
-            this.sportsNames.push(element.name_SPORT)  
+            this.sportsNames.push(element.name_SPORT.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase())  
           });
           
         });
@@ -534,7 +534,7 @@ export default {
       var newSportName = document.getElementById('newSportName').value.trim();
       this.newSportInput = newSportName;
       if(newSportName != ''){
-        if(this.sportsNames.includes(newSportName)){
+        if(this.sportsNames.includes(newSportName.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase())){
           this.newSportInputValid = false;
           console.log(this.sportsNames, newSportName)
           try{
