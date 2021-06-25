@@ -205,8 +205,7 @@ export default {
       this.loadingBooking = true;
       this.bookingElementID = elementID;
       axios
-        // .get("https://oriunapi.herokuapp.com/MyElement?id=" + elementID)
-        .get("https://oriunapi.herokuapp.com/MyElement?id=" + elementID)
+        .get("https://oriun-api.herokuapp.com/MyElement?id=" + elementID)
         .then((response) => (this.elementShow = response.data, this.loadingBooking = false));
     },
     getElements() {
@@ -216,8 +215,7 @@ export default {
         this.initElementPage = (this.currentPage - 1) * this.maxNumRows;
         axios
           .get(
-            // "https://oriunapi.herokuapp.com/Singlelmts?init=" +
-            "https://oriunapi.herokuapp.com/Singlelmts?init=" +
+            "https://oriun-api.herokuapp.com/Singlelmts?init=" +
               this.initElementPage +
               "&size=" +
               this.maxNumRows
@@ -228,15 +226,13 @@ export default {
     getAllElements() {
       axios
         .get(
-          // "https://oriunapi.herokuapp.com/Singlelmts?init=0&size=-1"
-          "https://oriunapi.herokuapp.com/Singlelmts?init=0&size=-1"
+          "https://oriun-api.herokuapp.com/Singlelmts?init=0&size=-1"
         )
         .then((response) => (this.elementsAll = response.data));
     },
     getNumElements() {
       axios
-        // .get("https://oriunapi.herokuapp.com/nelements")
-        .get("https://oriunapi.herokuapp.com/nelements")
+        .get("https://oriun-api.herokuapp.com/nelements")
         .then(
           (response) => (
             (this.numElements = response.data), this.auxListPages()
@@ -332,7 +328,7 @@ export default {
         try {
           await axios
             .post(
-            "https://oriunapi.herokuapp.com/gAlquiler", {user_NAME: this.username, id_ELEMENT: element.id_ELEMENT, rent_DATE: this.rentDate}
+            "https://oriun-api.herokuapp.com/gAlquiler", {user_NAME: this.username, id_ELEMENT: element.id_ELEMENT, rent_DATE: this.rentDate}
             );
           this.toaster.success(
             "Reserva realizada correctamente"

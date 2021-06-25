@@ -287,7 +287,7 @@ export default {
   methods: {
     getEvents() {
       axios
-        .get("https://oriunapi.herokuapp.com/userevents/?user=" + this.username)
+        .get("https://oriun-api.herokuapp.com/userevents/?user=" + this.username)
         .then((response) => {
           console.log(response);
           this.events = response.data;
@@ -296,7 +296,7 @@ export default {
     },
     getUserSports() {
       axios
-        .get("https://oriunapi.herokuapp.com/usersports/?user=" + this.username)
+        .get("https://oriun-api.herokuapp.com/usersports/?user=" + this.username)
         .then((response) => {
           console.log(response);
           this.userSport = response.data;
@@ -305,7 +305,7 @@ export default {
     },
     getSports() {
       axios
-        .get("https://oriunapi.herokuapp.com/sports")
+        .get("https://oriun-api.herokuapp.com/sports")
         .then((response) => {
           console.log(response);
           this.sports = response.data;
@@ -314,7 +314,7 @@ export default {
     },
     getBooking() {
       axios
-        .get("https://oriunapi.herokuapp.com/laUser?user=" + this.username)
+        .get("https://oriun-api.herokuapp.com/laUser?user=" + this.username)
         .then((response) => {
           this.myBooking = response.data;
         });
@@ -325,7 +325,7 @@ export default {
     },
     async deleteBooking(bookingId){
       try {
-        await axios.delete("https://oriunapi.herokuapp.com/noAlquiler?id=" + bookingId).then(() => {
+        await axios.delete("https://oriun-api.herokuapp.com/noAlquiler?id=" + bookingId).then(() => {
           this.ocultar();
           document.getElementById('booking'+bookingId).remove();
         })
@@ -381,21 +381,20 @@ export default {
       } else {
         axios
           .post(
-            "https://oriunapi.herokuapp.com/usersportsreg/?user=" +
+            "https://oriun-api.herokuapp.com/usersportsreg/?user=" +
               this.username +
               "&sport=" +
               this.deporteNuevo
           )
-          // .get("https://oriunapi.herokuapp.com/sports")
           .then((response) => {
             // axios
             //    .post(
-            //       "https://oriunapi.herokuapp.com/usersportsreg/?user=" +
+            //       "https://oriun-api.herokuapp.com/usersportsreg/?user=" +
             //          this.username +
             //          "&sport=" +
             //          this.deporteNuevo
             //    )
-            //    // .get("https://oriunapi.herokuapp.com/sports")
+            //    // .get("https://oriun-api.herokuapp.com/sports")
             //    .then((response) => {
             console.log(response);
             // this.userSport = response.data;
@@ -411,7 +410,7 @@ export default {
     quitarNuevo(deporte) {
       axios
         .delete(
-          "https://oriunapi.herokuapp.com/usersportsdel/?user=" +
+          "https://oriun-api.herokuapp.com/usersportsdel/?user=" +
             this.username +
             "&sport=" +
             deporte
@@ -419,7 +418,7 @@ export default {
         .then((response) => {
           // axios
           //    .delete(
-          //       "https://oriunapi.herokuapp.com/usersportsdel/?user=" +
+          //       "https://oriun-api.herokuapp.com/usersportsdel/?user=" +
           //          this.username +
           //          "&sport=" +
           //          deporte
@@ -427,7 +426,7 @@ export default {
           alert("deporte eliminado correctamente");
           location.href = "../";
         })
-        // .get("https://oriunapi.herokuapp.com/sports")
+        // .get("https://oriun-api.herokuapp.com/sports")
         // .then((response) => {
         //    console.log(response);
         //    this.userSport = response.data;
@@ -452,7 +451,7 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "https://oriunapi.herokuapp.com/NoEvent?id_event=" + event.id_EVENT
+            "https://oriun-api.herokuapp.com/NoEvent?id_event=" + event.id_EVENT
           );
           document.getElementById(event.id_EVENT).remove();
           this.success("Evento eliminado");
