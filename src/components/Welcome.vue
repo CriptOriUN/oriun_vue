@@ -119,8 +119,8 @@
       </div>
 
       <div class="row w-100">
-        <div class="col-6 w-auto"></div>
-        <div class="col-6 float-right">
+        <div class="col-md-6 col-0 w-auto"></div>
+        <div class="col-md-6 float-right">
           <div class="mis-eventos">
             <h4 class="titulo-eventos">Mis Reservas</h4>
 
