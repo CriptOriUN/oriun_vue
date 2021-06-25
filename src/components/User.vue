@@ -1,6 +1,7 @@
 <template>
   <div class="user">
     <NavBar :username="username" />
+    <Websocket />
     <div id="thewelcome">
       <h6>
         Hola,
@@ -26,7 +27,7 @@
                     href="#"
                     v-on:click="
                       pop = 'notificacion';
-                      mostrar(noti);
+                      mostrar(noti, true);
                     "
                     >{{ noti.name_SPORT }}</a
                   >
@@ -61,7 +62,7 @@
                       class="info-titulo-ref"
                       v-on:click="
                         pop = 'evento';
-                        mostrar(event);
+                        mostrar(event, true);
                       "
                       >{{ event.event_TITLE }}</a
                     >
@@ -76,11 +77,51 @@
               </div>
               <hr />
             </div>
+
+            <div class="tabla-eve">
+              <h3 class="titulo-tablas">Eventos a Asistir</h3>
+              <hr />
+              <div class="row ml-4 mr-4 d-flex bd-highlight">
+                <div
+                  v-for="event in eventosAsistir"
+                  :key="event.id"
+                  class="tar-evento flex-fill bd-highlight"
+                >
+                  <div class="d-flex justify-content-between">
+                    <h5 class="info-titulo">
+                      <a
+                        href="#"
+                        class="info-titulo-ref"
+                        v-on:click="
+                          pop = 'evento';
+                          mostrar(event, false);
+                        "
+                        >{{ event.event_TITLE }}</a
+                      >
+                    </h5>
+                    <button
+                      type="button"
+                      class="btn quitar mr-3"
+                      v-on:click="noAsistir(event.id_EVENT, event.event_TITLE)"
+                    >
+                      <i class="fa fa-minus"></i>
+                    </button>
+                  </div>
+
+                  <p class="info-fecha">fecha: {{ event.event_INIT }}</p>
+                  <p class="info-hora-lugar">
+                    hora: {{ event.event_INIT_HOUR }} Lugar:
+                    {{ event.name_LOC_SPORT }}
+                    <!--<a class="detalles" href="#">Detalles</a>-->
+                  </p>
+                </div>
+              </div>
+              <hr />
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- <button @click="emitGreeting">Greet</button> -->
     <div class="overlay" v-bind:class="{ active: isActive }">
       <div class="popup">
         <a
@@ -96,6 +137,11 @@
           <h6>Descripción: {{ descripcionNoti }}</h6>
           <h6>Deporte: {{ deporteNoti }}</h6>
           <h6>Hora: {{ horaNoti }}</h6>
+          <div id="boton-asistir">
+            <button type="button" class="btn btn-primary" @click="asistir()">
+              Asistir
+            </button>
+          </div>
         </div>
         <div v-if="pop == 'evento'">
           <h3>Detalles del evento</h3>
@@ -105,22 +151,29 @@
           <h6>Fecha: {{ fechaEvento }}</h6>
           <h6>Hora: {{ horaEvento }}</h6>
           <h6>Locación: {{ locacionEvento }}</h6>
+          <div v-if="mostrarBotonAsis">
+            <div id="boton-asistir">
+              <button type="button" class="btn btn-primary" @click="asistir()">
+                Asistir
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <MySocialChat />
   </div>
 </template>
 
 <script>
 import NavBar from "../components/header/NavBar";
 import axios from "axios";
-import MySocialChat from "../components/social-chat/MySocialChat";
+import Websocket from "../components/Websocket";
+
 export default {
   name: "Users",
   components: {
     NavBar,
-    MySocialChat,
+    Websocket,
   },
   watch: {
     newNotification() {
@@ -144,95 +197,65 @@ export default {
       horaEvento: "",
       locacionEvento: "",
       newNotification: null,
-      userSports: [],
-      notificationsAllowed: false,
+      eventosAsistir: [],
+      id_user: "",
+      id_asistencia: "",
+      puedoAsistir: false,
+      mostrarBotonAsis: false,
     };
   },
   created: function () {
     this.username = this.$route.params.username;
-    
   },
   mounted() {
-    // console.log('holanda')
     this.getEvents();
     this.getNotifications();
-    this.getUserSports();
-    if(!this.notificationsAllowed){
-      this.requestNotificationPermission();
-    }
-
-    this.$root.$on("sportNotifications", (sportNotifications, userCreator) => {
+    this.$root.$on("sportNotifications", (sportNotifications) => {
       console.log("RECEIVED!!!!");
       this.newNotification = JSON.parse(sportNotifications);
       console.log(
         "Received data: ",
         typeof this.newNotification,
-        this.newNotification,
-        "userCreator: ",
-        userCreator
+        this.newNotification
       );
-      // if(this.userSports.includes(this.newNotification[0].name_SPORT)){
-      if (userCreator !== this.username) {
-        this.notify();
-        console.log("New notification");
-      } else {
-        console.log("You created this event");
-      }
-      // }else{
-      //   console.log('This notification doesnt apply for this user');
-      // }
+      this.notify();
     });
+    this.getMisEventos();
   },
   methods: {
-    emitGreeting() {
-      this.$root.$emit("Greeting");
-      this.notifyTEST();
-    },
     getEvents() {
-      // console.log('codigo get')
       axios
         .get(
           "https://oriun-api.herokuapp.com/events?init=1&size=-1",
           self.username
         )
         .then((response) => {
-          // axios
-          //    .get("https://oriun-api.herokuapp.com/events?init=1&size=-1/", self.username)
-          //    .then((response) => {
-          // console.log(response);
           this.events = response.data;
         })
         .catch((e) => console.log(e));
     },
     getNotifications() {
-      // console.log("codigo get");
       axios
         .get(
           "https://oriun-api.herokuapp.com/usernotifications/?user=" +
             this.username
         )
         .then((response) => {
-          // axios
-          //    .get("https://oriun-api.herokuapp.com/usernotifications/?user="+ this.username)
-          // .then((response) => {
-          console.log(response);
           this.notifications = response.data;
         })
         .catch((e) => console.log(e));
     },
-    getUserSports() {
-      axios
-        .get(
-          "https://oriun-api.herokuapp.com/usersports/?user=" + this.username
-        )
-        .then((response) => {
-          response.data.forEach((element) => {
-            this.userSports.push(element.name_SPORT);
-          });
-        });
-    },
-    mostrar(objet) {
+
+    mostrar(objet, boton) {
       this.isActive = true;
+      this.id_asistencia = objet.id_EVENT;
+
+      if (boton == true) {
+        this.mostrarBotonAsis = true;
+      } else {
+        this.mostrarBotonAsis = false;
+      }
+
       if (this.pop == "notificacion") {
         this.descripcionNoti = objet.notification_DESCRIPTION;
         this.deporteNoti = objet.name_SPORT;
@@ -255,56 +278,13 @@ export default {
       console.log("this.newNotification: ", this.newNotification);
       console.log("this.notifications", this.notifications);
     },
-    requestNotificationPermission() {
-      console.log("Notification.permission: ", Notification.permission)
-      // Let's check if the browser supports notifications
-      if (!("Notification" in window)) {
-        console.log("This browser does not support desktop notification");
-      }
-      // Let's check whether notification permissions have alredy been granted
-      else if (Notification.permission === "granted") {
-        // If it's okay let's create a notification
-        this.notificationsAllowed = true;
-      }
-      // Otherwise, we need to ask the user for permission
-      else if (
-        Notification.permission !== "denied" ||
-        Notification.permission === "default"
-      ) {
-        console.log("this.notificationsAllowed - before: ", this.notificationsAllowed)
-
-        Notification.requestPermission((permission) => {
-          // If the user accepts, let's create a notification
-          if (permission === "granted") {
-            this.notificationsAllowed = true;
-            console.log("this.notificationsAllowed - after: ", this.notificationsAllowed)
-          }
-        });
-        
-      }
-      // At last, if the user has denied notifications, and you
-      // want to be respectful there is no need to bother them any more.
-    },
     notify() {
       var title = "OriUN - Evento de " + this.newNotification[0].name_SPORT;
       // var icon = "../assets/oriun.png";
-      var icon = "https://i.ibb.co/ScF3rnx/oriun.png";
-      // "https://drive.google.com/uc?export=view&id=1kMJupb5dGtHu-zEQ4xqlktpQHWYfFdJG";
-      var body = this.newNotification[0].notification_DESCRIPTION;
-      
-      // Let's check whether notification permissions have already been granted
-      if (this.notificationsAllowed) {
-        // If it's okay let's create a notification
-        this.createNotification(body, icon, title);
-        console.log("We have send you a notification!!!");
-      }
-    },
-    notifyTEST() {
-      var title = "OriUN - Notification TESTS";
-      // var icon = "../assets/oriun.png";
-      var icon = "https://i.ibb.co/ScF3rnx/oriun.png";
+      var icon =
+        "https://drive.google.com/uc?export=view&id=1kMJupb5dGtHu-zEQ4xqlktpQHWYfFdJG";
       // var icon = "https://pics.freeicons.io/uploads/icons/png/5205410931579605509-512.png";
-      var body = "Testing image notifications";
+      var body = this.newNotification[0].notification_DESCRIPTION;
       // Let's check if the browser supports notifications
       console.log("We have send you a notification!!!");
       if (!("Notification" in window)) {
@@ -337,7 +317,64 @@ export default {
       };
       var n = new Notification(theTitle, options);
       setTimeout(n.close.bind(n), 5000);
-      console.log("Notificacion!!!!!");
+    },
+    getMisEventos() {
+      axios
+        .get(
+          "https://oriun-api.herokuapp.com/userassistanceevents?user=" +
+            this.username
+        )
+        .then((response) => {
+          this.eventosAsistir = response.data;
+        })
+        .catch((e) => console.log(e));
+    },
+    noAsistir(id, nombre) {
+      let mensaje = "¿Desea dejar de asisitir a este evento: " + nombre + " ?";
+
+      if (window.confirm(mensaje)) {
+        axios
+          .delete(
+            "https://oriun-api.herokuapp.com/LeaveEvent?id_user=" +
+              this.username +
+              "&id_event=" +
+              id
+          )
+          .then((response) => {
+            alert("Ya no asistes a ese evento!");
+            location.reload(true);
+          })
+          .catch((e) => console.log(e));
+      }
+    },
+    asistir() {
+      let self = this;
+      axios
+        .post(
+          "https://oriun-api.herokuapp.com/asistirevent?id_user=" +
+            self.username +
+            "&id_event=" +
+            self.id_asistencia
+        )
+        .then((result) => {
+          self.puedoAsistir = result.data;
+          //  if (self.puedoAsistir == true) {
+          //    alert("El usuario ha sido regitrado el evento con exito");
+          //  } else {
+          //    alert("El Usuario ya estaba registrado en el evento");
+          //  }
+          //    alert("El usuario ha sido regitrado el evento con exito");
+          alert("El usuario ha sido regitrado el evento con exito");
+          location.reload(true);
+        })
+        .catch((error) => {
+          self.isLoadingEvent = false;
+          if (error.response.status == "507") {
+            alert("El evento ya ha superado el limite de asistentes");
+          } else {
+            alert("ERROR Servidor ASISTIR EVENTOS");
+          }
+        });
     },
   },
 };
@@ -501,6 +538,11 @@ export default {
   visibility: visible;
 }
 
+.quitar {
+  border-radius: 100%;
+  color: #fff;
+  padding: 0px 12px 0px 12px;
+}
 /* .popup.active{
 
 } */
