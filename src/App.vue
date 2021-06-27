@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view v-on:logeado="logIn"></router-view>
-    <Websocket />
+    <Websocket v-if="is_auth"/>
   </div>
 </template>
 
