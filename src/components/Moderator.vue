@@ -713,15 +713,15 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "https://oriun-api.herokuapp.com/PerdonReporte?id_event=" + String(event.id_EVENT)
+            "https://oriun-api.herokuapp.com/#########?user=" + String(event.user_NAME)
           );
           document.getElementById('report_'+event.id_EVENT).remove();
-          this.toaster.success("Reporte descartado");
+          this.toaster.success("Usuario penalizado");
           setTimeout(() => {
             location.reload();
           }, 1000);
         } catch (error) {
-          this.toaster.failure("Error descartando reporte");
+          this.toaster.failure("Error penalizando usuario");
         }
       }
     },
