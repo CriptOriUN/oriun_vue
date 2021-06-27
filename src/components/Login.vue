@@ -72,24 +72,24 @@
                   />
                 </div>
                 <div class="text-center pt-4">
-                  <vue-hcaptcha
+                  <!-- <vue-hcaptcha
                     sitekey="e3605ee2-18a4-4e7c-9a8e-5885075be08e"
                     @verify="captchaVerified"
                     @error="hCaptchaVerified = false"
                   >
-                  </vue-hcaptcha>
+                  </vue-hcaptcha> -->
                 </div>
                 <div v-if="loadingElements" class="text-center pt-4">
-                  <Spinner :color="color"/>
+                  <Spinner :color="color" />
                 </div>
                 <div class="text-center">
                   <button type="submit" class="btn btn-primary">Login</button>
                 </div>
 
                 <div class="text-center pt-3">
-                  <!-- <a class="btn btn-link text-primary" href="#"
-                        >Forgot Your Password?</a
-                      > -->
+                  <router-link :to="{ name: 'UnlockAccount' }">
+                    <input type="button" class="btn unlockAccountButton" value="Cuenta bloqueada?">
+                  </router-link>
                 </div>
               </form>
             </div>
@@ -192,7 +192,7 @@ import Spinner from "../components/spinner/Spinner";
 
 export default {
   name: "Login",
-  components: { VueHcaptcha, MySocialChat, Spinner, },
+  components: { VueHcaptcha, MySocialChat, Spinner },
   data: function () {
     return {
       rules: [
@@ -212,7 +212,7 @@ export default {
         password: "",
       },
       validregex: false,
-      hCaptchaVerified: false,
+      hCaptchaVerified: true,
       loadingElements: false,
       color: "#466B3F",
     };
@@ -243,33 +243,29 @@ export default {
         this.loadingElements = true;
         axios
           .get(
-            "https://oriun-api.herokuapp.com/userstate?user=" +
-              self.loginform.user_name
+            "http://localhost:8081/userstate?user=" + self.loginform.user_name
           )
           .then((result) => {
             if (result.data) {
               axios
-                .post(
-                  "https://oriun-api.herokuapp.com/userlog/",
-                  self.loginform
-                )
+                .post("http://localhost:8081/userlog/", self.loginform)
                 .then((result) => {
                   self.$emit(
                     "logeado",
                     self.loginform.user_name,
                     result.data.ROL_NAME
                   );
-                  this.loadingElements =  false;
+                  this.loadingElements = false;
                 })
                 .catch((error) => {
-                  this.loadingElements =  false;
+                  this.loadingElements = false;
                   if (error.response.status == "404")
                     alert("ERROR 404:Contraseña Erronea.");
                   if (error.response.status == "406")
                     alert("ERROR 403: Usuario no encontrado.");
                 });
             } else {
-              this.loadingElements =  false;
+              this.loadingElements = false;
               alert("No has verificado tu cuenta.");
             }
           });
@@ -287,7 +283,7 @@ export default {
         if (self.validregex == true) {
           axios
             .post(
-              "https://oriun-api.herokuapp.com/userreg?user=" +
+              "http://localhost:8081/userreg?user=" +
                 self.registerform.user_name +
                 "&password=" +
                 self.registerform.password +
@@ -420,6 +416,15 @@ li.nav-item {
 
 .text-primary.active {
   color: white !important;
+}
+
+.unlockAccountButton{
+  color: #7a7a7a;
+  font-size: 12pt;
+}
+
+.unlockAccountButton:hover{
+  color: white;
 }
 
 @media (max-width: 470px) {

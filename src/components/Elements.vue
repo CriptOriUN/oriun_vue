@@ -141,7 +141,7 @@ export default {
       numElements: 3,
       search: "",
       initElementPage: 0,
-      maxNumRows: 5,
+      maxNumRows: 10,
       numPages: 3,
       pages: [],
       currentPage: 1,
@@ -151,6 +151,9 @@ export default {
       color: "#94B43B",
       bookingElementID: -1,
       rentDate: new Date(),
+      rentTime: '00:00',
+      rentDuration: 30,
+      myBooking: [],
     };
   },
   watch: {
@@ -195,17 +198,20 @@ export default {
     },
   },
   mounted(){
-    this.$root.$on("updateBookingDate", (rentDate) => {
+    this.$root.$on("updateBooking", (rentDate, rentTime, rentDuration) => {
       this.rentDate = rentDate;
-      console.log("DATE RECEIVED!", rentDate)
+      this.rentTime = rentTime;
+      this.rentDuration = rentDuration;
+      console.log("DATA RECEIVED!", rentDate, rentTime, rentDuration)
     });
+    this.getBooking();
   },
   methods: {
     getElementByID(elementID){
       this.loadingBooking = true;
       this.bookingElementID = elementID;
       axios
-        .get("https://oriun-api.herokuapp.com/MyElement?id=" + elementID)
+        .get("http://localhost:8081/MyElement?id=" + elementID)
         .then((response) => (this.elementShow = response.data, this.loadingBooking = false));
     },
     getElements() {
@@ -215,7 +221,7 @@ export default {
         this.initElementPage = (this.currentPage - 1) * this.maxNumRows;
         axios
           .get(
-            "https://oriun-api.herokuapp.com/Singlelmts?init=" +
+            "http://localhost:8081/Singlelmts?init=" +
               this.initElementPage +
               "&size=" +
               this.maxNumRows
@@ -226,18 +232,27 @@ export default {
     getAllElements() {
       axios
         .get(
-          "https://oriun-api.herokuapp.com/Singlelmts?init=0&size=-1"
+          "http://localhost:8081/Singlelmts?init=0&size=-1"
         )
         .then((response) => (this.elementsAll = response.data));
     },
     getNumElements() {
       axios
-        .get("https://oriun-api.herokuapp.com/nelements")
+        .get("http://localhost:8081/nelements")
         .then(
           (response) => (
             (this.numElements = response.data), this.auxListPages()
           )
         );
+    },
+    getBooking() {
+      axios
+        .get("http://localhost:8081/laUser?user=" + this.username)
+        .then((response) => {
+          response.data.forEach(element => {
+            this.myBooking.push(element.id_ELEMENT)
+          });
+        });
     },
     auxListPages() {
       this.pages = [];
@@ -325,16 +340,24 @@ export default {
       
       // If you throw an error, the method will terminate here unless you surround it wil try/catch
       if (ok) {
-        try {
-          await axios
-            .post(
-            "https://oriun-api.herokuapp.com/gAlquiler", {user_NAME: this.username, id_ELEMENT: element.id_ELEMENT, rent_DATE: this.rentDate}
+        console.log("myBooking", this.myBooking)
+        console.log("id", element.id_ELEMENT)
+        if(this.myBooking.includes(element.id_ELEMENT)){
+          setTimeout(() => {
+            this.toaster.failure("Ya tienes una reserva de este elemento");
+          }, 1000);
+        }else{      
+          try {
+            await axios
+              .post(
+              "http://localhost:8081/gAlquiler", {user_NAME: this.username, id_ELEMENT: element.id_ELEMENT, rent_DATE: this.rentDate}
+              );
+            this.toaster.success(
+              "Reserva realizada correctamente"
             );
-          this.toaster.success(
-            "Reserva realizada correctamente"
-          );
-        } catch (error) {
-          this.toaster.failure("Error realizando reserva");
+          } catch (error) {
+            this.toaster.failure("Error realizando reserva");
+          }
         }
       }
     },

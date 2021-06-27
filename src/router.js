@@ -13,6 +13,7 @@ import Searcher from './components/Searcher'
 import Elements from './components/Elements'
 import Confirmation from './components/Confirmation'
 import DispEspacio from './components/DispEspacio'
+import UnlockAccount from './components/UnlockAccount'
 
 const router = new vueRouter({
     mode: 'history',
@@ -87,10 +88,11 @@ const router = new vueRouter({
             name: "DispEspacio",
             component: DispEspacio
         },
-        // {
-        //     path: '/:pathMatch(.*)*',
-        //     component: Login
-        // },
+        {
+            path: '/unlock-account',
+            name: "UnlockAccount",
+            component: UnlockAccount
+        },
 
     ]
 })

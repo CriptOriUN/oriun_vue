@@ -30,6 +30,22 @@
                 {{ element.name_SPORT }}
               </li>
               <li>
+                <div class="form-row">
+                  <b class="col-sm-4 col-form-label">Duracion: </b>
+                  <select
+                    class="form-control col-sm-6"
+                    name="bookingDuration"
+                    id="bookingDuration"
+                    v-model="rentDuration"
+                    @change="validateTime()"
+                  >
+                    <option value="30" selected>30 minutos</option>
+                    <option value="60">1 hora</option>
+                    <option value="120">2 horas</option>
+                  </select>
+                </div>
+              </li>
+              <li>
                 <b>Retiro: </b> <br />
                 <div class="mt-2 ml-3 form-row">
                   <label class="col-sm-3 col-form-label" for="bookingDate"
@@ -44,8 +60,8 @@
                     @change="validateDate()"
                     required
                   />
-                  <div class="invalid-feedback">
-                    Reservas de Lunes a Viernes
+                  <div class="text-center invalid-feedback">
+                    Atención de Lunes a Viernes
                   </div>
                 </div>
                 <div class="ml-3 form-row">
@@ -58,7 +74,10 @@
                     name="bookingTime"
                     @change="validateTime()"
                   />
-                  <div class="invalid-feedback">Reservas de 8:00 a 16:00</div>
+                  <div class="invalid-feedback text-center">Atención de 8:00 a 17:00</div>
+                </div>
+                <div id="limitTimeWarning" class="mt-1 ml-3 text-center d-none">
+                <small class="text-secundary">Para usar este implemento durante {{durationText}}, debes retirarlo antes de las {{upperLimmit}}</small>
                 </div>
               </li>
             </ul>
@@ -67,7 +86,7 @@
             <img
               class="d-block mx-auto"
               alt="Imagen"
-              :src="'data:image/jpg;base64,' + element.element_IMAGE"
+              :src="'data:image/jpeg;base64,' + element.element_IMAGE"
               onerror="this.onerror=null; this.alt='Image Not Found';
             this.src='https://i.ibb.co/sFpkRp3/no-image.png'"
               style="max-width: 90%; max-height: 200px"
@@ -123,7 +142,7 @@
 
 <script>
 import PopupModal from "./PopupModal.vue";
-import {toaster} from '../toaster/toaster'
+import { toaster } from "../toaster/toaster";
 
 export default {
   name: "ConfirmDialogue",
@@ -143,6 +162,11 @@ export default {
     element: null,
     today: null,
     rentDate: new Date(),
+    rentDuration: 30,
+    rentTime: '00:00',
+    durationText: '30 minutos',
+    upperLimmit: '16:30',
+    sthInvalid: true,
     toaster,
   }),
   mounted() {
@@ -172,19 +196,20 @@ export default {
     },
 
     _confirmBooking() {
-      var dateInvalid = document.getElementById("bookingDate").classList.contains('is-invalid') || document.getElementById("bookingDate").value == "";
-      var timeInvalid = document.getElementById("bookingTime").classList.contains('is-invalid')  || document.getElementById("bookingTime").value == "";
-      if(dateInvalid || timeInvalid){
-        this.toaster.failure("Revisa las entradas de Dia y Hora");
-      }else{
+      var emptyDate = document.getElementById('bookingDate').value == '';
+      var emptyTime = document.getElementById('bookingTime').value == '';
+      if(emptyDate || emptyTime){
+        this.sthInvalid = true;
+      }
+      if (this.sthInvalid) {
+        this.toaster.failure("Revisa las entradas de la reserva");
+      } else {
         this.$nextTick(() => {
-          console.log("Date emitted", this.rentDate)
+          console.log("Date emitted", this.rentDate);
           this.$refs.popup.close();
           this.resolvePromise(true);
-        })
-        
+        });
       }
-      
     },
     _confirm() {
       this.$refs.popup.close();
@@ -200,11 +225,6 @@ export default {
 
     // Booking methods
     limitDate() {
-      // var today = new Date();
-      // var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-      // // document.getElementById('bookingDate').min = date;
-      // console.log("LIMITING BOOKING DATE", date);
-      // this.today = date;
       var fecha = new Date();
       var anio = fecha.getFullYear();
       var dia = fecha.getDate();
@@ -227,37 +247,59 @@ export default {
       var bookingDate = document.getElementById("bookingDate").value;
       var date = new Date(bookingDate);
       if (date.getDay() == 5 || date.getDay() == 6) {
-        document.getElementById("bookingDate").classList.add('is-invalid');
-        try{
-          document.getElementById("bookingDate").classList.remove('is-valid')
-        }catch(error){}
+        document.getElementById("bookingDate").classList.add("is-invalid");
+        this.sthInvalid = true;
+        try {
+          document.getElementById("bookingDate").classList.remove("is-valid");
+        } catch (error) {}
       } else {
-        document.getElementById("bookingDate").classList.add('is-valid');
+        this.sthInvalid = false;
+        document.getElementById("bookingDate").classList.add("is-valid");
         this.rentDate = bookingDate;
-        this.$root.$emit("updateBookingDate", this.rentDate);
-        try{
-          document.getElementById("bookingDate").classList.remove('is-invalid')
-        }catch(error){}
+        this.$root.$emit("updateBooking", this.rentDate, this.rentTime, this.rentDuration);
+        try {
+          document.getElementById("bookingDate").classList.remove("is-invalid");
+        } catch (error) {}
       }
     },
     validateTime() {
+      
       var bookingTime = document.getElementById("bookingTime").value;
-      var time = new Date();
-      time.setHours(bookingTime.split(':')[0],bookingTime.split(':')[1])
-      if (time.getHours() < 8  || time.getHours() > 16) {
-        document.getElementById("bookingTime").classList.add('is-invalid');
-        try{
-          document.getElementById("bookingTime").classList.remove('is-valid')
-        }catch(error){}
-      } else {
-        document.getElementById("bookingTime").classList.add('is-valid');
-        // this.rentDate.setHours(time.getHours());
-        // this.rentDate.setMinutes(time.getMinutes());
-        try{
-          document.getElementById("bookingTime").classList.remove('is-invalid')
-        }catch(error){}
+      var duration = document.getElementById('bookingDuration');
+      this.durationText = duration.options[duration.selectedIndex].text;
+      
+      if(bookingTime != ''){
+        var time = new Date();
+        time.setHours(bookingTime.split(":")[0], bookingTime.split(":")[1]);
+        var rentDuration = this.rentDuration;
+        var closeTime = new Date(new Date().setHours(17,0));
+        var upperLimmit = new Date(closeTime - rentDuration * 60000);
+        this.upperLimmit = upperLimmit.getHours() + ':' + ("0" + upperLimmit.getMinutes()).slice(-2);
+        if (time.getHours() < 8 || time > upperLimmit){
+          this.sthInvalid = true;          
+          if(time > upperLimmit){
+            document.getElementById("limitTimeWarning").classList.remove("d-none");
+          }else{
+            document.getElementById("limitTimeWarning").classList.add("d-none");
+          }
+          document.getElementById("bookingTime").classList.add("is-invalid");
+          try {
+            document.getElementById("bookingTime").classList.remove("is-valid");
+          } catch (error) {}
+        } else {
+          this.sthInvalid = false;
+          this.rentTime = bookingTime;
+          this.$root.$emit("updateBooking", this.rentDate, this.rentTime, this.rentDuration);
+          document.getElementById("bookingTime").classList.add("is-valid");
+          try {
+            document.getElementById("bookingTime").classList.remove("is-invalid");
+          } catch (error) {}
+          try {
+            document.getElementById("limitTimeWarning").classList.add("d-none");
+          } catch (error) {}
+        }
+        // console.log(time)
       }
-      // console.log(time)
     },
   },
 };
@@ -266,7 +308,7 @@ export default {
 <style scoped>
 .modal-content {
   /* max-height: calc( 100vh - 50px ); */
-  max-height: 70vh;
+  max-height: 80vh;
   overflow-y: auto;
 }
 

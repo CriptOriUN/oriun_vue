@@ -238,7 +238,6 @@ import NavBar from "./header/NavBar";
 import axios from "axios";
 import { usersfake } from "../fake-data";
 import Spinner from "./spinner/Spinner";
-import Vue from "vue";
 import { toaster } from "../components/toaster/toaster";
 import MySocialChat from "../components/social-chat/MySocialChat";
 export default {
@@ -296,7 +295,7 @@ export default {
 
       axios
         .delete(
-          "https://oriun-api.herokuapp.com/noelements?id=" + value
+          "http://localhost:8081/noelements?id=" + value
         )
         .then((result) => {
           this.$delete(this.elementos, index);
@@ -318,7 +317,7 @@ export default {
       alert(index);
       axios
         .delete(
-          "https://oriun-api.herokuapp.com/nolsibu?name=" + value
+          "http://localhost:8081/nolsibu?name=" + value
         )
         .then((result) => {
           this.$delete(this.locaciones, index);
@@ -336,7 +335,7 @@ export default {
     this.username = this.$route.params.username;
     let self = this;
     axios
-      .get("https://oriun-api.herokuapp.com/user")
+      .get("http://localhost:8081/user")
       .then((result) => {
         self.usuarios = result.data;
         self.isLoading = false;
@@ -346,7 +345,7 @@ export default {
       });
     axios
       .get(
-        "https://oriun-api.herokuapp.com/Singlelsibu?init=-1&size=-1"
+        "http://localhost:8081/Singlelsibu?init=-1&size=-1"
       )
       .then((result) => {
         self.locaciones = result.data;
@@ -358,7 +357,7 @@ export default {
 
     axios
       .get(
-        "https://oriun-api.herokuapp.com/Singlelmts?init=-1&size=-1"
+        "http://localhost:8081/Singlelmts?init=-1&size=-1"
       )
       .then((result) => {
         self.elementos = result.data;
