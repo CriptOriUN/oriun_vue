@@ -243,12 +243,12 @@ export default {
         this.loadingElements = true;
         axios
           .get(
-            "http://localhost:8081/userstate?user=" + self.loginform.user_name
+            "https://oriun-api.herokuapp.com/userstate?user=" + self.loginform.user_name
           )
           .then((result) => {
             if (result.data) {
               axios
-                .post("http://localhost:8081/userlog/", self.loginform)
+                .post("https://oriun-api.herokuapp.com/userlog/", self.loginform)
                 .then((result) => {
                   self.$emit(
                     "logeado",
@@ -283,7 +283,7 @@ export default {
         if (self.validregex == true) {
           axios
             .post(
-              "http://localhost:8081/userreg?user=" +
+              "https://oriun-api.herokuapp.com/userreg?user=" +
                 self.registerform.user_name +
                 "&password=" +
                 self.registerform.password +

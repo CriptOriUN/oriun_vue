@@ -211,7 +211,7 @@ export default {
       this.loadingBooking = true;
       this.bookingElementID = elementID;
       axios
-        .get("http://localhost:8081/MyElement?id=" + elementID)
+        .get("https://oriun-api.herokuapp.com/MyElement?id=" + elementID)
         .then((response) => (this.elementShow = response.data, this.loadingBooking = false));
     },
     getElements() {
@@ -221,7 +221,7 @@ export default {
         this.initElementPage = (this.currentPage - 1) * this.maxNumRows;
         axios
           .get(
-            "http://localhost:8081/Singlelmts?init=" +
+            "https://oriun-api.herokuapp.com/Singlelmts?init=" +
               this.initElementPage +
               "&size=" +
               this.maxNumRows
@@ -232,13 +232,13 @@ export default {
     getAllElements() {
       axios
         .get(
-          "http://localhost:8081/Singlelmts?init=0&size=-1"
+          "https://oriun-api.herokuapp.com/Singlelmts?init=0&size=-1"
         )
         .then((response) => (this.elementsAll = response.data));
     },
     getNumElements() {
       axios
-        .get("http://localhost:8081/nelements")
+        .get("https://oriun-api.herokuapp.com/nelements")
         .then(
           (response) => (
             (this.numElements = response.data), this.auxListPages()
@@ -247,7 +247,7 @@ export default {
     },
     getBooking() {
       axios
-        .get("http://localhost:8081/laUser?user=" + this.username)
+        .get("https://oriun-api.herokuapp.com/laUser?user=" + this.username)
         .then((response) => {
           response.data.forEach(element => {
             this.myBooking.push(element.id_ELEMENT)
@@ -350,7 +350,7 @@ export default {
           try {
             await axios
               .post(
-              "http://localhost:8081/gAlquiler", {user_NAME: this.username, id_ELEMENT: element.id_ELEMENT, rent_DATE: this.rentDate}
+              "https://oriun-api.herokuapp.com/gAlquiler", {user_NAME: this.username, id_ELEMENT: element.id_ELEMENT, rent_DATE: this.rentDate}
               );
             this.toaster.success(
               "Reserva realizada correctamente"
