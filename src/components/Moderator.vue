@@ -523,22 +523,22 @@ export default {
   },
   mounted: function () {
     axios
-      .get("http://localhost:8081/events?init=0&size=-1")
+      .get("https://oriun-api.herokuapp.com/events?init=0&size=-1")
       .then((response) => (this.events = response.data));
     axios
-      .get("http://localhost:8081/EventosReportados")
+      .get("https://oriun-api.herokuapp.com/EventosReportados")
       .then((response) => (this.reportedEvents = response.data, this.loadingReports = false));
     axios
-      .get("http://localhost:8081/Solicitudsall")
+      .get("https://oriun-api.herokuapp.com/Solicitudsall")
       .then((response) => (this.unlockRequests = response.data, this.loadingRequests = false));
     axios
-      .get("http://localhost:8081/eventsall/")
+      .get("https://oriun-api.herokuapp.com/eventsall/")
       .then(
         (response) => (
           (this.allevents = response.data), (this.loadingEvents = false)
         )
       );
-    axios.get("http://localhost:8081/sports/").then((response) => {
+    axios.get("https://oriun-api.herokuapp.com/sports/").then((response) => {
       this.sportsData = response.data;
       this.loadingSports = false;
       this.sportsData.forEach((element) => {
@@ -552,7 +552,7 @@ export default {
     });
 
     axios
-      .get("http://localhost:8081/otherscount/")
+      .get("https://oriun-api.herokuapp.com/otherscount/")
       .then(
         (response) => (
           (this.suggestedSports = response.data),
@@ -574,7 +574,7 @@ export default {
       });
       if (ok) {
         try {
-          await axios.post("http://localhost:8081/g/", {
+          await axios.post("https://oriun-api.herokuapp.com/g/", {
             name_SPORT: suggestedSport,
           });
 
@@ -607,7 +607,7 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "http://localhost:8081/nosports?sport=" + String(sport.name_SPORT)
+            "https://oriun-api.herokuapp.com/nosports?sport=" + String(sport.name_SPORT)
           );
           document.getElementById(sport.name_SPORT).remove();
           this.toaster.success("Deporte Eliminado");
@@ -633,7 +633,7 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "http://localhost:8081/###########?user=" + String(user)
+            "https://oriun-api.herokuapp.com/###########?user=" + String(user)
           );
           // document.getElementById(sport.name_SPORT).remove();
           this.toaster.success("Cuenta desbloqueada");
@@ -659,7 +659,7 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "http://localhost:8081/OlvidarSoli?user=" + String(user)
+            "https://oriun-api.herokuapp.com/OlvidarSoli?user=" + String(user)
           );
           document.getElementById(user+'_request').remove();
           this.toaster.success("Solicitud descartada");
@@ -685,7 +685,7 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "http://localhost:8081/PerdonReporte?id_event=" + String(event.id_EVENT)
+            "https://oriun-api.herokuapp.com/PerdonReporte?id_event=" + String(event.id_EVENT)
           );
           document.getElementById('report_'+event.id_EVENT).remove();
           this.toaster.success("Reporte descartado");
@@ -713,7 +713,7 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "http://localhost:8081/PerdonReporte?id_event=" + String(event.id_EVENT)
+            "https://oriun-api.herokuapp.com/PerdonReporte?id_event=" + String(event.id_EVENT)
           );
           document.getElementById('report_'+event.id_EVENT).remove();
           this.toaster.success("Reporte descartado");
@@ -737,7 +737,7 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "http://localhost:8081/NoEvent?id_event=" + event.id_EVENT
+            "https://oriun-api.herokuapp.com/NoEvent?id_event=" + event.id_EVENT
           );
           document.getElementById(event.id_EVENT).remove();
           this.toaster.success("Evento eliminado");
@@ -848,7 +848,7 @@ export default {
     async newSportSubmit() {
       if (this.newSportInputValid) {
         try {
-          await axios.post("http://localhost:8081/g/", {
+          await axios.post("https://oriun-api.herokuapp.com/g/", {
             name_SPORT: this.newSportInput,
           });
 

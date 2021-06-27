@@ -227,7 +227,7 @@ export default {
     getEvents() {
       axios
         .get(
-          "http://localhost:8081/events?init=1&size=-1",
+          "https://oriun-api.herokuapp.com/events?init=1&size=-1",
           self.username
         )
         .then((response) => {
@@ -238,7 +238,7 @@ export default {
     getNotifications() {
       axios
         .get(
-          "http://localhost:8081/usernotifications/?user=" +
+          "https://oriun-api.herokuapp.com/usernotifications/?user=" +
             this.username
         )
         .then((response) => {
@@ -322,7 +322,7 @@ export default {
     getMisEventos() {
       axios
         .get(
-          "http://localhost:8081/userassistanceevents?user=" +
+          "https://oriun-api.herokuapp.com/userassistanceevents?user=" +
             this.username
         )
         .then((response) => {
@@ -336,7 +336,7 @@ export default {
       if (window.confirm(mensaje)) {
         axios
           .delete(
-            "http://localhost:8081/LeaveEvent?id_user=" +
+            "https://oriun-api.herokuapp.com/LeaveEvent?id_user=" +
               this.username +
               "&id_event=" +
               id
@@ -352,7 +352,7 @@ export default {
       let self = this;
       axios
         .post(
-          "http://localhost:8081/asistirevent?id_user=" +
+          "https://oriun-api.herokuapp.com/asistirevent?id_user=" +
             self.username +
             "&id_event=" +
             self.id_asistencia

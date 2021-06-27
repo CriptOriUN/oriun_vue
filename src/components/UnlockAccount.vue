@@ -46,7 +46,7 @@ export default {
   methods: {
       checkUser(){
           axios
-          .get('http://localhost:8081/user')
+          .get('https://oriun-api.herokuapp.com/user')
           .then((response) => {
               for (let user of response.data){
                   if(user.user_NAME == this.form.username){
@@ -66,7 +66,7 @@ export default {
                 this.toaster.info("Tu cuenta NO está bloqueda");    
               }else{
                 axios
-                .post("http://localhost:8081/SoliDesban", { user_NAME: this.form.username, solicitud: this.form.message })
+                .post("https://oriun-api.herokuapp.com/SoliDesban", { user_NAME: this.form.username, solicitud: this.form.message })
                 .then(() => {
                     this.toaster.success("Solicitud enviada correctamente");
                 })
