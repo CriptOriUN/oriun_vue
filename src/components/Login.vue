@@ -72,12 +72,12 @@
                   />
                 </div>
                 <div class="text-center pt-4">
-                  <!-- <vue-hcaptcha
+                  <vue-hcaptcha
                     sitekey="e3605ee2-18a4-4e7c-9a8e-5885075be08e"
                     @verify="captchaVerified"
                     @error="hCaptchaVerified = false"
                   >
-                  </vue-hcaptcha> -->
+                  </vue-hcaptcha>
                 </div>
                 <div v-if="loadingElements" class="text-center pt-4">
                   <Spinner :color="color" />
@@ -212,7 +212,7 @@ export default {
         password: "",
       },
       validregex: false,
-      hCaptchaVerified: true,
+      hCaptchaVerified: false,
       loadingElements: false,
       color: "#466B3F",
     };
