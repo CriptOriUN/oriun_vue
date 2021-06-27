@@ -1,5 +1,8 @@
 <template>
   <div class="login">
+    <div style="overflow-x: hidden;">
+      <img class="background" src="../assets/login_bg.png" alt="">
+    </div>
     <div class="container mb-5 pt-4 text-center">
       <div class="pb-5">
         <img class="app-logo" src="../assets/oriun.png" alt="" height="100" />
@@ -320,6 +323,13 @@ export default {
 <style scoped>
 * {
   font-size: 14pt;
+  
+}
+
+.background{
+  z-index: -1;
+  position: fixed;
+  max-height: 100vh;  
 }
 
 .card {
