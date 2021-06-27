@@ -2,40 +2,192 @@
   <div class="moderador">
     <NavBarModerator :username="username" />
 
-    <div class="container mt-5">
+    <div class="container-fluid mt-4">
       <div class="row mx-auto">
-        <div class="welcome">
-          <p class="hola mx-auto">Hola,</p>
-          <p class="fullName text-center" id="userName">{{ username }}</p>
+        <div class="mx-auto">
+          <span class="hola"
+            >Hola, <span class="fullName">{{ username }}</span></span
+          >
         </div>
       </div>
       <div class="row justify-content-center mx-auto">
-        <!-- <div class="card col-xl-4 col-lg-4 col-md-6 col-12 mt-4"> -->
-        <ul class="row nav col-auto d-flex justify-content-between">
-          <li class="col-5 mt-4 mx-auto nav-item">
-            <!-- <a class="card nav-link" id="events-tab" v-on:click="openEvents()"> -->
-            <router-link
-              :to="{ name: 'Moderator', query: { tab: 'events' } }"
-              class="card nav-link"
-              id="events-tab"
-            >
-              <div class="text-center">Eventos</div>
-            </router-link>
-          </li>
+        <!-- HOME -->
+        <div class="dynamic-content" id="home-tab">
+          <div class="row mt-5 mx-auto d-flex justify-content-between">
+            <div class="col-md-7 mb-3" id="reports-card">
+              <div class="card card-tables">
+                <div class="card-header mx-auto">
+                  <h2>Eventos Reportados</h2>
+                  <hr />
+                </div>
+                <div class="card-body">
+                  <!-- Lista de Eventos reportados-->
+                  <div class="table-responsive">
+                    <table
+                      class="table table-bordered table-hover table-options"
+                    >
+                      <thead class="thead-dark text-center">
+                        <tr>
+                          <th>EVENTO</th>
+                          <th>CREADOR</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody v-if="loadingReports">
+                        <tr style="height: 100px">
+                          <td class="align-middle text-center" colspan="3">
+                            <Spinner :color="color" />
+                          </td>
+                        </tr>
+                      </tbody>
+                      <tbody
+                        v-else
+                        v-for="event in reportedEvents"
+                        :key="event.id_EVENT"
+                        :id="'report_'+event.id_EVENT"
+                      >
+                        <tr>
+                          <td>{{ event.event_TITLE }}</td>
+                          <td>{{ event.user_NAME }}</td>
+                          <td>
+                            <button
+                              class="btn btn-primary"
+                              type="button"
+                              data-toggle="collapse"
+                              :data-target="'#details' + event.id_EVENT"
+                              aria-controls="details"
+                              aria-expanded="false"
+                              title="Ver detalles"
+                            >
+                              <!-- Ver detalles -->
+                              <i class="fa fa-info-circle"></i>
+                            </button>
+                            <div class="btn-group mx-0 text-secondary" role="group">|</div>
+                            <button
+                              @click="dismissReport(event)"
+                              class="btn btn-success"
+                              title="Descartar"
+                            >
+                              <!-- Borrar -->
+                              <i class="fa fa-thumbs-up"></i>
+                            </button>      
+                            <button
+                              @click="penalizeEvent(event)"
+                              class="btn btn-danger"
+                              title="Penalizar"
+                            >
+                              <!-- Borrar -->
+                              <i class="fa fa-thumbs-down"></i>
+                            </button>                        
+                          </td>
+                        </tr>
+                        <!-- Detalles de evento-->
+                        <tr
+                          class="collapse"
+                          v-bind:id="['details' + event.id_EVENT]"
+                        >
+                          <td class="p-3 text-left" colspan="5">
+                            <ul class="list-group">
+                              <li class="list-group-item py-1">
+                                <h6 class="d-inline">Deporte:</h6>
+                                <span v-if="event.other_SPORT == null">{{
+                                  event.name_SPORT
+                                }}</span>
+                                <span v-else>{{ event.other_SPORT }}</span>
+                              </li>
+                              <li class="list-group-item py-1">
+                                <h6 class="d-inline">Descripcion:</h6>
+                                <span>{{ event.event_DESCRIPTION }}</span>
+                              </li>
+                              <li class="list-group-item py-1">
+                                <h6 class="d-inline">Lugar:</h6>
+                                <span>{{ event.name_LOC_SPORT }}</span>
+                              </li>
+                              <li class="list-group-item py-1">
+                                <h6 class="d-inline">Fecha:</h6>
+                                <span>{{ event.event_INIT }}</span>
+                              </li>
+                              <li class="list-group-item py-1">
+                                <h6 class="d-inline">Hora Inicio:</h6>
+                                <span>{{
+                                  event.event_INIT_HOUR.slice(
+                                    event.event_INIT_HOUR.length - 8
+                                  )
+                                }}</span>
+                              </li>
+                              <li class="list-group-item py-1">
+                                <h6 class="d-inline">Hora Fin:</h6>
+                                <span>{{
+                                  event.event_FINISH_HOUR.slice(
+                                    event.event_FINISH_HOUR.length - 8
+                                  )
+                                }}</span>
+                              </li>
+                              <li class="list-group-item py-1">
+                                <h6 class="d-inline">Capacidad:</h6>
+                                <span>{{ event.capacity }}</span>
+                              </li>
+                            </ul>
+                          </td>
+                        </tr>
+                      </tbody>
+                      <tbody v-if="reportedEvents.length == 0 && !loadingReports">
+                        <tr style="height: 100px">
+                          <td class="align-middle text-center" colspan="3">
+                            No se han reportado eventos
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-          <li class="col-5 mt-4 mx-auto nav-item">
-            <!-- <a class="card nav-link" id="sports-tab" v-on:click="openSports()"> -->
-            <router-link
-              :to="{ name: 'Moderator', query: { tab: 'sports' } }"
-              class="card nav-link"
-              id="sports-tab"
-            >
-              <div class="text-center">Deportes</div>
-            </router-link>
-          </li>
-        </ul>
+            <div class="col-md-5 mb-3" id="requests-card">
+              <div class="card card-tables">
+                <div class="card-header mx-auto">
+                  <h2>Solicitudes</h2>
+                  <hr />
+                </div>
+                <div class="card-body">
+                  <div v-if="loadingRequests" style="height: 100px" class="align-middle text-center">    
+                    <Spinner :color="color" />
+                  </div>
+                  <div
+                    v-for="(request, index) in unlockRequests"
+                    :key="index"
+                    class="card mb-3"
+                    style="border-radius: 10px"
+                    :id="request.user_NAME+'_request'"
+                  >
+                    <div class="d-flex card-header p-0">
+                      <h5 class="m-2 ml-3 text-left">{{ request.user_NAME }}</h5>
+                      <button @click="unlock(request.user_NAME)" class="btn ml-auto p-0 my-0 text-primary" title="Desbloquear">
+                        <!-- Aceptar -->
+                        <i class="fa fa-unlock"></i>
+                      </button>
+                      <div class="btn-group mx-0 text-secondary" role="group">|</div>
+                      <button @click="dismissRequest(request.user_NAME)" class="btn mr-1 p-0 my-0 text-danger" title="Descartar">
+                        <!-- Borrar -->
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </div>
+                    <hr class="mt-0" />
+                    <div class="card-body py-3 px-2">
+                      {{ request.solicitud }}
+                    </div>
+                  </div>
+                  <div v-if="unlockRequests.length == 0 && !loadingRequests" style="height: 100px" class="align-middle text-center">
+                          No hay sugerencias para mostrar
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <div class="row mt-5 mb-5">
+        <div class="row mt-5 mb-5" style="width: 85%">
           <!-- EVENTOS -->
           <div class="mx-auto dynamic-content" id="event-list">
             <div class="card card-tables">
@@ -336,7 +488,9 @@ export default {
     return {
       username: "",
       events: [],
+      reportedEvents: [],
       allevents: [],
+      unlockRequests: [],
       sportsData: [],
       sportsNames: [],
       suggestedSports: [],
@@ -346,6 +500,8 @@ export default {
       loadingEvents: true,
       loadingSports: true,
       loadingSuggSports: true,
+      loadingReports: true,
+      loadingRequests: true,
       color: "#76232F",
       newSportInput: null,
       newSportInputValid: false,
@@ -355,7 +511,10 @@ export default {
     "$route.query.tab": {
       immediate: true,
       handler(tab) {
-        this.showTab();
+        try{
+          this.showTab();
+        }catch(error){}
+        
       },
     },
   },
@@ -364,28 +523,36 @@ export default {
   },
   mounted: function () {
     axios
-      .get("https://oriun-api.herokuapp.com/events?init=0&size=-1")
+      .get("http://localhost:8081/events?init=0&size=-1")
       .then((response) => (this.events = response.data));
     axios
-      .get("https://oriun-api.herokuapp.com/eventsall/")
+      .get("http://localhost:8081/EventosReportados")
+      .then((response) => (this.reportedEvents = response.data, this.loadingReports = false));
+    axios
+      .get("http://localhost:8081/Solicitudsall")
+      .then((response) => (this.unlockRequests = response.data, this.loadingRequests = false));
+    axios
+      .get("http://localhost:8081/eventsall/")
       .then(
         (response) => (
           (this.allevents = response.data), (this.loadingEvents = false)
         )
       );
-    axios
-      .get("https://oriun-api.herokuapp.com/sports/")
-      .then((response) => {
-          this.sportsData = response.data;
-          this.loadingSports = false;
-          this.sportsData.forEach(element => {
-            this.sportsNames.push(element.name_SPORT.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase())  
-          });
-          
-        });
+    axios.get("http://localhost:8081/sports/").then((response) => {
+      this.sportsData = response.data;
+      this.loadingSports = false;
+      this.sportsData.forEach((element) => {
+        this.sportsNames.push(
+          element.name_SPORT
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+        );
+      });
+    });
 
     axios
-      .get("https://oriun-api.herokuapp.com/otherscount/")
+      .get("http://localhost:8081/otherscount/")
       .then(
         (response) => (
           (this.suggestedSports = response.data),
@@ -407,7 +574,7 @@ export default {
       });
       if (ok) {
         try {
-          await axios.post("https://oriun-api.herokuapp.com/g/", {
+          await axios.post("http://localhost:8081/g/", {
             name_SPORT: suggestedSport,
           });
 
@@ -440,7 +607,7 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "https://oriun-api.herokuapp.com/nosports?sport=" + String(sport.name_SPORT)
+            "http://localhost:8081/nosports?sport=" + String(sport.name_SPORT)
           );
           document.getElementById(sport.name_SPORT).remove();
           this.toaster.success("Deporte Eliminado");
@@ -449,14 +616,115 @@ export default {
           }, 1000);
         } catch (error) {
           this.toaster.failure("Error eliminando deporte");
-          this.toaster.info(
-            "Intente eliminando primero los eventos asociados a este deporte"
-          );
-          this.toaster.info("Revisar borrado en cascada en API");
         }
       }
     },
-
+    async unlock(user) {
+      // this.printHello()
+      const ok = await this.$refs.confirmDialogue.show({
+        title: "Desbloquear cuenta",
+        message:
+          "¿Está seguro que desea desbloquear la cuenta de " +
+          user.bold().big() +
+          "?",
+        okButton: "Desbloquear",
+      });
+      // If you throw an error, the method will terminate here unless you surround it wil try/catch
+      if (ok) {
+        try {
+          await axios.delete(
+            "http://localhost:8081/###########?user=" + String(user)
+          );
+          // document.getElementById(sport.name_SPORT).remove();
+          this.toaster.success("Cuenta desbloqueada");
+          setTimeout(() => {
+            location.reload();
+          }, 1000);
+        } catch (error) {
+          this.toaster.failure("Error desbloqueando cuenta");
+        }
+      }
+    },
+    async dismissRequest(user) {
+      // this.printHello()
+      const ok = await this.$refs.confirmDialogue.show({
+        title: "Descartar solicitud",
+        message:
+          "¿Está seguro que desea descartar la solicitud de " +
+          user.bold().big() +
+          "? </br> Esta acción es irreversible",
+        okButton: "Descartar",
+      });
+      // If you throw an error, the method will terminate here unless you surround it wil try/catch
+      if (ok) {
+        try {
+          await axios.delete(
+            "http://localhost:8081/OlvidarSoli?user=" + String(user)
+          );
+          document.getElementById(user+'_request').remove();
+          this.toaster.success("Solicitud descartada");
+          setTimeout(() => {
+            location.reload();
+          }, 1000);
+        } catch (error) {
+          this.toaster.failure("Error descartando solicitud");
+        }
+      }
+    },
+    async dismissReport(event) {
+      // this.printHello()
+      const ok = await this.$refs.confirmDialogue.show({
+        title: "Descartar reporte",
+        message:
+          "¿Está seguro que desea descartar el reporte del evento " +
+          event.event_TITLE.bold().big() +
+          "? </br> Esta acción es irreversible",
+        okButton: "Descartar",
+      });
+      // If you throw an error, the method will terminate here unless you surround it wil try/catch
+      if (ok) {
+        try {
+          await axios.delete(
+            "http://localhost:8081/PerdonReporte?id_event=" + String(event.id_EVENT)
+          );
+          document.getElementById('report_'+event.id_EVENT).remove();
+          this.toaster.success("Reporte descartado");
+          setTimeout(() => {
+            location.reload();
+          }, 1000);
+        } catch (error) {
+          this.toaster.failure("Error descartando reporte");
+        }
+      }
+    },
+    async penalizeEvent(event) {
+      // this.printHello()
+      const ok = await this.$refs.confirmDialogue.show({
+        title: "Penalizar evento",
+        message:
+          "¿Está seguro que desea penalizar a " +
+          event.user_NAME.bold().big() +
+          " por la creación del evento " +
+          event.event_TITLE.bold().big() +
+          "? </br> Esta acción es irreversible",
+        okButton: "Penalizar",
+      });
+      // If you throw an error, the method will terminate here unless you surround it wil try/catch
+      if (ok) {
+        try {
+          await axios.delete(
+            "http://localhost:8081/PerdonReporte?id_event=" + String(event.id_EVENT)
+          );
+          document.getElementById('report_'+event.id_EVENT).remove();
+          this.toaster.success("Reporte descartado");
+          setTimeout(() => {
+            location.reload();
+          }, 1000);
+        } catch (error) {
+          this.toaster.failure("Error descartando reporte");
+        }
+      }
+    },
     async delEvent(event) {
       // this.printHello()
       const ok = await this.$refs.confirmDialogue.show({
@@ -469,7 +737,7 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "https://oriun-api.herokuapp.com/NoEvent?id_event=" + event.id_EVENT
+            "http://localhost:8081/NoEvent?id_event=" + event.id_EVENT
           );
           document.getElementById(event.id_EVENT).remove();
           this.toaster.success("Evento eliminado");
@@ -516,53 +784,71 @@ export default {
         var row = table.insertRow(0);
         row.innerHTML =
           '<tr><td colspan="2"><div class="input-group"><input type="text" id="newSportName" class="mr-4 form-control" name="newSport" placeholder="Deporte" autocomplete="off"><div id="newSportInvalidFeedback" class="order-last invalid-feedback"></div><div class="input-group-append my-auto"><button title="Registrar" id="newSportSubmit" class="btn btn-primary p-0 mr-2" style="height: 30px;width: 30px; visibility:hidden"><i class="fa fa-check"></i></button><button title="Cancelar" id="newSportCancel" class="btn btn-secondary p-0" style="height: 30px;width: 30px" ><i class="fa fa-times"></i></button></div></div></td></tr>';
-        
+
         this.$nextTick(() => {
-          document.getElementById("newSportName").addEventListener("input", () => {
-            this.checkInput();
-          });
-          document.getElementById("newSportSubmit").addEventListener("click", () => {
-            this.newSportSubmit();
-          });
-          document.getElementById("newSportCancel").addEventListener("click", () => {
-            row.remove();
-          });
+          document
+            .getElementById("newSportName")
+            .addEventListener("input", () => {
+              this.checkInput();
+            });
+          document
+            .getElementById("newSportSubmit")
+            .addEventListener("click", () => {
+              this.newSportSubmit();
+            });
+          document
+            .getElementById("newSportCancel")
+            .addEventListener("click", () => {
+              row.remove();
+            });
         });
       }
     },
-    checkInput(){
-      var newSportName = document.getElementById('newSportName').value.trim();
+    checkInput() {
+      var newSportName = document.getElementById("newSportName").value.trim();
       this.newSportInput = newSportName;
-      if(newSportName != ''){
-        if(this.sportsNames.includes(newSportName.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase())){
+      if (newSportName != "") {
+        if (
+          this.sportsNames.includes(
+            newSportName
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase()
+          )
+        ) {
           this.newSportInputValid = false;
-          console.log(this.sportsNames, newSportName)
-          try{
-            document.getElementById('newSportInvalidFeedback').innerText = 'Este deporte ya está registrado';
-            document.getElementById('newSportName').classList.add('is-invalid');
-            document.getElementById('newSportSubmit').style.visibility = "hidden";
-            
-          }catch(error){}
-        }else{
+          console.log(this.sportsNames, newSportName);
+          try {
+            document.getElementById("newSportInvalidFeedback").innerText =
+              "Este deporte ya está registrado";
+            document.getElementById("newSportName").classList.add("is-invalid");
+            document.getElementById("newSportSubmit").style.visibility =
+              "hidden";
+          } catch (error) {}
+        } else {
           this.newSportInputValid = true;
-          try{
-            document.getElementById('newSportName').classList.remove('is-invalid');
-            document.getElementById('newSportSubmit').style.visibility = "visible";
-          }catch(error){}
+          try {
+            document
+              .getElementById("newSportName")
+              .classList.remove("is-invalid");
+            document.getElementById("newSportSubmit").style.visibility =
+              "visible";
+          } catch (error) {}
         }
-      }else{
-          this.newSportInputValid = false;
-          try{
-            document.getElementById('newSportInvalidFeedback').innerText = 'No debe estar vacio';
-            document.getElementById('newSportName').classList.add('is-invalid');
-            document.getElementById('newSportSubmit').style.visibility = "hidden";
-          }catch(error){}
+      } else {
+        this.newSportInputValid = false;
+        try {
+          document.getElementById("newSportInvalidFeedback").innerText =
+            "No debe estar vacio";
+          document.getElementById("newSportName").classList.add("is-invalid");
+          document.getElementById("newSportSubmit").style.visibility = "hidden";
+        } catch (error) {}
       }
     },
     async newSportSubmit() {
-      if(this.newSportInputValid){
+      if (this.newSportInputValid) {
         try {
-          await axios.post("https://oriun-api.herokuapp.com/g/", {
+          await axios.post("http://localhost:8081/g/", {
             name_SPORT: this.newSportInput,
           });
 
@@ -573,7 +859,7 @@ export default {
         } catch (error) {
           this.toaster.failure("Error registrando deporte");
         }
-      }      
+      }
     },
     getParameterByName(name, url) {
       if (!url) url = window.location.href;
@@ -586,18 +872,26 @@ export default {
     },
     showTab() {
       var dynamicContent = this.getParameterByName("tab");
-      console.log("dynamicContent", dynamicContent);
+      // console.log("dynamicContent", dynamicContent);
       // Check if the URL parameter is apples
       if (dynamicContent == "events") {
-        console.log("events-tab");
-        document.getElementById("sport-list").style.display = "none";
+        // console.log("events-tab");
         document.getElementById("event-list").style.display = "block";
+        document.getElementById("home-tab").style.display = "none";
+        document.getElementById("sport-list").style.display = "none";
+        
       }
       // Check if the URL parameter is oranges
       else if (dynamicContent == "sports") {
-        console.log("sports-tab");
+        // console.log("sports-tab");
+        document.getElementById("home-tab").style.display = "none";
         document.getElementById("event-list").style.display = "none";
         document.getElementById("sport-list").style.display = "block";
+      } else {
+        // console.log("home-tab");
+        document.getElementById("home-tab").style.display = "block";
+        document.getElementById("event-list").style.display = "none";
+        document.getElementById("sport-list").style.display = "none";
       }
     },
   },
@@ -675,7 +969,7 @@ export default {
 }
 .dynamic-content {
   /* background-color: #94B43B; */
-  width: 80%;
+  width: 90%;
   display: none;
 }
 .card-header {
@@ -715,17 +1009,14 @@ export default {
   width: 95%;
 }
 .fullName {
-  width: 100%;
+  color: #212529;
+  margin-left: 20px;
   font-size: 26pt;
 }
-.welcome {
-  width: 100%;
-}
+
 .hola {
-  width: 50%;
   color: #7a7a7a;
   font-size: 20pt;
-  margin: -10px auto;
 }
 ul {
   list-style-type: none;
@@ -810,11 +1101,6 @@ input:checked + .slider:before {
 }
 
 @media (max-width: 768px) {
-  .welcome {
-    font-size: 100pt;
-    width: 100%;
-    /* margin-top: -25px; */
-  }
   .card.nav-link {
     font-size: 25pt;
     height: 80px;

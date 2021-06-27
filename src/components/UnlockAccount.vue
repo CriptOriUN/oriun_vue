@@ -9,7 +9,7 @@
         <form class="mt-5 w-75 mx-auto" v-on:submit.prevent="checkUser">
             <div class="form-group row">
                 <label class="col-md-2 h5 col-form-label text-right" for="userBox">User</label>
-                <input v-model="form.username" class="col-md-3 form-control" type="text" id="userBox" autocomplete="off" required>
+                <input v-model="form.username" class="col-md-3 form-control" type="text" id="userBox" autocomplete="off" placeholder="Username" required>
             </div>
             <div class="form-group row">
                 <label class="col-md-2 h5 col-form-label text-right" for="messageBox">Mensaje</label>
@@ -46,7 +46,7 @@ export default {
   methods: {
       checkUser(){
           axios
-          .get('https://oriun-api.herokuapp.com/user')
+          .get('http://localhost:8081/user')
           .then((response) => {
               for (let user of response.data){
                   if(user.user_NAME == this.form.username){
@@ -66,7 +66,7 @@ export default {
                 this.toaster.info("Tu cuenta NO está bloqueda");    
               }else{
                 axios
-                .post("https://oriun-api.herokuapp.com/SoliDesban", { user_NAME: this.form.username, solicitud: this.form.message })
+                .post("http://localhost:8081/SoliDesban", { user_NAME: this.form.username, solicitud: this.form.message })
                 .then(() => {
                     this.toaster.success("Solicitud enviada correctamente");
                 })

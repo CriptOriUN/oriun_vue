@@ -1,7 +1,7 @@
 <template>
   <div class="navigation">
     <nav class="navbar navbar-expand-lg navbar-light mt-2">
-      <div class="container">
+      <div class="container-fluid">
         <a href="/" class="navbar-brand">
           <img
             class="logo navbar-brand"
@@ -14,8 +14,8 @@
           class="navbar-toggler"
           type="button"
           data-toggle="collapse"
-          data-target="#navbar"
-          aria-controls="navbar"
+          data-target="#moderatorNavbar"
+          aria-controls="moderatorNavbar"
           aria-expanded="false"
           aria-label="Menu de Navegacion"
         >
@@ -26,33 +26,17 @@
           <ul class="navbar-nav d-flex justify-content-end">
             <li class="nav-item mx-4 active" id="home">
               <!-- <router-link :to="{ name: 'Welcome', params: { username: this.username }}" id="products-link"> -->
-              <a href="/" class="nav-link btn-menu" v-on:click="selectActive()"
-                >Home</a
-              >
+              <div class="nav-link btn-menu" v-on:click="goHome(); selectActive()">Home</div>
               <!-- </router-link> -->
             </li>
             <li class="nav-item mx-4" id="events">
-              <router-link
-                href="?tab=events"
-                :to="{ name: 'Moderator', query: { tab: 'events' } }"
-                class="nav-link btn-menu"
-                v-on:click="selectActive()"
-                >Eventos</router-link
-              >
+              <div class="nav-link btn-menu" v-on:click="goEvents(); selectActive()">Eventos</div>
             </li>
             <li class="nav-item mx-4" id="sports">
-              <router-link
-                href="?tab=sports"
-                :to="{ name: 'Moderator', query: { tab: 'sports' } }"
-                class="nav-link btn-menu"
-                v-on:click="selectActive()"
-                >Deportes</router-link
-              >
+              <div class="nav-link btn-menu" v-on:click="goSports(); selectActive()">Deportes</div>
             </li>
             <li class="nav-item mx-4">
-              <a v-on:click="closeSession" href="/" class="nav-link btn-menu"
-                >Cerrar Sesión</a
-              >
+              <a v-on:click="closeSession" href="/" class="nav-link btn-menu">Cerrar Sesión</a>
             </li>
           </ul>
         </div>
@@ -90,6 +74,15 @@ export default {
         });
       }
     },
+    goHome(){
+      this.$router.push({ path: 'moderator'}).catch(()=>{})  
+    },
+    goEvents(){
+      this.$router.push({ path: 'moderator', query: { tab: 'events' }}).catch(()=>{})  
+    },
+    goSports(){
+      this.$router.push({ path: 'moderator', query: { tab: 'sports' }}).catch(()=>{})  
+    }
   },
 };
 </script>
@@ -110,5 +103,11 @@ export default {
 .nav-link.btn-menu {
   cursor: pointer;
 }
-/*# sourceMappingURL=crearEvento.css.map */
+
+@media (max-width: 992px) {
+  .nav-item{
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
 </style>

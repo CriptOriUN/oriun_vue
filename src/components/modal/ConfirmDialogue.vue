@@ -107,7 +107,7 @@
           {{ cancelButton }}
         </button>
         <button
-          v-if="okButton == 'Eliminar' || okButton == 'Descartar'"
+          v-if="okButton == 'Eliminar' || okButton == 'Descartar' || okButton == 'Penalizar'"
           type="button"
           id="okButton"
           class="btn btn-danger"

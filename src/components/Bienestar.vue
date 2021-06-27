@@ -3,9 +3,10 @@
     <NavBar :username="username" />
     <div class="container mt-5">
       <div class="row mx-auto">
-        <div class="welcome">
-          <p class="hola mx-auto">Hola,</p>
-          <p class="fullName text-center" id="userName">{{ username }}</p>
+        <div class="mx-auto">
+          <span class="hola"
+            >Hola, <span class="fullName">{{ username }}</span></span
+          >
         </div>
       </div>
       <div class="row justify-content-center mx-auto" id="myTab" role="tablist">
@@ -295,7 +296,7 @@ export default {
 
       axios
         .delete(
-          "https://oriun-api.herokuapp.com/noelements?id=" + value
+          "http://localhost:8081/noelements?id=" + value
         )
         .then((result) => {
           this.$delete(this.elementos, index);
@@ -317,7 +318,7 @@ export default {
       alert(index);
       axios
         .delete(
-          "https://oriun-api.herokuapp.com/nolsibu?name=" + value
+          "http://localhost:8081/nolsibu?name=" + value
         )
         .then((result) => {
           this.$delete(this.locaciones, index);
@@ -335,7 +336,7 @@ export default {
     this.username = this.$route.params.username;
     let self = this;
     axios
-      .get("https://oriun-api.herokuapp.com/user")
+      .get("http://localhost:8081/user")
       .then((result) => {
         self.usuarios = result.data;
         self.isLoading = false;
@@ -345,7 +346,7 @@ export default {
       });
     axios
       .get(
-        "https://oriun-api.herokuapp.com/Singlelsibu?init=-1&size=-1"
+        "http://localhost:8081/Singlelsibu?init=-1&size=-1"
       )
       .then((result) => {
         self.locaciones = result.data;
@@ -357,7 +358,7 @@ export default {
 
     axios
       .get(
-        "https://oriun-api.herokuapp.com/Singlelmts?init=-1&size=-1"
+        "http://localhost:8081/Singlelmts?init=-1&size=-1"
       )
       .then((result) => {
         self.elementos = result.data;
@@ -461,19 +462,14 @@ export default {
 }
 
 .fullName {
-  width: 100%;
+  color: #212529;
+  margin-left: 20px;
   font-size: 26pt;
 }
 
-.welcome {
-  width: 100%;
-}
-
 .hola {
-  width: 50%;
   color: #7a7a7a;
   font-size: 20pt;
-  margin: -10px auto;
 }
 
 ul {

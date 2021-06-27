@@ -2,12 +2,13 @@
   <div class="user">
     <NavBar :username="username" />
     <Websocket />
-    <div id="thewelcome">
-      <h6>
-        Hola,
-        <h2>{{ username }}</h2>
-      </h6>
-    </div>
+      <div class="row mx-auto">
+        <div class="mx-auto">
+          <span class="hola"
+            >Hola, <span class="fullName">{{ username }}</span></span
+          >
+        </div>
+      </div>
     <div class="plantilla">
       <div class="container contenedor_p">
         <div class="row">
@@ -226,7 +227,7 @@ export default {
     getEvents() {
       axios
         .get(
-          "https://oriun-api.herokuapp.com/events?init=1&size=-1",
+          "http://localhost:8081/events?init=1&size=-1",
           self.username
         )
         .then((response) => {
@@ -237,7 +238,7 @@ export default {
     getNotifications() {
       axios
         .get(
-          "https://oriun-api.herokuapp.com/usernotifications/?user=" +
+          "http://localhost:8081/usernotifications/?user=" +
             this.username
         )
         .then((response) => {
@@ -321,7 +322,7 @@ export default {
     getMisEventos() {
       axios
         .get(
-          "https://oriun-api.herokuapp.com/userassistanceevents?user=" +
+          "http://localhost:8081/userassistanceevents?user=" +
             this.username
         )
         .then((response) => {
@@ -335,7 +336,7 @@ export default {
       if (window.confirm(mensaje)) {
         axios
           .delete(
-            "https://oriun-api.herokuapp.com/LeaveEvent?id_user=" +
+            "http://localhost:8081/LeaveEvent?id_user=" +
               this.username +
               "&id_event=" +
               id
@@ -351,7 +352,7 @@ export default {
       let self = this;
       axios
         .post(
-          "https://oriun-api.herokuapp.com/asistirevent?id_user=" +
+          "http://localhost:8081/asistirevent?id_user=" +
             self.username +
             "&id_event=" +
             self.id_asistencia
@@ -381,10 +382,17 @@ export default {
 </script>
 
 <style scoped>
-#thewelcome {
-  display: flex;
-  justify-content: center;
+.fullName {
+  color: #212529;
+  margin-left: 20px;
+  font-size: 26pt;
 }
+
+.hola {
+  color: #7a7a7a;
+  font-size: 20pt;
+}
+
 .plantilla {
   background: #fff;
   /* background: url(../assets/login_bg.png); */
