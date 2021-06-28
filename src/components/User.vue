@@ -2,13 +2,13 @@
   <div class="user">
     <NavBar :username="username" />
     <Websocket />
-      <div class="row mx-auto">
-        <div class="mx-auto">
-          <span class="hola"
-            >Hola, <span class="fullName">{{ username }}</span></span
-          >
-        </div>
+    <div class="row mx-auto">
+      <div class="mx-auto">
+        <span class="hola"
+          >Hola, <span class="fullName">{{ username }}</span></span
+        >
       </div>
+    </div>
     <div class="plantilla">
       <div class="container contenedor_p">
         <div class="row">
@@ -125,19 +125,45 @@
     </div>
     <div class="overlay" v-bind:class="{ active: isActive }">
       <div class="popup">
-        <a
-          href="#"
-          id="btn-cerrar-popup"
-          class="btn-cerrar-popup"
-          v-on:click="ocultar()"
-          >X</a
-        >
+        <div class="">
+          <a
+            href="#"
+            id="btn-cerrar-popup"
+            class="btn-cerrar-popup"
+            v-on:click="ocultar()"
+          >
+            <h4>&times;</h4>
+          </a>
+          <div v-if="pop == 'notificacion'">
+            <h3>Notificacion</h3>
+          </div>
+          <div v-if="pop == 'evento'">
+            <h3>Detalles del evento</h3>
+          </div>
+        </div>
         <div v-if="pop == 'notificacion'">
-          <h3>Notificacion</h3>
-          <h6>Nombre Evento: {{ nombreEvento }}</h6>
-          <h6>Descripción: {{ descripcionNoti }}</h6>
-          <h6>Deporte: {{ deporteNoti }}</h6>
-          <h6>Hora: {{ horaNoti }}</h6>
+          <!-- <h3>Notificacion</h3> -->
+          <hr />
+
+          <div class="mx-auto w-75">
+            <div class="row">
+              <h6 class="col-4 text-right">Nombre Evento:</h6>
+              <p class="col-8 m-0 text-left">{{ nombreEvento }}</p>
+            </div>
+            <div class="row">
+              <h6 class="col-4 text-right">Descripción:</h6>
+              <p class="col-8 m-0 text-left">{{ descripcionNoti }}</p>
+            </div>
+            <div class="row">
+              <h6 class="col-4 text-right">Deporte:</h6>
+              <p class="col-8 m-0 text-left">{{ deporteNoti }}</p>
+            </div>
+            <div class="row">
+              <h6 class="col-4 text-right">Hora:</h6>
+              <p class="col-8 m-0 text-left">{{ horaNoti }}</p>
+            </div>
+          </div>
+          <hr />
           <div id="boton-asistir">
             <button type="button" class="btn btn-primary" @click="asistir()">
               Asistir
@@ -145,17 +171,48 @@
           </div>
         </div>
         <div v-if="pop == 'evento'">
-          <h3>Detalles del evento</h3>
-          <h6>Nombre: {{ nombreEvento }}</h6>
-          <h6>Deporte: {{ deporteEvento }}</h6>
-          <h6>Organizador: {{ organizadorEvento }}</h6>
-          <h6>Fecha: {{ fechaEvento }}</h6>
-          <h6>Hora: {{ horaEvento }}</h6>
-          <h6>Locación: {{ locacionEvento }}</h6>
+          <!-- <h3>Detalles del evento</h3> -->
+          <hr />
+          <div class="mx-auto w-75">
+            <div class="row">
+              <h6 class="col-4 text-right">Nombre:</h6>
+              <p class="col-8 m-0 text-left">{{ nombreEvento }}</p>
+            </div>
+            <div class="row">
+              <h6 class="col-4 text-right">Deporte:</h6>
+              <p class="col-8 m-0 text-left">{{ deporteEvento }}</p>
+            </div>
+            <div class="row">
+              <h6 class="col-4 text-right">Organizador:</h6>
+              <p class="col-8 m-0 text-left">{{ organizadorEvento }}</p>
+            </div>
+            <div class="row">
+              <h6 class="col-4 text-right">Fecha:</h6>
+              <p class="col-8 m-0 text-left">{{ fechaEvento }}</p>
+            </div>
+            <div class="row">
+              <h6 class="col-4 text-right">Hora:</h6>
+              <p class="col-8 m-0 text-left">{{ horaEvento }}</p>
+            </div>
+            <div class="row">
+              <h6 class="col-4 text-right">Locación:</h6>
+              <p class="col-8 m-0 text-left">{{ locacionEvento }}</p>
+            </div>
+          </div>
+          <hr />
           <div v-if="mostrarBotonAsis">
             <div id="boton-asistir">
               <button type="button" class="btn btn-primary" @click="asistir()">
                 Asistir
+              </button>
+              <div class="btn-group mx-0 text-secondary" role="group">|</div>
+              <button
+                @click="reportEvent()"
+                class="btn btn-danger"
+                title="Reportar"
+              >
+                <!-- Borrar -->
+                <i class="fa fa-thumbs-down"></i>
               </button>
             </div>
           </div>
@@ -169,6 +226,7 @@
 import NavBar from "../components/header/NavBar";
 import axios from "axios";
 import Websocket from "../components/Websocket";
+import { toaster } from "./toaster/toaster";
 
 export default {
   name: "Users",
@@ -203,6 +261,7 @@ export default {
       id_asistencia: "",
       puedoAsistir: false,
       mostrarBotonAsis: false,
+      toaster,
     };
   },
   created: function () {
@@ -226,10 +285,7 @@ export default {
   methods: {
     getEvents() {
       axios
-        .get(
-          "https://oriun-api.herokuapp.com/events?init=1&size=-1",
-          self.username
-        )
+        .get("https://oriun-api.herokuapp.com/events?init=1&size=-1", self.username)
         .then((response) => {
           this.events = response.data;
         })
@@ -237,10 +293,7 @@ export default {
     },
     getNotifications() {
       axios
-        .get(
-          "https://oriun-api.herokuapp.com/usernotifications/?user=" +
-            this.username
-        )
+        .get("https://oriun-api.herokuapp.com/usernotifications/?user=" + this.username)
         .then((response) => {
           this.notifications = response.data;
         })
@@ -321,10 +374,7 @@ export default {
     },
     getMisEventos() {
       axios
-        .get(
-          "https://oriun-api.herokuapp.com/userassistanceevents?user=" +
-            this.username
-        )
+        .get("https://oriun-api.herokuapp.com/userassistanceevents?user=" + this.username)
         .then((response) => {
           this.eventosAsistir = response.data;
         })
@@ -377,6 +427,18 @@ export default {
           }
         });
     },
+    reportEvent(){
+      axios
+      .post("https://oriun-api.herokuapp.com/Reportarevento", {id_EVENT: this.id_asistencia, user_NAME: this.username})
+      .then(()=>{
+        this.toaster.success("Has reportado un evento como indebido");
+      })
+      .catch((error)=>{
+        this.toaster.failure("Error reportando el evento");
+        alert(error)
+      });
+      this.ocultar();
+    }
   },
 };
 </script>
@@ -518,14 +580,12 @@ export default {
   padding: 20px;
   text-align: center;
   width: 600px;
+  position: relative;
 }
 .overlay .popup .btn-cerrar-popup {
-  font-size: 16px;
-  line-height: 16px;
-  display: block;
-  text-align: right;
   color: #bbbbbb;
-  /* transition: 0.3s ease all; */
+  position: absolute;
+  right: 30px;
 }
 .overlay .popup .btn-cerrar-popup:hover {
   color: #000;

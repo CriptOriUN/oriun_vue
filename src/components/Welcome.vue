@@ -10,7 +10,7 @@
         </div>
       </div>
 
-    <div class="container mt-4">
+    <div class="container mt-4 mb-4">
       <div class="row w-100">
         <div class="col-md-6 mb-6">
           <div class="mis-eventos">
@@ -61,6 +61,7 @@
         </div>
 
         <div class="col-md-6">
+          <!-- MIS DEPORTES -->
           <div class="mis-eventos">
             <h4 class="titulo-eventos">Mis Deportes</h4>
 
@@ -115,12 +116,8 @@
               </button>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div class="row w-100">
-        <div class="col-md-6 col-0 w-auto"></div>
-        <div class="col-md-6 float-right">
+          <!-- MIS RESERVAS -->
           <div class="mis-eventos">
             <h4 class="titulo-eventos">Mis Reservas</h4>
 
@@ -146,7 +143,9 @@
             </div>
           </div>
         </div>
+
       </div>
+
     </div>
 
     <div class="overlay" v-if="pop=='evento'" v-bind:class="{ active: isActive }">

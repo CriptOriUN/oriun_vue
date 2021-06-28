@@ -72,7 +72,7 @@
                               <i class="fa fa-thumbs-up"></i>
                             </button>      
                             <button
-                              @click="penalizeEvent(event)"
+                              @click="penalizeUser(event)"
                               class="btn btn-danger"
                               title="Penalizar"
                             >
@@ -220,9 +220,9 @@
                   <table class="table table-bordered table-hover table-options">
                     <thead class="thead-dark text-center">
                       <tr>
+                        <th>EVENTO</th>
                         <th>CREADOR</th>
-                        <th>FECHA</th>
-                        <th>HORA</th>
+                        <th>FECHA</th>                        
                         <th>LUGAR</th>
                         <th></th>
                       </tr>
@@ -241,15 +241,9 @@
                       v-bind:id="event.id_EVENT"
                     >
                       <tr>
+                        <td>{{ event.event_TITLE }}</td>
                         <td>{{ event.user_NAME }}</td>
                         <td>{{ event.event_INIT }}</td>
-                        <td>
-                          {{
-                            event.event_INIT_HOUR.slice(
-                              event.event_INIT_HOUR.length - 8
-                            )
-                          }}
-                        </td>
                         <td>{{ event.name_LOC_SPORT }}</td>
                         <td>
                           <button
@@ -264,9 +258,18 @@
                             <!-- Ver detalles -->
                             <i class="fa fa-info-circle"></i>
                           </button>
+                          <div class="btn-group mx-0 text-secondary" role="group">|</div>
+                          <button
+                            @click="penalizeUser(event)"
+                            class="btn btn-danger"
+                            title="Penalizar"
+                          >
+                            <!-- Borrar -->
+                            <i class="fa fa-thumbs-down"></i>
+                          </button>
                           <button
                             @click="delEvent(event)"
-                            class="btn btn-danger"
+                            class="btn btn-secondary"
                             title="Eliminar"
                           >
                             <!-- Borrar -->
@@ -398,7 +401,10 @@
                       <tr>
                         <th style="width: 60%">SUGERENCIAS</th>
                         <th>#</th>
-                        <th></th>
+                        <th class="p-0"><button @click="viewChart()" class="btn p-0 text-white viewChartButton" title="Ver Grafico" data-toggle="modal" data-target="#chartModal">
+                        <!-- Ver grafico -->
+                        <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                      </button></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -451,6 +457,32 @@
 
         <!-- MODAL -->
         <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
+
+        <!-- Chart-->
+        <div class="modal fade" id="chartModal" tabindex="-1" role="dialog" aria-labelledby="chartModalTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <!-- <h5 class="modal-title">Deportes sugeridos</h5> -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <!-- <div class="modal-body" id="suggestedSports-chart">
+                
+              </div> -->
+              <div class="modal-body" style="overflow-x: auto;">
+                <div class="mx-auto" style="width: fit-content">
+                  <div class="d-flex justify-content-start" id="suggestedSports-chart">
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- <div class="d-flex align-items-center col-xl-3 col-lg-3 col-12 mt-4"> -->
@@ -494,6 +526,8 @@ export default {
       sportsData: [],
       sportsNames: [],
       suggestedSports: [],
+      suggestedSportsNames: [],
+      suggestedSportsCount: [],
       search: "",
       switchChecked: false,
       toaster,
@@ -553,12 +587,14 @@ export default {
 
     axios
       .get("https://oriun-api.herokuapp.com/otherscount/")
-      .then(
-        (response) => (
-          (this.suggestedSports = response.data),
-          (this.loadingSuggSports = false)
-        )
-      );
+      .then((response) => {
+          this.suggestedSports = response.data
+          this.suggestedSports.forEach(element => {
+            this.suggestedSportsNames.push(element[0]);
+            this.suggestedSportsCount.push(element[1]);
+          });
+          this.loadingSuggSports = false
+        });
 
     this.showTab();
   },
@@ -632,8 +668,8 @@ export default {
       // If you throw an error, the method will terminate here unless you surround it wil try/catch
       if (ok) {
         try {
-          await axios.delete(
-            "https://oriun-api.herokuapp.com/###########?user=" + String(user)
+          await axios.put(
+            "https://oriun-api.herokuapp.com/opuuser?user=" + String(user)
           );
           // document.getElementById(sport.name_SPORT).remove();
           this.toaster.success("Cuenta desbloqueada");
@@ -697,30 +733,41 @@ export default {
         }
       }
     },
-    async penalizeEvent(event) {
+    async penalizeUser(event) {
       // this.printHello()
       const ok = await this.$refs.confirmDialogue.show({
-        title: "Penalizar evento",
+        title: "Penalizar usuario",
         message:
           "¿Está seguro que desea penalizar a " +
           event.user_NAME.bold().big() +
           " por la creación del evento " +
           event.event_TITLE.bold().big() +
-          "? </br> Esta acción es irreversible",
+          "? " + " Se eliminará el evento".bold() + ". </br> Esta acción es irreversible",
         okButton: "Penalizar",
       });
       // If you throw an error, the method will terminate here unless you surround it wil try/catch
       if (ok) {
         try {
-          await axios.delete(
-            "https://oriun-api.herokuapp.com/#########?user=" + String(event.user_NAME)
+          await axios.put(
+            "https://oriun-api.herokuapp.com/banuser?user=" + String(event.user_NAME)
           );
-          document.getElementById('report_'+event.id_EVENT).remove();
+          try{
+            await axios.delete(
+              "https://oriun-api.herokuapp.com/NoEvent?id_event=" + event.id_EVENT
+            );
+            this.toaster.success("Evento eliminado");
+          }catch(error){
+            this.toaster.failure("Error eliminando evento");
+          }
+          try{
+            document.getElementById('report_'+event.id_EVENT).remove();
+          }catch(error){}
           this.toaster.success("Usuario penalizado");
           setTimeout(() => {
             location.reload();
           }, 1000);
         } catch (error) {
+          alert(error)
           this.toaster.failure("Error penalizando usuario");
         }
       }
@@ -739,7 +786,9 @@ export default {
           await axios.delete(
             "https://oriun-api.herokuapp.com/NoEvent?id_event=" + event.id_EVENT
           );
-          document.getElementById(event.id_EVENT).remove();
+          try{
+            document.getElementById(event.id_EVENT).remove();
+          }catch(error){}
           this.toaster.success("Evento eliminado");
           setTimeout(() => {
             location.reload();
@@ -894,6 +943,37 @@ export default {
         document.getElementById("sport-list").style.display = "none";
       }
     },
+    viewChart(){
+      // var xArray = [55, 49, 44, 24, 15];
+      // var yArray = ["Italy ", "France ", "Spain ", "USA ", "Argentina "];
+      var data = [{
+        y:this.suggestedSportsCount,
+        x:this.suggestedSportsNames,
+        type:"bar",
+        orientation:"v",
+      }];
+
+      var layout = {
+        title:{
+          text: "<b>Deportes sugeridos</b>",
+          font: {
+            size: 26,
+            color: "#212529",
+            family: 'Arial',
+          }
+        },
+        xaxis: {
+          title: "<b>Deporte</b>"
+        },
+        yaxis: {
+          range: [0, Math.max(this.suggestedSportsCount)],
+          title: "<b>Numero de sugerencias</b>"
+        },
+      };
+      var config = {responsive: true}
+      Plotly.newPlot("suggestedSports-chart", data, layout, config);
+      document.querySelector('[data-title="Autoscale"]').click()
+    },
   },
   computed: {
     filterEvents: function () {
@@ -945,6 +1025,7 @@ export default {
   font-size: 35pt;
   cursor: pointer;
 }
+
 .card.nav-link:hover {
   top: -2px;
   transition: 0.5s;
@@ -997,7 +1078,15 @@ export default {
 }
 
 .newSport {
-  margin-top: -28px;
+  margin-top: -35px;
+  margin-left: -5px;
+  font-size: 16pt;
+}
+
+.newSport:hover{
+  font-size: 18pt;
+  margin-top: -30px;
+  margin-right: -5px;
 }
 
 #SportsTable td:last-child {
@@ -1081,6 +1170,16 @@ table {
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
+
+.viewChartButton{
+  font-size: 16pt;
+  margin-top: -30px
+}
+
+.viewChartButton:hover{
+  font-size: 20pt;
+}
+
 input:checked + .slider {
   background-color: #2196f3;
 }
