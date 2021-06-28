@@ -53,14 +53,16 @@
               </router-link>
             </li>
 
-             <li class="nav-item active mx-4">
+            <li class="nav-item active mx-4">
               <router-link
                 :to="{
                   name: 'DispEspacio',
                   params: { username: this.username },
                 }"
               >
-                <a href="#" class="nav-link btn-menu">Disponibilidad de Espacio</a>
+                <a href="#" class="nav-link btn-menu"
+                  >Disponibilidad de Espacio</a
+                >
               </router-link>
             </li>
 
@@ -138,6 +140,16 @@
                 <a href="#" class="nav-link btn-menu">Crear Evento</a>
               </router-link>
             </li>
+            <li class="nav-item active mx-4">
+              <router-link
+                :to="{
+                  name: 'RentalElements',
+                  params: { username: this.username },
+                }"
+              >
+                <a href="#" class="nav-link btn-menu">Estado Elementos</a>
+              </router-link>
+            </li>
             <li class="nav-item mx-4">
               <a v-on:click="closeSession" href="#" class="nav-link btn-menu"
                 >Cerrar Sesión</a
@@ -187,7 +199,7 @@ export default {
 }
 
 @media (max-width: 992px) {
-  .nav-item{
+  .nav-item {
     margin-left: auto !important;
     margin-right: auto !important;
   }

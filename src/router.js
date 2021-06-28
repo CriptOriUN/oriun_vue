@@ -14,6 +14,7 @@ import Elements from './components/Elements'
 import Confirmation from './components/Confirmation'
 import DispEspacio from './components/DispEspacio'
 import UnlockAccount from './components/UnlockAccount'
+import RentalElements from './components/RentalElements'
 
 const router = new vueRouter({
     mode: 'history',
@@ -93,7 +94,11 @@ const router = new vueRouter({
             name: "UnlockAccount",
             component: UnlockAccount
         },
-
+        {
+            path: '/:username/rental-elements', 
+            name: "RentalElements",
+            component: RentalElements
+        }
     ]
 })
 export default router
