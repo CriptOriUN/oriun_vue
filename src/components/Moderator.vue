@@ -671,7 +671,10 @@ export default {
           await axios.put(
             "https://oriun-api.herokuapp.com/opuuser?user=" + String(user)
           );
-          // document.getElementById(sport.name_SPORT).remove();
+          await axios.delete(
+            "https://oriun-api.herokuapp.com/OlvidarSoli?user=" + String(user)
+          );
+          document.getElementById(user+'_request').remove();
           this.toaster.success("Cuenta desbloqueada");
           setTimeout(() => {
             location.reload();
