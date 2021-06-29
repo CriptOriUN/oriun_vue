@@ -9,91 +9,36 @@
         <h2>Estado Elementos</h2>
         <hr />
       </div>
-      <!-- <div class="form-group">
-        
-        <select class="form-control" name="state" id="maxRows">
-          <option value="5000">Mostrar Todo</option>
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-          <option value="20">20</option>
-          <option value="50">50</option>
-          <option value="70">70</option>
-          <option value="100">100</option>
-        </select>
-      </div> -->
       <table
         id="LocationsTable"
         class="table table-bordered table-hover table-striped table-options"
       >
         <thead class="thead-dark text-center">
           <tr>
-            <th>Usuario</th>
+            <th>Locacion</th>
             <th></th>
           </tr>
         </thead>
-        <tbody v-for="alquiler in alquileres" :key="alquiler.id">
-          <tr id="alquilerlist">
-            <td>{{ alquiler.user_NAME }}</td>
+        <tbody v-for="locacion in locaciones" :key="locacion.id">
+          <tr id="locacionlist">
+            <td>{{ locacion }}</td>
             <td class="">
               <!--button that call collapse-->
               <button
-                v-on:click="getElements"
+                v-on:click="getReservas(locacion)"
                 class="btn btn-primary"
                 type="button"
-                data-toggle="collapse"
-                :data-target="'#details' + alquiler.id_RENT"
-                aria-controls="details"
-                aria-expanded="false"
                 title="Ver detalles"
               >
                 <!-- Ver detalles -->
                 <i class="fa fa-info-circle"></i>
               </button>
-              <button class="btn btn-danger" title="Eliminar">
-                <!-- Borrar -->
-                <i class="fa fa-minus-circle"></i>
-              </button>
-            </td>
-          </tr>
-          <tr class="collapse" v-bind:id="['details' + alquiler.id_RENT]">
-            <td class="p-3 text-left" colspan="5">
-              <table
-                id="IndumentariaTable"
-                class="table table-striped table-options"
-              >
-                <thead class="thead-info">
-                  <tr>
-                    <th>Elemento(s) Asociados</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <!-- <tbody>
-                <tr
-                  v-for="element in elementos"
-                  :key="element.id"
-                  id="usuarioslist"
-                >
-                  <td v-if="element.name_LOCATION == locacion">
-                    {{ element.element_NAME }}
-                  </td>
-                  <td v-if="element.name_LOCATION == locacion" class="">
-                    <button
-                      class="btn btn-danger"
-                      title="Eliminar"
-                      @click="delElement(element.id_ELEMENT)"
-                    >
-                      
-                      <i class="fa fa-minus-circle"></i>
-                    </button>
-                  </td>
-                </tr>
-              </tbody> -->
-              </table>
             </td>
           </tr>
         </tbody>
       </table>
+      <!-- MODAL -->
+      <rental-dialogue ref="rentalDialogue"></rental-dialogue>
     </div>
   </div>
 </template> 
@@ -102,33 +47,79 @@
 import NavBar from "../components/header/NavBar";
 import Spinner from "./spinner/Spinner";
 import { toaster } from "../components/toaster/toaster";
+import RentalDialogue from "../components/modal/RentalDialogue";
 import axios from "axios";
 export default {
   name: "RentalElements",
   components: {
     NavBar,
     Spinner,
+    RentalDialogue,
   },
   data: function () {
     return {
       alquileres: [],
+      locaciones: [],
+      reservas: {},
       isLoading: true,
+      habilitado: false,
       color: "#76232f",
+      locacionact: null,
+      mostrarReservacion: null,
     };
   },
 
   created: function () {
     this.username = this.$route.params.username;
+    this.reservas = {};
     let self = this;
+
     axios
-      .get("https://oriun-api.herokuapp.com/alquileresall")
+      .get("https://oriun-api.herokuapp.com/Singlelsibu?init=-1&size=-1")
       .then((result) => {
-        self.alquileres = result.data;
+        self.locaciones = result.data;
         self.isLoading = false;
       })
       .catch((error) => {
-        alert("ERROR Servidor ALQUILER");
+        alert("ERROR Servidor LOCACION");
       });
+  },
+
+  watch: {
+    mostrarReservacion() {
+      this.requestReservacion(this.mostrarReservacion);
+    },
+  },
+  methods: {
+    getReservas: function (locacion) {
+      axios
+        .get("https://oriun-api.herokuapp.com/lapluse?name_loc=" + locacion)
+        .then((result) => {
+          this.mostrarReservacion = result.data;
+          Vue.set(this.reservas, locacion, result.data);
+          this.habilitado = true;
+          this.locacionact = locacion;
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
+
+    async requestReservacion(element) {
+      console.log("reserva", element);
+      this.$root.$emit("newBooking", element);
+      const ok = await this.$refs.rentalDialogue.show({
+        title: "Detalles de reserva(s) en " + this.locacionact,
+        message: "Booking form",
+
+        okButton: "Reservar",
+      });
+
+      // If you throw an error, the method will terminate here unless you surround it wil try/catch
+      if (ok) {
+        console.log("reserva realizada");
+      }
+    },
   },
 };
 </script>
