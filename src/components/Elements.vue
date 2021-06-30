@@ -322,11 +322,6 @@ export default {
           }, 1000);
         }else{      
           try {
-            alert("?user_name=" + this.username + 
-              "&id_elem=" + element.id_ELEMENT +
-              "&i_date=" + this.rentDate +
-              "&tim=" + this.rentTime + 
-              "&dur=" + this.rentDuration)
             await axios
               .post(
               "https://oriun-api.herokuapp.com/solicitarAlq" + 
