@@ -57,12 +57,12 @@
                     name="bookingDate"
                     :min="'' + today"
                     @focus="limitDate()"
-                    @change="validateDate()"
+                    @change="validateDate(); validateTime()"
                     required
                   />
-                  <div class="text-center invalid-feedback">
+                  <small class="text-center invalid-feedback">
                     Atención de Lunes a Viernes
-                  </div>
+                  </small>
                 </div>
                 <div class="ml-3 form-row">
                   <label class="col-sm-3 col-form-label" for="bookingTime"
@@ -74,10 +74,13 @@
                     name="bookingTime"
                     @change="validateTime()"
                   />
-                  <div class="invalid-feedback text-center">Atención de 8:00 a 17:00</div>
+                  <small id="timeFeedback" class="invalid-feedback text-center">Atención de 8:00 a 17:00</small>
                 </div>
                 <div id="limitTimeWarning" class="mt-1 ml-3 text-center d-none">
                 <small class="text-secundary">Para usar este implemento durante {{durationText}}, debes retirarlo antes de las {{upperLimmit}}</small>
+                </div>
+                <div id="lateTimeWarning" class="mt-1 ml-3 text-center d-none">
+                  <small class="text-danger">Estás un poco tarde para esta reserva</small>
                 </div>
               </li>
             </ul>
@@ -263,8 +266,12 @@ export default {
       }
     },
     validateTime() {
-      
+      try{
+        document.getElementById("timeFeedback").classList.remove("d-none");
+      }catch(error){}      
+      var today = new Date().toISOString().split('T')[0];
       var bookingTime = document.getElementById("bookingTime").value;
+      var bookingDate = document.getElementById("bookingDate").value;
       var duration = document.getElementById('bookingDuration');
       this.durationText = duration.options[duration.selectedIndex].text;
       
@@ -287,20 +294,72 @@ export default {
             document.getElementById("bookingTime").classList.remove("is-valid");
           } catch (error) {}
         } else {
-          this.sthInvalid = false;
-          this.rentTime = bookingTime;
-          this.$root.$emit("updateBooking", this.rentDate, this.rentTime, this.rentDuration);
-          document.getElementById("bookingTime").classList.add("is-valid");
-          try {
-            document.getElementById("bookingTime").classList.remove("is-invalid");
-          } catch (error) {}
-          try {
-            document.getElementById("limitTimeWarning").classList.add("d-none");
-          } catch (error) {}
+          if(bookingDate != ''){
+            if(bookingDate == today){
+              var now = new Date();
+              var inputTime = bookingTime.split(":");
+              if(parseInt(inputTime[0]) < parseInt(now.getHours())){
+                this.sthInvalid = true; 
+                document.getElementById("lateTimeWarning").classList.remove("d-none");
+                try{
+                  document.getElementById("bookingTime").classList.add("is-invalid");
+                  document.getElementById("timeFeedback").classList.add("d-none");
+                }catch(error){alert(error)}
+                
+              }else if (parseInt(inputTime[0]) == parseInt(now.getHours())) {
+                if(parseInt(inputTime[1]) <= parseInt(now.getMinutes())){
+                  this.sthInvalid = true; 
+                  document.getElementById("lateTimeWarning").classList.remove("d-none");
+                  try{
+                    document.getElementById("bookingTime").classList.add("is-invalid");
+                    document.getElementById("timeFeedback").classList.add("d-none");
+                  }catch(error){alert(error)}
+                }else{
+                  document.getElementById("lateTimeWarning").classList.add("d-none");
+                  document.getElementById("bookingTime").classList.add("is-valid");
+                  try{
+                    document.getElementById("timeFeedback").classList.remove("d-none");
+                    document.getElementById("bookingTime").classList.remove("is-invalid");
+                  }catch(error){alert(error)}
+                  this.emitBooking(bookingTime);
+                }
+              }else{
+                document.getElementById("lateTimeWarning").classList.add("d-none");
+                document.getElementById("bookingTime").classList.add("is-valid");
+                try{
+                    document.getElementById("timeFeedback").classList.remove("d-none");
+                    document.getElementById("bookingTime").classList.remove("is-invalid");
+                  }catch(error){alert(error)}
+                this.emitBooking(bookingTime);
+              }         
+            }else{
+              this.emitBooking(bookingTime);
+              document.getElementById("bookingTime").classList.add("is-valid");
+              try{
+                  document.getElementById("timeFeedback").classList.remove("d-none");
+                  document.getElementById("bookingTime").classList.remove("is-invalid");
+                }catch(error){alert(error)}
+            }
+          }
         }
         // console.log(time)
       }
     },
+    emitBooking(bookingTime){
+      this.sthInvalid = false;
+      this.rentTime = bookingTime;
+      this.$root.$emit("updateBooking", this.rentDate, this.rentTime, this.rentDuration);
+      document.getElementById("bookingTime").classList.add("is-valid");
+      try {
+        document.getElementById("bookingTime").classList.remove("is-invalid");
+      } catch (error) {}
+      try {
+        document.getElementById("limitTimeWarning").classList.add("d-none");
+      } catch (error) {}
+      try {
+        document.getElementById("lateTimeWarning").classList.add("d-none");
+      } catch (error) {}
+    }
   },
 };
 </script>

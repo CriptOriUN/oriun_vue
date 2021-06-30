@@ -151,7 +151,7 @@ export default {
       color: "#94B43B",
       bookingElementID: -1,
       rentDate: new Date(),
-      rentTime: '00:00',
+      rentTime: '00:00:00',
       rentDuration: 30,
       myBooking: [],
     };
@@ -200,9 +200,9 @@ export default {
   mounted(){
     this.$root.$on("updateBooking", (rentDate, rentTime, rentDuration) => {
       this.rentDate = rentDate;
-      this.rentTime = rentTime;
+      this.rentTime = rentTime + ':00';
       this.rentDuration = rentDuration;
-      console.log("DATA RECEIVED!", rentDate, rentTime, rentDuration)
+      // console.log("DATA RECEIVED!", rentDate, rentTime, rentDuration)
     });
     this.getBooking();
   },
@@ -309,35 +309,9 @@ export default {
       const ok = await this.$refs.confirmDialogue.show({
         title: "Detalles de la reserva",
         message: "Booking form",
-          // "<div class='row'><div class='col-6'><ul style='list-style-type:none;'><li><b>Implemento: </b>" +
-          // element.element_NAME +
-          // "</li>" +
-          // "<li><b>Descripcion: </b>" +
-          // element.description +
-          // "</li>" +
-          // "<li><b>Ubicacion: </b>" +
-          // element.name_LOCATION +
-          // "</li>" +
-          // "<li><b>Deporte: </b>" +
-          // element.name_SPORT +
-          // "</li>" +
-          // "<li><b>Retiro: </b> <br>" +
-          // "<div class='ml-3'>" +
-          // "<label class='mr-5' for='bookingDate'>Dia </label><input id='bookingDate' class='ml-3' type='date' name='bookingDate'><br>" +
-          // "</div>" + 
-          // "<div class='mt-3 ml-3'>" +
-          // "<label class='' for='bookingTime'>Hora </label><input @focus='limitDate()' id='bookingTime' class='ml-3' type='time' name='bookingTime'>" +
-          // "</div>" + 
-          // "</li>" +
-          // "</ul></div>" +
-          // "<div class='col-6'><img class='d-block mx-auto' alt='Imagen' src=' data:image/jpg;base64," +
-          // element.element_IMAGE +
-          // "' onerror=\"this.onerror=null; this.alt='Image Not Found'; this.src=\'https://i.ibb.co/sFpkRp3/no-image.png\'\" style='max-width:90%; max-height:200px'></div></div>",
         okButton: "Reservar",
       });
-      
-      
-      
+          
       // If you throw an error, the method will terminate here unless you surround it wil try/catch
       if (ok) {
         console.log("myBooking", this.myBooking)
@@ -348,9 +322,19 @@ export default {
           }, 1000);
         }else{      
           try {
+            alert("?user_name=" + this.username + 
+              "&id_elem=" + element.id_ELEMENT +
+              "&i_date=" + this.rentDate +
+              "&tim=" + this.rentTime + 
+              "&dur=" + this.rentDuration)
             await axios
               .post(
-              "https://oriun-api.herokuapp.com/gAlquiler", {user_NAME: this.username, id_ELEMENT: element.id_ELEMENT, rent_DATE: this.rentDate}
+              "https://oriun-api.herokuapp.com/solicitarAlq" + 
+              "?user_name=" + this.username + 
+              "&id_elem=" + element.id_ELEMENT +
+              "&i_date=" + this.rentDate +
+              "&tim=" + this.rentTime + 
+              "&dur=" + this.rentDuration
               );
             this.toaster.success(
               "Reserva realizada correctamente"
