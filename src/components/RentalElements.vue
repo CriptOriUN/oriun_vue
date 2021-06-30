@@ -66,6 +66,7 @@ export default {
       color: "#76232f",
       locacionact: null,
       mostrarReservacion: null,
+      toaster,
     };
   },
 
@@ -108,17 +109,28 @@ export default {
     async requestReservacion(element) {
       console.log("reserva", element);
       this.$root.$emit("newBooking", element);
-      const ok = await this.$refs.rentalDialogue.show({
-        title: "Detalles de reserva(s) en " + this.locacionact,
-        message: "Booking form",
+      const ok = await this.$refs.rentalDialogue
+        .show({
+          title: "Detalles de reserva(s) en " + this.locacionact,
+          message: "Booking form",
 
-        okButton: "Reservar",
-      });
+          okButton: "Strike a Usuario",
+        })
+        .then((result) => {
+          axios
+            .put("https://oriun-api.herokuapp.com/banuser?user=" + result)
+            .then((response) => {
+              this.toaster.success("Al Usuario "+result+" se le ha puesto un STRIKE");
+            }) 
+            .catch((error)=>{
+              this.toaster.failure("Hubo un error al aplicarle un Strike al Usuario "+result)
+            });
+        });
 
       // If you throw an error, the method will terminate here unless you surround it wil try/catch
-      if (ok) {
-        console.log("reserva realizada");
-      }
+      // if (ok) {
+      //   console.log("reserva realizada");
+      // }
     },
   },
 };
