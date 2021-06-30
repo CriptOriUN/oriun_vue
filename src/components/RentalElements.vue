@@ -121,9 +121,6 @@ export default {
             .put("https://oriun-api.herokuapp.com/banuser?user=" + result)
             .then((response) => {
               this.toaster.success("Al Usuario "+result+" se le ha puesto un STRIKE");
-            }) 
-            .catch((error)=>{
-              this.toaster.failure("Hubo un error al aplicarle un Strike al Usuario "+result)
             });
         });
 
