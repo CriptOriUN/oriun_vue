@@ -31,6 +31,14 @@
                     <b>Usuario: </b>
                     {{ elemento.user_NAME }}
                   </li>
+                  <li>
+                    <b>Fecha de reserva: </b>
+                    {{ elemento.rent_DATE }}
+                  </li>
+                  <li>
+                    <b>Disponible: </b>
+                    {{ elemento.available }}
+                  </li>
                 </ul>
               </div>
               <!-- <div class="col-12 col-lg-6 col-md-6 col-sm-6 my-auto">
