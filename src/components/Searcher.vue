@@ -25,7 +25,7 @@
       </div>
     </div>
     <div v-else class="plantilla">
-      <div class="container contenedor_p">
+      <div class="container contenedor_p pb-4">
         <div class="eventos">
           <div class="evento" v-for="evento in filterEvents" :key="evento.id">
             <div class="columnas">
