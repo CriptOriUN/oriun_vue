@@ -172,7 +172,7 @@ export default {
 
 <style scoped>
 .plantilla {
-  background: #76232f;
+  background: #94B43B;
   min-height: 100vh;
 }
 .plantilla .contenedor_p {
