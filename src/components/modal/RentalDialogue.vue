@@ -5,7 +5,7 @@
         <h4 class="modal-title text-center" id="adviseModalTitle">
           {{ title }}
         </h4>
-        <button type="button" class="close" @click="_cancel" aria-label="Close">
+        <button type="button" class="close" @click="_salir" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -61,7 +61,7 @@
               type="button"
               id="cancelButton"
               class="btn btn-secondary"
-              @click="_cancel"
+              @click="_cancel(elemento.id_RENT)"
             >
               {{ cancelButton }}
             </button>
@@ -98,19 +98,12 @@ export default {
     title: undefined,
     message: undefined, // Main text content
     okButton: undefined, // Text for confirm button; leave it empty because we don't know what we're using it for
-    cancelButton: "Cancelar", // text for cancel button
+    cancelButton: "Cancelar la Reserva", // text for cancel button
 
     // Private variables
     resolvePromise: undefined,
     rejectPromise: undefined,
     element: null,
-    today: null,
-    rentDate: new Date(),
-    rentDuration: 30,
-    rentTime: "00:00",
-    durationText: "30 minutos",
-    upperLimmit: "16:30",
-    sthInvalid: true,
     toaster,
   }),
   mounted() {
@@ -143,11 +136,15 @@ export default {
     _confirm(username) {
       this.$refs.popup.close();
       this.resolvePromise(username);
+    }, 
+
+    _salir(){
+      this.$refs.popup.close();
     },
 
-    _cancel() {
+    _cancel(id_RENT) {
       this.$refs.popup.close();
-      this.resolvePromise(false);
+      this.rejectPromise(id_RENT);
       // Or you can throw an error
       // this.rejectPromise(new Error('User cancelled the dialogue'))
     },

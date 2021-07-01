@@ -122,6 +122,12 @@ export default {
             .then((response) => {
               this.toaster.success("Al Usuario "+result+" se le ha puesto un STRIKE");
             });
+        }).catch((error) => { 
+          axios
+            .delete("https://oriun-api.herokuapp.com/noAlquiler?id="+error)
+            .then((response)=>{
+              this.toaster.success("la RESERVA fue ELIMINADA con EXITO")
+            });
         });
 
       // If you throw an error, the method will terminate here unless you surround it wil try/catch
