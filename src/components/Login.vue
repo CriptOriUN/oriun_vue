@@ -262,7 +262,7 @@ export default {
                 })
                 .catch((error) => {
                   this.loadingElements = false;
-                  alert(error.response.status)
+                  // alert(error.response.status)
                   if (error.response.status == "404")
                     alert("Contraseña Erronea.");
                   else if (error.response.status == "406")
