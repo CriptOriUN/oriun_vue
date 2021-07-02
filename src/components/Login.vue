@@ -262,15 +262,21 @@ export default {
                 })
                 .catch((error) => {
                   this.loadingElements = false;
+                  alert(error.response.status)
                   if (error.response.status == "404")
-                    alert("ERROR 404:Contraseña Erronea.");
-                  if (error.response.status == "406")
-                    alert("ERROR 403: Usuario no encontrado.");
+                    alert("Contraseña Erronea.");
+                  else if (error.response.status == "406")
+                    alert("Tu cuenta ha sido bloqueda.");
                 });
             } else {
               this.loadingElements = false;
               alert("No has verificado tu cuenta.");
             }
+          })
+          .catch((error) => {
+            this.loadingElements = false;
+            if (error.response.status == "422")
+              alert("Usuario no encontrado.");
           });
       } else {
         this.loadingElements = false;
@@ -302,7 +308,7 @@ export default {
             })
             .catch((error) => {
               if (error.response.status == "422")
-                alert("ERROR 422: El Usuario ya existe.");
+                alert("El Usuario ya existe.");
             });
         } else {
           alert("NO estan cumpliendose las condiciones de la contraseña");
