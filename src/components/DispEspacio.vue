@@ -29,7 +29,7 @@
           </div>
           <div class="col-11 col-md-8">
             <div class="espacios">
-              <h3 class="titulos">Locaciones</h3>
+              <h3 class="titulos">Locaciones Ocupadas</h3>
               <hr />
             </div>
             <div class="row espacios ml-4 mr-4 d-flex bd-highlight">
@@ -66,7 +66,9 @@
                 v-if="locations.length == 0"
                 class="loc flex-fill bd-highlight p-5"
               >
-                <h4 class="localizaciones">Sin resultados</h4>
+                <h4 class="localizaciones">
+                  Todas las locaciones estas disponibles
+                </h4>
                 <h4 class="localizaciones">
                   <i class="fa fa-search"></i>
                 </h4>
