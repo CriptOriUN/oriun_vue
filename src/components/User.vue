@@ -422,8 +422,10 @@ export default {
           self.isLoadingEvent = false;
           if (error.response.status == "507") {
             alert("El evento ya ha superado el limite de asistentes");
-          } else {
-            alert("ERROR Servidor ASISTIR EVENTOS");
+          }else if(error.response.status == "409"){
+            alert("El Usuario ya estaba registrado en el evento");
+          }else {
+            alert("Error asistiendo al evento");
           }
         });
     },

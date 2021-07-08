@@ -120,35 +120,20 @@ export default {
           "https://oriun-api.herokuapp.com/asistirevent?id_user=" +
             self.username +
             "&id_event=" +
-            id_EVENT,
-          {
-            params: {
-              id_user: self.username,
-              id_event: id_EVENT,
-            },
-          }
-        )
+            id_EVENT)
         .then((result) => {
           self.puedoAsistir = result.data;
           self.isLoadingEvent = false;
-          if (self.puedoAsistir == true) {
-            self.toaster.success(
-              "El usuario ha sido regitrado el evento con exito"
-            );
-          } else {
-            self.toaster.failure(
-              "El Usuario ya estaba registrado en el evento"
-            );
-          }
+          self.toaster.success("El usuario ha sido registrado el evento con exito");
         })
         .catch((error) => {
           self.isLoadingEvent = false;
           if (error.response.status == "507") {
-            self.toaster.failure(
-              "El evento ya ha superado el limite de asistentes"
-            );
-          } else {
-            alert("ERROR Servidor ASISTIR EVENTOS");
+            self.toaster.failure("El evento ya ha superado el limite de asistentes");
+          }else if(error.response.status == "409"){
+            self.toaster.failure("El Usuario ya estaba registrado en el evento");
+          }else {
+            self.toaster.failure("Error asistiendo al evento");
           }
         });
     },

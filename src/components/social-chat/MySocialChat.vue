@@ -38,17 +38,17 @@ export default {
         app: 'messenger',
         label: 'Desarrollador - Messenger',
         name: 'YerGOD Valderrama',
-        id: 'YOUR_FACEBOOK_ID',
+        id: '113101434359781',
         avatar: {
           src: 'https://groriun.github.io/images/1.jpg',
-          alt: 'Alan Ktquez avatar'
+          alt: 'Avatar: No es una mujer mapache xd'
         }
       },
       {
         app: 'twitter',
         label: 'Desarrollador - Twitter',
         name: 'YerGOD Valderrama',
-        id: 'Avatar: No es una mujer mapache xd',
+        id: '1410627555909062657',
         avatar: {
           src: 'https://groriun.github.io/images/1.jpg',
           alt: 'Avatar: No es una mujer mapache xd'
