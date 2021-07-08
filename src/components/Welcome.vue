@@ -31,7 +31,7 @@
                       href="#"
                       class="info-titulo-ref detalles"
                       v-on:click="
-                        pop = 'evento';
+                        pop = 'event';
 
                         mostrar(event);
                       "
@@ -148,7 +148,7 @@
 
     </div>
 
-    <div class="overlay" v-if="pop=='evento'" v-bind:class="{ active: isActive }">
+    <div class="overlay" v-if="pop=='event'" v-bind:class="{ active: isActive }">
       <div class="popup">
         <a
           href="#"
