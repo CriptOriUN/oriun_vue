@@ -157,7 +157,9 @@
               required
             />
 
-            <label for="Capacidad" class="titulo_bln">Capacidad</label>
+            <label for="Capacidad" class="titulo_bln"
+              >Numero de asistentes</label
+            >
 
             <input
               type="number"
