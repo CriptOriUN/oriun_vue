@@ -560,7 +560,7 @@ export default {
 
                 alert("Evento Creado con exito");
 
-                location.href = "../";
+                //  location.href = "../";
               })
 
               .catch((e) => console.log(e));
