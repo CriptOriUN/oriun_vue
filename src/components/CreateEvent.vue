@@ -532,6 +532,8 @@ export default {
     },
 
     send() {
+      console.log("porque?", this.eventForm);
+
       axios
 
         .get(
