@@ -285,7 +285,7 @@ export default {
   methods: {
     getEvents() {
       axios
-        .get("https://oriun-api.herokuapp.com/events?init=1&size=-1", self.username)
+        .get("https://oriun-api.herokuapp.com/events?init=0&size=-1", self.username)
         .then((response) => {
           this.events = response.data;
         })
