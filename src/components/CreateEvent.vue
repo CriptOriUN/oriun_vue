@@ -54,7 +54,7 @@
                   v-model="eventForm.event_INIT"
                   v-on:change="hoy()"
                   required
-                  min="2021-06-"
+                  min="2021-06-01"
                 />
               </div>
 
@@ -462,9 +462,7 @@ export default {
             alert("Por favor escriba otra actividad");
           } else if (
             this.sportsNames
-
               .map((sport) => sport.toLowerCase())
-
               .includes(this.eventForm.other_SPORT.toLowerCase())
           ) {
             alert(
@@ -535,7 +533,6 @@ export default {
       console.log("porque?", this.eventForm);
 
       axios
-
         .get(
           "https://oriun-api.herokuapp.com/location_sport?sport=" +
             this.eventForm.name_SPORT +
@@ -560,14 +557,12 @@ export default {
 
                 alert("Evento Creado con exito");
 
-                //  location.href = "../";
+                location.href = "../";
               })
 
               .catch((e) => console.log(e));
 
-            alert("Evento Creado con exito");
-
-            // location.href = "../";
+            location.href = "../";
           }
         })
 
@@ -589,21 +584,18 @@ export default {
 
                 .then((response) => {
                   console.log(this.eventForm);
-
                   this.IDeventCreated = response.data.id_EVENT;
 
                   this.emitEvent();
 
                   alert("Evento Creado con exito");
 
-                  // location.href = "../";
+                  location.href = "../";
                 })
 
                 .catch((e) => console.log(e));
 
-              alert("Evento Creado con exito");
-
-              //   location.href = "../";
+              location.href = "../";
             }
           }
         });
