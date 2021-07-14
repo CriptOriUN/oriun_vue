@@ -146,17 +146,20 @@
           <hr />
 
           <div class="mx-auto w-75">
-            <div class="row">
-              <h6 class="col-4 text-right">Nombre Evento:</h6>
-              <p class="col-8 m-0 text-left">{{ nombreEvento }}</p>
+            <div class="row mb-3">
+              <h5 class="col-12 text-center">{{ descripcionNoti[0] }}!!!</h5>     
             </div>
             <div class="row">
-              <h6 class="col-4 text-right">Descripción:</h6>
-              <p class="col-8 m-0 text-left">{{ descripcionNoti }}</p>
+              <h6 class="col-4 text-right">Titulo:</h6>
+              <p class="col-8 m-0 text-left">{{ descripcionNoti.slice(1, descripcionNoti.length)[0] }}</p>
             </div>
             <div class="row">
               <h6 class="col-4 text-right">Deporte:</h6>
               <p class="col-8 m-0 text-left">{{ deporteNoti }}</p>
+            </div>
+            <div class="row">
+              <h6 class="col-4 text-right">Fecha:</h6>
+              <p class="col-8 m-0 text-left">{{ fechaNoti }}</p>
             </div>
             <div class="row">
               <h6 class="col-4 text-right">Hora:</h6>
@@ -246,8 +249,9 @@ export default {
       notifications: null,
       isActive: false,
       nombreEvento: "",
-      descripcionNoti: "",
+      descripcionNoti: [],
       deporteNoti: "",
+      fechaNoti: "",
       horaNoti: "",
       pop: "",
       deporteEvento: "",
@@ -300,9 +304,9 @@ export default {
         .catch((e) => console.log(e));
     },
 
-    mostrar(objet, boton) {
+    mostrar(object, boton) {
       this.isActive = true;
-      this.id_asistencia = objet.id_EVENT;
+      this.id_asistencia = object.id_EVENT;
 
       if (boton == true) {
         this.mostrarBotonAsis = true;
@@ -311,17 +315,18 @@ export default {
       }
 
       if (this.pop == "notificacion") {
-        this.descripcionNoti = objet.notification_DESCRIPTION;
-        this.deporteNoti = objet.name_SPORT;
-        this.horaNoti = objet.time_NOTIFICATION;
+        this.fechaNoti = object.notification_DATE;
+        this.descripcionNoti = object.notification_DESCRIPTION.split(":");
+        this.deporteNoti = object.name_SPORT;
+        this.horaNoti = object.time_NOTIFICATION;
       } else if (this.pop == "evento") {
-        console.log(objet);
-        this.nombreEvento = objet.event_TITLE;
-        this.deporteEvento = objet.name_SPORT;
-        this.organizadorEvento = objet.user_NAME;
-        this.fechaEvento = objet.event_INIT;
-        this.horaEvento = objet.event_INIT_HOUR;
-        this.locacionEvento = objet.name_LOC_SPORT;
+        console.log(object);
+        this.nombreEvento = object.event_TITLE;
+        this.deporteEvento = object.name_SPORT;
+        this.organizadorEvento = object.user_NAME;
+        this.fechaEvento = object.event_INIT;
+        this.horaEvento = object.event_INIT_HOUR;
+        this.locacionEvento = object.name_LOC_SPORT;
       }
     },
     ocultar() {
