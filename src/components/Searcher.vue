@@ -47,9 +47,9 @@
                 <h4>Hora Fin: {{ evento.event_FINISH_HOUR }}</h4>
               </div>
             </div>
-            <div id="boton-asistir">
+            <div class="row">
               <button
-                class="btn btn-primary"
+                class="btn btn-primary mx-3 mt-3"
                 type="button"
                 data-toggle="collapse"
                 :data-target="'#details' +  evento.id_EVENT"
@@ -59,6 +59,14 @@
                 @click="asistir(evento.id_EVENT)"
               >
                 Asistir
+              </button>
+              <button
+                @click="reportEvent(evento.id_EVENT)"
+                class="btn btn-danger mt-3"
+                title="Reportar"
+              >
+                <!-- Reportar -->
+                <i class="fa fa-thumbs-down"></i>
               </button>
             </div>
             <div v-if="isLoadingEvent" class="collapse" v-bind:id="['details' + evento.id_EVENT]">
@@ -137,6 +145,21 @@ export default {
           }
         });
     },
+    reportEvent(id_evento){
+      axios
+      .post("https://oriun-api.herokuapp.com/Reportarevento", {id_EVENT: id_evento, user_NAME: this.username})
+      .then(()=>{
+        this.toaster.success("Has reportado un evento como inadecuado");
+      })
+      .catch((error)=>{
+        if(error.response.status == "409"){
+          this.toaster.failure("Ya has reportado este evento");
+        }else{
+          this.toaster.failure("Error reportando el evento");
+        }
+        // alert(error)
+      });
+    }
   },
   computed: {
     filterEvents: function () {
@@ -179,7 +202,5 @@ export default {
   justify-content: space-between;
   flex-wrap: wrap;
 }
-#boton-asistir {
-  margin: 5px auto;
-}
+
 </style>

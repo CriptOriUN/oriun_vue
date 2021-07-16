@@ -49,22 +49,43 @@
           </div>
           <div class="col-md-8">
             <div class="tabla-eve">
-              <h3 class="titulo-tablas">Proximos Eventos</h3>
+              <div class="position-relative">
+                <button
+                    class="btn arrowEvents"
+                    style="left:15px;"
+                    title="Anterior"
+                    v-if="events.length>10 && initEventPage>=10"
+                    v-on:click="initEventPage = initEventPage-10; getNextEvents()"
+                  >
+                    <i class="fa fa-caret-left"></i>
+                </button>
+                <h3 class="titulo-tablas">Proximos Eventos</h3>
+                <button
+                    class="btn arrowEvents"
+                    style="right:15px;"
+                    title="Siguiente"
+                    v-if="events.length > 10 && initEventPage+10<events.length"
+                    v-on:click="initEventPage = initEventPage+10; getNextEvents()"
+                  >
+                    <i class="fa fa-caret-right"></i>
+                </button>
+              </div>
               <hr />
               <div class="row ml-4 mr-4 d-flex bd-highlight">
                 <div
-                  v-for="event in events"
+                  v-for="event in nextEvents"
                   :key="event.id"
                   class="tar-evento flex-fill bd-highlight"
+                  v-on:click="
+                        pop = 'evento';
+                        mostrar(event, true);
+                      "
                 >
                   <h5 class="info-titulo">
                     <a
                       href="#"
                       class="info-titulo-ref"
-                      v-on:click="
-                        pop = 'evento';
-                        mostrar(event, true);
-                      "
+                      
                       >{{ event.event_TITLE }}</a
                     >
                   </h5>
@@ -246,6 +267,7 @@ export default {
     return {
       username: "",
       events: null,
+      nextEvents: [],
       notifications: null,
       isActive: false,
       nombreEvento: "",
@@ -265,6 +287,7 @@ export default {
       id_asistencia: "",
       puedoAsistir: false,
       mostrarBotonAsis: false,
+      initEventPage: 0,
       toaster,
     };
   },
@@ -272,6 +295,7 @@ export default {
     this.username = this.$route.params.username;
   },
   mounted() {
+    this.getNextEvents();
     this.getEvents();
     this.getNotifications();
     this.$root.$on("sportNotifications", (sportNotifications) => {
@@ -287,9 +311,17 @@ export default {
     this.getMisEventos();
   },
   methods: {
+    getNextEvents() {
+      axios
+        .get("https://oriun-api.herokuapp.com/events?init="+this.initEventPage+"&size=10", self.username)
+        .then((response) => {
+          this.nextEvents = response.data;
+        })
+        .catch((e) => console.log(e));
+    },
     getEvents() {
       axios
-        .get("https://oriun-api.herokuapp.com/events?init=0&size=-1", self.username)
+        .get("https://oriun-api.herokuapp.com/events?init="+this.initEventPage+"&size=10000", self.username)
         .then((response) => {
           this.events = response.data;
         })
@@ -438,7 +470,7 @@ export default {
       axios
       .post("https://oriun-api.herokuapp.com/Reportarevento", {id_EVENT: this.id_asistencia, user_NAME: this.username})
       .then(()=>{
-        this.toaster.success("Has reportado un evento como indebido");
+        this.toaster.success("Has reportado un evento como inadecuado");
       })
       .catch((error)=>{
         this.toaster.failure("Error reportando el evento");
@@ -511,6 +543,10 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   color: #fff;
+}
+.plantilla .contenedor_p .tabla-eve .tar-evento:hover{
+  cursor: pointer;
+  background: #324D2D;
 }
 .plantilla .contenedor_p .tabla-eve .tar-evento .info-titulo {
   padding: 10px 0px 0px 15px;
@@ -617,6 +653,23 @@ export default {
   border-radius: 100%;
   color: #fff;
   padding: 0px 12px 0px 12px;
+}
+
+.arrowEvents{
+  font-size:24pt;
+  position: absolute;
+  top: 0px;
+  height: 40px;
+
+}
+.btn.arrowEvents:focus {
+  outline: none;
+  box-shadow: none;
+}
+.arrowEvents:hover{
+  font-size:26pt;
+  top: -1pt;
+  transition: 0.2s;
 }
 /* .popup.active{
 
