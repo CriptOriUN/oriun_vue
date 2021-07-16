@@ -23,7 +23,7 @@
                 role="tab"
                 aria-controls="pills-login"
                 aria-selected="true"
-                >Log In</a
+                >Ingreso</a
               >
             </li>
 
@@ -36,7 +36,7 @@
                 role="tab"
                 aria-controls="pills-register"
                 aria-selected="false"
-                >Sign Up</a
+                >Registro</a
               >
             </li>
           </ul>
@@ -50,7 +50,7 @@
               role="tabpanel"
               aria-labelledby="pills-login-tab"
             >
-              <div class="placeholder">Username</div>
+              <div class="placeholder">Nombre de Usuario</div>
               <form v-on:submit.prevent="submitFormLogin">
                 <div class="form-group">
                   <input
@@ -63,7 +63,7 @@
                     autofocus
                   />
                 </div>
-                <div class="placeholder">Password</div>
+                <div class="placeholder">Contraseña</div>
                 <div class="form-group">
                   <input
                     type="password"
@@ -86,7 +86,7 @@
                   <Spinner :color="color" />
                 </div>
                 <div class="text-center">
-                  <button type="submit" class="btn btn-primary">Login</button>
+                  <button type="submit" class="btn btn-primary">Ingresar</button>
                 </div>
 
                 <div class="text-center pt-3">
@@ -110,7 +110,7 @@
                     name="username"
                     id="name"
                     class="form-control"
-                    placeholder="Username"
+                    placeholder="Nombre de Usuario"
                     v-model="registerform.user_name"
                     required
                     autofocus
@@ -123,7 +123,7 @@
                     name="email"
                     id="email"
                     class="form-control"
-                    placeholder="Email"
+                    placeholder="Correo Electronico"
                     v-model="registerform.email"
                     required
                   />
@@ -136,7 +136,7 @@
                     id="password"
                     class="form-control"
                     v-model="registerform.password"
-                    placeholder="Set a password"
+                    placeholder="Contraseña"
                     required
                   />
                 </div>
@@ -146,7 +146,7 @@
                       v-if="passwordValidation.errors.length > 0"
                       class="hints"
                     >
-                      <h5>Hints</h5>
+                      <h5>Pistas</h5>
                       <h5
                         class="reg-validation"
                         v-for="error in passwordValidation.errors"
@@ -166,7 +166,7 @@
                     name="password_confirmation"
                     id="password-confirm"
                     class="form-control"
-                    placeholder="Confirm password"
+                    placeholder="Confirmar Contraseña"
                     v-model="registerform.password_confirmation"
                     required
                   />
@@ -174,7 +174,7 @@
 
                 <div class="text-center pt-2 pb-1">
                   <button type="submit" class="btn btn-primary">
-                    Register
+                    Registrar
                   </button>
                 </div>
               </form>
@@ -199,10 +199,10 @@ export default {
   data: function () {
     return {
       rules: [
-        { message: "One lowercase letter required.", regex: /[a-z]+/ },
-        { message: "One uppercase letter required.", regex: /[A-Z]+/ },
-        { message: "8 characters minimum.", regex: /.{8,}/ },
-        { message: "One number required.", regex: /[0-9]+/ },
+        { message: "Una letra Minuscula.", regex: /[a-z]+/ },
+        { message: "Una letra Mayuscula.", regex: /[A-Z]+/ },
+        { message: "8 Caracteres minimo.", regex: /.{8,}/ },
+        { message: "Un numero.", regex: /[0-9]+/ },
       ],
       registerform: {
         user_name: "",
@@ -346,7 +346,7 @@ export default {
 
 button,
 .btn-primary {
-  background-color: #b1b2b0;
+  background-color: #7a7a7a;
   border: none;
   border-radius: 10px;
   margin-top: 40px;
