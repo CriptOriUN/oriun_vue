@@ -156,7 +156,7 @@
                       </h5>
                     </div>
                     <div v-else>
-                      <h5>El password es valido</h5>
+                      <h5>La contraseña es valida</h5>
                     </div>
                   </transition>
                 </div>

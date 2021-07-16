@@ -16,7 +16,7 @@
               name="username"
               id="name"
               class="form-control"
-              placeholder="Username"
+              placeholder="Nombre de Usuario"
               v-model="registerform.user_name"
               required
               autofocus
@@ -29,7 +29,7 @@
               name="email"
               id="email"
               class="form-control"
-              placeholder="Email"
+              placeholder="Correo Electronico"
               v-model="registerform.email"
               required
             />
@@ -42,7 +42,7 @@
               id="password"
               class="form-control"
               v-model="registerform.password"
-              placeholder="Set a password"
+              placeholder="Contraseña"
               required
             />
           </div>
@@ -53,19 +53,16 @@
               name="password_confirmation"
               id="password-confirm"
               class="form-control"
-              placeholder="Confirm password"
+              placeholder="Confirmar Contraseña"
               v-model="registerform.password_confirmation"
               required
             />
           </div>
 
           <div class="text-center pt-2 pb-1">
-            <button type="submit" class="btn btn-primary">Register</button>
+            <button type="submit" class="btn btn-primary">Registrar</button>
           </div>
         </form>
-        <div class="pb-5" v-if="exitoso == true">
-          El usuario fue regitrado con exito
-        </div>
       </div>
     </div>
   </div>
@@ -74,6 +71,7 @@
 <script>
 import NavBar from "../components/header/NavBar";
 import axios from "axios";
+import { toaster } from "./toaster/toaster"; 
 
 export default {
   name: "RegisterModerator",
@@ -88,8 +86,8 @@ export default {
         password: "",
         password_confirmation: "",
       },
-      exitoso: false,
-      username: "",
+      username: "", 
+      toaster
     };
   },
   created: function () {
@@ -115,13 +113,16 @@ export default {
               },
             }
           )
-          .then((result) => {})
+          .then((result) => {
+            self.toaster.success("el moderador "+self.registerform.user_name+" fue"
+            +" registrado con exito")
+          })
           .catch((error) => {
             if (error.response.status == "422")
-              alert("ERROR 422: El Moderador ya existe.");
+              self.toaster.failure("ERROR 422: El Moderador ya existe.");
           });
       } else {
-        alert("Error de digitacion: Las contraseñas no coinciden");
+        self.toaster.failure("Error de digitacion: Las contraseñas no coinciden");
       }
     },
   },
@@ -145,7 +146,7 @@ export default {
 
 button,
 .btn-primary {
-  background-color: #b1b2b0;
+  background-color: #7a7a7a;
   border: none;
   border-radius: 10px;
   margin-top: 40px;
