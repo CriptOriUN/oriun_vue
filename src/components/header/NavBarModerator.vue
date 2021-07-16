@@ -26,17 +26,43 @@
           <ul class="navbar-nav d-flex justify-content-end">
             <li class="nav-item mx-4 active" id="home">
               <!-- <router-link :to="{ name: 'Welcome', params: { username: this.username }}" id="products-link"> -->
-              <div class="nav-link btn-menu" v-on:click="goHome(); selectActive()">Home</div>
+              <div
+                class="nav-link btn-menu"
+                v-on:click="
+                  goHome();
+                  selectActive();
+                "
+              >
+                Home
+              </div>
               <!-- </router-link> -->
             </li>
             <li class="nav-item mx-4" id="events">
-              <div class="nav-link btn-menu" v-on:click="goEvents(); selectActive()">Eventos</div>
+              <div
+                class="nav-link btn-menu"
+                v-on:click="
+                  goEvents();
+                  selectActive();
+                "
+              >
+                Eventos
+              </div>
             </li>
             <li class="nav-item mx-4" id="sports">
-              <div class="nav-link btn-menu" v-on:click="goSports(); selectActive()">Deportes</div>
+              <div
+                class="nav-link btn-menu"
+                v-on:click="
+                  goSports();
+                  selectActive();
+                "
+              >
+                Deportes
+              </div>
             </li>
             <li class="nav-item mx-4">
-              <a v-on:click="closeSession" href="/" class="nav-link btn-menu">Cerrar Sesión</a>
+              <a v-on:click="closeSession" href="/" class="nav-link btn-menu"
+                >Cerrar Sesión</a
+              >
             </li>
           </ul>
         </div>
@@ -56,7 +82,7 @@ export default {
       var self = this;
       localStorage.removeItem("isAuth");
       localStorage.removeItem("current_username");
-      self.$router.push({ name: "root" }).catch(()=>{});
+      self.$router.push({ name: "root" }).catch(() => {});
     },
     selectActive() {
       // Get the container element
@@ -74,15 +100,19 @@ export default {
         });
       }
     },
-    goHome(){
-      this.$router.push({ path: 'moderator'}).catch(()=>{})  
+    goHome() {
+      this.$router.push({ path: "moderator" }).catch(() => {});
     },
-    goEvents(){
-      this.$router.push({ path: 'moderator', query: { tab: 'events' }}).catch(()=>{})  
+    goEvents() {
+      this.$router
+        .push({ path: "moderator", query: { tab: "events" } })
+        .catch(() => {});
     },
-    goSports(){
-      this.$router.push({ path: 'moderator', query: { tab: 'sports' }}).catch(()=>{})  
-    }
+    goSports() {
+      this.$router
+        .push({ path: "moderator", query: { tab: "sports" } })
+        .catch(() => {});
+    },
   },
 };
 </script>
@@ -96,6 +126,10 @@ export default {
   width: 100%;
 }
 
+.btn-menu {
+  color: #000;
+}
+
 .btn-menu:hover {
   color: #000;
 }
@@ -105,7 +139,7 @@ export default {
 }
 
 @media (max-width: 992px) {
-  .nav-item{
+  .nav-item {
     margin-left: auto !important;
     margin-right: auto !important;
   }

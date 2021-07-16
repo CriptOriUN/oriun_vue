@@ -194,6 +194,10 @@ export default {
   width: 100%;
 }
 
+.btn-menu {
+  color: #000;
+}
+
 .btn-menu:hover {
   color: #000;
 }
