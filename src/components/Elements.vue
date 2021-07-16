@@ -12,14 +12,21 @@
         <div class="back px-4">
           <!-- <h3 class="titulos tit-det pt-4 pb-4">Detalles Generales</h3> -->
           <div
-            class="d-flex justify-content-between row mt-4 searcher-selector mx-auto"
+            class="
+              d-flex
+              justify-content-between
+              row
+              mt-4
+              searcher-selector
+              mx-auto
+            "
           >
             <!--		Show Numbers Of Rows 		-->
             <div class="d-flex form-group">
-              <p class="mb-0 pt-2 mr-2">Mostar</p>
+              <p class="mb-0 pt-2 mr-2">Mostrar</p>
               <select v-model="maxNumRows" class="form-control" id="maxRows">
                 <option value="-1">All</option>
-                <option value="5" >5</option>
+                <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="20">20</option>
                 <option value="50">50</option>
@@ -51,10 +58,14 @@
               <tbody>
                 <tr v-if="loadingElements" style="height: 100px">
                   <td class="align-middle text-center" colspan="4">
-                    <Spinner :color="color"/>
-                  </td>                 
+                    <Spinner :color="color" />
+                  </td>
                 </tr>
-                <tr v-else v-for="element in filterElements" :key="element.id_ELEMENT">
+                <tr
+                  v-else
+                  v-for="element in filterElements"
+                  :key="element.id_ELEMENT"
+                >
                   <td class="align-middle">{{ element.name_LOCATION }}</td>
                   <td class="align-middle">{{ element.element_NAME }}</td>
                   <td class="align-middle">
@@ -67,11 +78,17 @@
                       :id="element.id_ELEMENT"
                       v-if="element.available"
                       v-on:click="getElementByID(element.id_ELEMENT)"
-                      style="width:100px"
+                      style="width: 100px"
                     >
-                      <span v-if="loadingBooking && element.id_ELEMENT == bookingElementID" class="spinner-border spinner-border-sm" role="status"></span>
+                      <span
+                        v-if="
+                          loadingBooking &&
+                          element.id_ELEMENT == bookingElementID
+                        "
+                        class="spinner-border spinner-border-sm"
+                        role="status"
+                      ></span>
                       <span v-else>Reservar</span>
-
                     </button>
                     <span class="btn" title="Reservar" v-else>
                       No disponible
@@ -122,7 +139,7 @@
 import NavBar from "../components/header/NavBar";
 import axios from "axios";
 import ConfirmDialogue from "../components/modal/ConfirmDialogue";
-import {toaster} from './toaster/toaster'
+import { toaster } from "./toaster/toaster";
 import Spinner from "../components/spinner/Spinner";
 
 export default {
@@ -151,7 +168,7 @@ export default {
       color: "#94B43B",
       bookingElementID: -1,
       rentDate: new Date(),
-      rentTime: '00:00:00',
+      rentTime: "00:00:00",
       rentDuration: 30,
       myBooking: [],
     };
@@ -167,21 +184,20 @@ export default {
       this.setPage();
       // this.$refs['page'+this.currentPage].
     },
-    elementShow(){
+    elementShow() {
       this.requestElement(this.elementShow);
-    }
+    },
   },
   created: function () {
     this.username = this.$route.params.username;
     this.getNumElements();
     this.getElements();
     this.getAllElements();
-    
   },
   computed: {
     filterElements: function () {
       var elementsArray = this.elements;
-      if(this.search != ""){
+      if (this.search != "") {
         elementsArray = this.elementsAll;
       }
       return elementsArray.filter((element) => {
@@ -197,22 +213,26 @@ export default {
       });
     },
   },
-  mounted(){
+  mounted() {
     this.$root.$on("updateBooking", (rentDate, rentTime, rentDuration) => {
       this.rentDate = rentDate;
-      this.rentTime = rentTime + ':00';
+      this.rentTime = rentTime + ":00";
       this.rentDuration = rentDuration;
       // console.log("DATA RECEIVED!", rentDate, rentTime, rentDuration)
     });
     this.getBooking();
   },
   methods: {
-    getElementByID(elementID){
+    getElementByID(elementID) {
       this.loadingBooking = true;
       this.bookingElementID = elementID;
       axios
         .get("https://oriun-api.herokuapp.com/MyElement?id=" + elementID)
-        .then((response) => (this.elementShow = response.data, this.loadingBooking = false));
+        .then(
+          (response) => (
+            (this.elementShow = response.data), (this.loadingBooking = false)
+          )
+        );
     },
     getElements() {
       if (this.maxNumRows == -1) {
@@ -226,14 +246,16 @@ export default {
               "&size=" +
               this.maxNumRows
           )
-          .then((response) => (this.elements = response.data, this.loadingElements = false));
+          .then(
+            (response) => (
+              (this.elements = response.data), (this.loadingElements = false)
+            )
+          );
       }
     },
     getAllElements() {
       axios
-        .get(
-          "https://oriun-api.herokuapp.com/Singlelmts?init=0&size=-1"
-        )
+        .get("https://oriun-api.herokuapp.com/Singlelmts?init=0&size=-1")
         .then((response) => (this.elementsAll = response.data));
     },
     getNumElements() {
@@ -249,16 +271,16 @@ export default {
       axios
         .get("https://oriun-api.herokuapp.com/laUser?user=" + this.username)
         .then((response) => {
-          response.data.forEach(element => {
-            this.myBooking.push(element.id_ELEMENT)
+          response.data.forEach((element) => {
+            this.myBooking.push(element.id_ELEMENT);
           });
         });
     },
     auxListPages() {
       this.pages = [];
-      if(this.maxNumRows == -1){
+      if (this.maxNumRows == -1) {
         this.numPages = 1;
-      }else{
+      } else {
         this.numPages = Math.ceil(this.numElements / Math.abs(this.maxNumRows));
       }
       for (let i = 1; i <= this.numPages; i++) {
@@ -302,38 +324,40 @@ export default {
         this.currentPage = this.currentPage + 1;
       }
     },
-    
+
     async requestElement(element) {
       console.log("element", element);
-      this.$root.$emit("newBooking",element);
+      this.$root.$emit("newBooking", element);
       const ok = await this.$refs.confirmDialogue.show({
         title: "Detalles de la reserva",
         message: "Booking form",
         okButton: "Reservar",
       });
-          
+
       // If you throw an error, the method will terminate here unless you surround it wil try/catch
       if (ok) {
-        console.log("myBooking", this.myBooking)
-        console.log("id", element.id_ELEMENT)
-        if(this.myBooking.includes(element.id_ELEMENT)){
+        console.log("myBooking", this.myBooking);
+        console.log("id", element.id_ELEMENT);
+        if (this.myBooking.includes(element.id_ELEMENT)) {
           setTimeout(() => {
             this.toaster.failure("Ya tienes una reserva de este elemento");
           }, 1000);
-        }else{      
+        } else {
           try {
-            await axios
-              .post(
-              "https://oriun-api.herokuapp.com/solicitarAlq" + 
-              "?user_name=" + this.username + 
-              "&id_elem=" + element.id_ELEMENT +
-              "&i_date=" + this.rentDate +
-              "&tim=" + this.rentTime + 
-              "&dur=" + this.rentDuration
-              );
-            this.toaster.success(
-              "Reserva realizada correctamente"
+            await axios.post(
+              "https://oriun-api.herokuapp.com/solicitarAlq" +
+                "?user_name=" +
+                this.username +
+                "&id_elem=" +
+                element.id_ELEMENT +
+                "&i_date=" +
+                this.rentDate +
+                "&tim=" +
+                this.rentTime +
+                "&dur=" +
+                this.rentDuration
             );
+            this.toaster.success("Reserva realizada correctamente");
           } catch (error) {
             this.toaster.failure("Error realizando reserva");
           }
@@ -441,6 +465,4 @@ table td:last-child {
 .page-link:hover {
   cursor: pointer;
 }
-
-
 </style>
