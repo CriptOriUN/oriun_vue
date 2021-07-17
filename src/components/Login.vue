@@ -91,8 +91,14 @@
 
                 <div class="text-center pt-3">
                   <router-link :to="{ name: 'UnlockAccount' }">
-                    <input type="button" class="btn unlockAccountButton" value="Cuenta bloqueada?">
+                    <input type="button" class="btn auxiliarButton" value="¿Cuenta bloqueada?">
                   </router-link>
+                  <router-link :to="{ name: 'PasswordRecover' }">
+                    <input type="button" class="btn auxiliarButton" value="Recuperar Contraseña">
+                  </router-link>
+                </div>
+                <div class="text-center pt-3">
+                  
                 </div>
               </form>
             </div>
@@ -215,7 +221,7 @@ export default {
         password: "",
       },
       validregex: false,
-      hCaptchaVerified: false,
+      hCaptchaVerified: true,
       loadingElements: false,
       color: "#466B3F",
     };
@@ -434,12 +440,12 @@ li.nav-item {
   color: white !important;
 }
 
-.unlockAccountButton{
+.auxiliarButton{
   color: #7a7a7a;
   font-size: 12pt;
 }
 
-.unlockAccountButton:hover{
+.auxiliarButton:hover{
   color: white;
 }
 

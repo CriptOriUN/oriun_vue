@@ -23,7 +23,8 @@ export default {
       self.is_auth = localStorage.getItem("isAuth") || false;
 
       if (self.is_auth == false){
-        if(!(self.$route.path == '/confirm-account') && !(self.$route.path == '/unlock-account')){
+        if(!(self.$route.path == '/confirm-account') && !(self.$route.path == '/unlock-account') &&
+           !(self.$route.path == '/password-reset') && !(self.$route.path == '/password-change')){
           self.$router.push({ name: "Login" }).catch(()=>{});
         }        
       } 
