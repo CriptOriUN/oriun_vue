@@ -221,7 +221,7 @@ export default {
         password: "",
       },
       validregex: false,
-      hCaptchaVerified: true,
+      hCaptchaVerified: false,
       loadingElements: false,
       color: "#466B3F",
     };
