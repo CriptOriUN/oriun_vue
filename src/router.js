@@ -15,7 +15,6 @@ import Confirmation from './components/Confirmation'
 import DispEspacio from './components/DispEspacio'
 import UnlockAccount from './components/UnlockAccount'
 import RentalElements from './components/RentalElements'
-import PasswordChange from './components/PasswordChange'
 import PasswordRecover from './components/PasswordRecover'
 
 const router = new vueRouter({
@@ -95,11 +94,6 @@ const router = new vueRouter({
             path: '/unlock-account',
             name: "UnlockAccount",
             component: UnlockAccount
-        },
-        {
-            path: '/password-change',
-            name: "PasswordChange",
-            component: PasswordChange
         },
         {
             path: '/password-reset',
