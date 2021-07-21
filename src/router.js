@@ -16,6 +16,7 @@ import DispEspacio from './components/DispEspacio'
 import UnlockAccount from './components/UnlockAccount'
 import RentalElements from './components/RentalElements'
 import PasswordRecover from './components/PasswordRecover'
+import PasswordChange from './components/PasswordChange'
 
 const router = new vueRouter({
     mode: 'history',
@@ -99,6 +100,11 @@ const router = new vueRouter({
             path: '/password-reset',
             name: "PasswordRecover",
             component: PasswordRecover
+        },
+        {
+            path: '/password-change',
+            name: "PasswordChange",
+            component: PasswordChange
         },
         {
             path: '/:username/rental-elements', 

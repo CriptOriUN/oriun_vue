@@ -5,8 +5,8 @@
         <img src="../assets/oriun.png" alt="" height="80" />
       </div>
       <div class="info w-80 p-5 mb-5">
-        <h2>Recuperar contraseña</h2>
-        <form class="mt-5 w-75 mx-auto" v-on:submit.prevent="submitFormReset" v-if="token">
+        <h2 v-if="token">Cambiar contraseña</h2>
+        <form class="mt-5 w-75 mx-auto" v-on:submit.prevent="submitFormChange" v-if="token">
             <div class="form-group row mb-2">
                 <label class="col-md-5 h5 col-form-label text-right" for="passwordBox">Nueva Contraseña</label>
                 <input v-model="form.password" class="col-md-5 form-control" type="password" id="passwordBox" autocomplete="off" placeholder="" required>
@@ -32,24 +32,16 @@
             <router-link to="/login">
                 <button class="mt-5 btn btn-secondary">Ingresar</button>
             </router-link>
-            <button type="submit" class="mt-5 btn submitButton">Recuperar</button>
+            <button type="submit" class="mt-5 btn submitButton">Cambiar</button>
         </form>
-        <form class="mt-5 w-75 mx-auto" v-on:submit.prevent="submitFormRequest" v-else>
-            <div class="form-group row">
-                <label class="col-md-5 h5 col-form-label text-right" for="emailBox">Correo Electrónico</label>
-                <input v-model="form.email" class="col-md-5 form-control" type="email" id="emailBox" autocomplete="off" placeholder="" required>
-            </div>
-            <div class="form-group row">
-                <label class="col-md-5 h5 col-form-label text-right" for="confBox">Confirmar correo</label>
-                <input v-model="form.emailConf" class="col-md-5 form-control" type="email" id="confBox" autocomplete="off" placeholder="" required>
-            </div>
-            <router-link to="/login">
-                <button class="mt-5 btn btn-secondary">Ingresar</button>
-            </router-link>
-            <button type="submit" class="mt-5 btn submitButton">Recuperar</button>
-        </form>
-        
-        
+        <h2 v-if="!token">Error cambiando contraseña</h2>
+        <div class="w-75 mx-auto" v-if="!token">
+          <div style="font-size:150px; color: rgb(206, 18, 18);">
+            <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+          </div>
+          <p>Ups! Hubo un error en el proceso. Revisa que tengas acceso al correo registrado.
+          <br> Intentalo nuevamente.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -63,8 +55,6 @@ export default {
   data: function () {
     return {
       form: { 
-        email: '',
-        emailConf: '',
         password: '',
         password_confirmation: '',
       },
@@ -110,44 +100,26 @@ export default {
     },
   },
   methods: {
-    submitFormRequest(){
-      if(!(this.form.email==this.form.emailConf)){
-        this.toaster.failure("Los correos no coinciden");    
-      }else{
-        axios
-        .post("https://oriun-api.herokuapp.com/password-request?email="+this.form.email)
-        .then(() => {
-            this.toaster.success("Se te ha enviado un correo para que recuperes tu contraseña");
-        })
-        .catch((error) => {
-            if(error.response.status == 422){
-                this.toaster.failure("El Usuario no esta registrado");  
-            }else{
-              this.toaster.failure("Hubo un error enviandote el correo");
-            }
-        });
-      }
-    },
-    submitFormReset(){
+    submitFormChange(){
       if(!this.passwordConfirmated){
         this.toaster.failure("Las contraseñas no coinciden");    
       }else{
         if(this.validregex){
           axios
-          .post("https://oriun-api.herokuapp.com/confirm-password?token="+this.token+"&password="+this.form.password)
+          .post("htthttps://oriun-api.herokuapp.com/confirm-password?token="+this.token+"&password="+this.form.password)
           .then(() => {
-              this.toaster.success("Contraseña recuperada con exito");
+              this.toaster.success("Contraseña actualizada con exito");
               setTimeout(() => {
                 this.$router.push({name: "Login"})
-              }, 1000);
+              }, 2000);
           })
           .catch((error) => {
               if(error.response.status == 409){
                 this.toaster.failure("No has cambiado tu contraseña");  
               }else if(error.response.status == 500){
-                this.toaster.failure("No tienes permisos para recuperar la contraseña");  
+                this.toaster.failure("No tienes permisos para cambiar la contraseña");  
               }else{
-                this.toaster.failure("Hubo un error recuperado contraseña");
+                this.toaster.failure("Hubo un error cambiando contraseña");
               }
           });
         }else{

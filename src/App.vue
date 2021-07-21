@@ -24,10 +24,10 @@ export default {
 
       if (self.is_auth == false){
         if(!(self.$route.path == '/confirm-account') && !(self.$route.path == '/unlock-account') &&
-           !(self.$route.path == '/password-reset')){
+           !(self.$route.path == '/password-reset') && !(self.$route.path == '/password-change')){
           self.$router.push({ name: "Login" }).catch(()=>{});
         }        
-      } 
+      }else if(self.$route.path == '/password-change'){}
       else {
         let username = localStorage.getItem("current_username");
         let role = localStorage.getItem("my_role");

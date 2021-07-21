@@ -7,6 +7,11 @@
         <span class="hola"
           >Hola, <span class="fullName">{{ username }}</span></span
         >
+          <button class="btn p-0 mr-auto text-secondary changePasswordButton" data-toggle="modal" data-target="#emailModal" v-on:click="form.email='';form.emailConf=''">
+            <i class="fa fa-cog changePasswordIcon"></i>
+            <span class="text-secondary changePasswordText"><small>Cambiar contraseña</small></span>
+          </button>
+        
       </div>
     </div>
     <div class="plantilla">
@@ -243,6 +248,37 @@
         </div>
       </div>
     </div>
+    <!-- Email Modal -->
+    <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="emailModalTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Cambiar contraseña</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p class="text-justify">Ingresa el correo electrónico que registraste en OriUN</p>
+            <form class="mx-auto" style="width:90%">
+              <div class="form-group row">
+                  <label class="col-md-5 h5 col-form-label text-right" for="emailBox">Correo</label>
+                  <input v-model="form.email" v-on:input="validateEmail()" class="col-md-5 form-control" type="email" id="emailBox" autocomplete="off" required>
+              </div>
+              <div class="form-group row">
+                  <label class="col-md-5 h5 col-form-label text-right" for="confEmailBox">Confirmar correo</label>
+                  <input v-model="form.emailConf" v-on:input="checkConfirmation()" class="col-md-5 form-control" type="email" id="confEmailBox" autocomplete="off" required>
+              </div>
+            </form>
+            <p class="text-justify">Te enviaremos un enlace que te permitirá cambiar de contraseña.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" v-on:click="submitFormEmail()">Enviar</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -266,9 +302,9 @@ export default {
   data: function () {
     return {
       username: "",
-      events: null,
+      events: [],
       nextEvents: [],
-      notifications: null,
+      notifications: [],
       isActive: false,
       nombreEvento: "",
       descripcionNoti: [],
@@ -281,7 +317,7 @@ export default {
       fechaEvento: "",
       horaEvento: "",
       locacionEvento: "",
-      newNotification: null,
+      newNotification: [],
       eventosAsistir: [],
       id_user: "",
       id_asistencia: "",
@@ -289,6 +325,12 @@ export default {
       mostrarBotonAsis: false,
       initEventPage: 0,
       toaster,
+      form: { 
+        email: '',
+        emailConf: '',
+      },
+      emailConfirmated: false,
+      emailValid: false,
     };
   },
   created: function () {
@@ -313,7 +355,7 @@ export default {
   methods: {
     getNextEvents() {
       axios
-        .get("https://oriun-api.herokuapp.com/events?init="+this.initEventPage+"&size=10", self.username)
+        .get("htthttps://oriun-api.herokuapp.com/events?init="+this.initEventPage+"&size=10", self.username)
         .then((response) => {
           this.nextEvents = response.data;
         })
@@ -321,7 +363,7 @@ export default {
     },
     getEvents() {
       axios
-        .get("https://oriun-api.herokuapp.com/events?init="+this.initEventPage+"&size=10000", self.username)
+        .get("htthttps://oriun-api.herokuapp.com/events?init="+this.initEventPage+"&size=10000", self.username)
         .then((response) => {
           this.events = response.data;
         })
@@ -329,7 +371,7 @@ export default {
     },
     getNotifications() {
       axios
-        .get("https://oriun-api.herokuapp.com/usernotifications/?user=" + this.username)
+        .get("htthttps://oriun-api.herokuapp.com/usernotifications/?user=" + this.username)
         .then((response) => {
           this.notifications = response.data;
         })
@@ -411,7 +453,7 @@ export default {
     },
     getMisEventos() {
       axios
-        .get("https://oriun-api.herokuapp.com/userassistanceevents?user=" + this.username)
+        .get("htthttps://oriun-api.herokuapp.com/userassistanceevents?user=" + this.username)
         .then((response) => {
           this.eventosAsistir = response.data;
         })
@@ -423,7 +465,7 @@ export default {
       if (window.confirm(mensaje)) {
         axios
           .delete(
-            "https://oriun-api.herokuapp.com/LeaveEvent?id_user=" +
+            "htthttps://oriun-api.herokuapp.com/LeaveEvent?id_user=" +
               this.username +
               "&id_event=" +
               id
@@ -439,7 +481,7 @@ export default {
       let self = this;
       axios
         .post(
-          "https://oriun-api.herokuapp.com/asistirevent?id_user=" +
+          "htthttps://oriun-api.herokuapp.com/asistirevent?id_user=" +
             self.username +
             "&id_event=" +
             self.id_asistencia
@@ -468,7 +510,7 @@ export default {
     },
     reportEvent(){
       axios
-      .post("https://oriun-api.herokuapp.com/Reportarevento", {id_EVENT: this.id_asistencia, user_NAME: this.username})
+      .post("htthttps://oriun-api.herokuapp.com/Reportarevento", {id_EVENT: this.id_asistencia, user_NAME: this.username})
       .then(()=>{
         this.toaster.success("Has reportado un evento como inadecuado");
       })
@@ -477,6 +519,77 @@ export default {
         alert(error)
       });
       this.ocultar();
+    },
+    changePassword(){
+      alert("Changing Password")
+    },
+    checkConfirmation(){
+      if(this.form.email === this.form.emailConf){
+        try {
+          document.getElementById("confEmailBox").classList.add("is-valid");
+          document.getElementById("confEmailBox").classList.remove("is-invalid");
+        } catch (error) {}
+        this.emailConfirmated = true;
+      }else{
+        try {
+          document.getElementById("confEmailBox").classList.add("is-invalid");
+          document.getElementById("confEmailBox").classList.remove("is-valid");
+        } catch (error) {}
+        this.emailConfirmated = false;
+      }
+    },
+    validEmail(email) {
+      const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    },
+    validateEmail() {
+      if(this.form.email!=''){
+        const email = this.form.email;
+        if (this.validEmail(email)) {
+          try {
+            document.getElementById("emailBox").classList.add("is-valid");
+            document.getElementById("emailBox").classList.remove("is-invalid");
+          } catch (error) {}
+          this.emailValid = true;
+        } else {
+          try {
+            document.getElementById("emailBox").classList.add("is-invalid");
+            document.getElementById("emailBox").classList.remove("is-valid");
+          } catch (error) {}
+          this.emailValid = false;
+        }
+      }else{
+        this.emailValid = false;
+      }
+    },
+    submitFormEmail(){
+      if(this.emailValid){
+        if(!(this.form.email==this.form.emailConf)){
+          this.toaster.failure("Los correos no coinciden");    
+        }else{
+          axios
+          .post("htthttps://oriun-api.herokuapp.com/password-change?email="+this.form.email)
+          .then(() => {
+              this.toaster.success("Se te ha enviado un correo para que cambies tu contraseña");
+              $("#emailModal .close").click();
+          })
+          .catch((error) => {
+              if(error.response.status == 422){
+                  this.toaster.failure("Correo NO registrado");  
+              }else{
+                this.toaster.failure("Hubo un error enviando el correo");
+              }            
+          });
+        }
+      }else{
+        if(this.form.email == ""){
+          this.toaster.failure("Ingresa el correo que registraste en OriUN");  
+        }else if(this.form.emailConf == ""){
+          this.toaster.failure("Confirma tu correo");  
+        }else{
+          this.toaster.failure("Correo NO registrado");  
+        }
+      }
     }
   },
 };
@@ -655,6 +768,39 @@ export default {
   padding: 0px 12px 0px 12px;
 }
 
+.changePasswordButton{
+  width: 20px;
+  position: relative;
+  left: 25px;
+  bottom: 4px;
+  
+}
+.changePasswordButton .changePasswordText{
+  display: none;
+  border-radius: 6px;
+  width: 120px;
+  position: absolute;
+  z-index: 1;
+  left: 20px;
+  bottom: 2px;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.changePasswordButton:hover .changePasswordIcon{
+  transform: rotate(0.25turn);
+  transition: 0.2s;
+}
+
+.changePasswordButton:hover .changePasswordText {
+  display: inline;
+  opacity: 1;
+}
+
+.changePasswordIcon{
+  font-size: 16pt;
+}
+
 .arrowEvents{
   font-size:24pt;
   position: absolute;
@@ -662,7 +808,7 @@ export default {
   height: 40px;
 
 }
-.btn.arrowEvents:focus {
+.btn.arrowEvents:focus, .changePasswordButton:focus {
   outline: none;
   box-shadow: none;
 }
