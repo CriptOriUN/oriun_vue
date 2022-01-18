@@ -19,3 +19,10 @@ npm run build --report
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+
+Pasos: 
+clonar repositorio https://github.com/Alasienn/oriUN_localtest (back)
+para correr el back usar el comando ---> .\mvnw.cmd spring-boot:run
+para correr el front escribimos npm i
+luego ponemos npm run dev
