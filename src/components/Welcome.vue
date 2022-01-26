@@ -286,7 +286,7 @@ export default {
   methods: {
     getEvents() {
       axios
-        .get("https://oriun-api.herokuapp.com/userevents/?user=" + this.username)
+        .get(this.$apiURL+"/userevents/?user=" + this.username)
         .then((response) => {
           console.log(response);
           this.events = response.data;
@@ -295,7 +295,7 @@ export default {
     },
     getUserSports() {
       axios
-        .get("https://oriun-api.herokuapp.com/usersports/?user=" + this.username)
+        .get(this.$apiURL+"/usersports/?user=" + this.username)
         .then((response) => {
           console.log(response);
           this.userSport = response.data;
@@ -304,7 +304,7 @@ export default {
     },
     getSports() {
       axios
-        .get("https://oriun-api.herokuapp.com/sports")
+        .get(this.$apiURL+"/sports")
         .then((response) => {
           console.log(response);
           this.sports = response.data;
@@ -313,7 +313,7 @@ export default {
     },
     getBooking() {
       axios
-        .get("https://oriun-api.herokuapp.com/laUser?user=" + this.username)
+        .get(this.$apiURL+"/laUser?user=" + this.username)
         .then((response) => {
           this.myBooking = response.data;
         });
@@ -324,7 +324,7 @@ export default {
     },
     async deleteBooking(bookingId){
       try {
-        await axios.delete("https://oriun-api.herokuapp.com/noAlquiler?id=" + bookingId).then(() => {
+        await axios.delete(this.$apiURL+"/noAlquiler?id=" + bookingId).then(() => {
           this.ocultar();
           document.getElementById('booking'+bookingId).remove();
         })
@@ -380,7 +380,7 @@ export default {
       } else {
         axios
           .post(
-            "https://oriun-api.herokuapp.com/usersportsreg/?user=" +
+            this.$apiURL+"/usersportsreg/?user=" +
               this.username +
               "&sport=" +
               this.deporteNuevo
@@ -388,12 +388,12 @@ export default {
           .then((response) => {
             // axios
             //    .post(
-            //       "https://oriun-api.herokuapp.com/usersportsreg/?user=" +
+            //       this.$apiURL+"/usersportsreg/?user=" +
             //          this.username +
             //          "&sport=" +
             //          this.deporteNuevo
             //    )
-            //    // .get("https://oriun-api.herokuapp.com/sports")
+            //    // .get(this.$apiURL+"/sports")
             //    .then((response) => {
             console.log(response);
             // this.userSport = response.data;
@@ -409,7 +409,7 @@ export default {
     quitarNuevo(deporte) {
       axios
         .delete(
-          "https://oriun-api.herokuapp.com/usersportsdel/?user=" +
+          this.$apiURL+"/usersportsdel/?user=" +
             this.username +
             "&sport=" +
             deporte
@@ -417,7 +417,7 @@ export default {
         .then((response) => {
           // axios
           //    .delete(
-          //       "https://oriun-api.herokuapp.com/usersportsdel/?user=" +
+          //       this.$apiURL+"/usersportsdel/?user=" +
           //          this.username +
           //          "&sport=" +
           //          deporte
@@ -425,7 +425,7 @@ export default {
           alert("deporte eliminado correctamente");
           location.href = "../";
         })
-        // .get("https://oriun-api.herokuapp.com/sports")
+        // .get(this.$apiURL+"/sports")
         // .then((response) => {
         //    console.log(response);
         //    this.userSport = response.data;
@@ -450,7 +450,7 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "https://oriun-api.herokuapp.com/NoEvent?id_event=" + event.id_EVENT
+            this.$apiURL+"/NoEvent?id_event=" + event.id_EVENT
           );
           document.getElementById(event.id_EVENT).remove();
           this.success("Evento eliminado");

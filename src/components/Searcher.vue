@@ -110,7 +110,7 @@ export default {
     this.username = this.$route.params.username;
     let self = this;
     axios
-      .get("https://oriun-api.herokuapp.com/events?init=-1&size=1000")
+      .get(this.$apiURL+"/events?init=-1&size=1000")
       .then((result) => {
         self.eventos = result.data;
         self.isLoading = false;
@@ -125,7 +125,7 @@ export default {
       self.isLoadingEvent = true;
       axios
         .post(
-          "https://oriun-api.herokuapp.com/asistirevent?id_user=" +
+          this.$apiURL+"/asistirevent?id_user=" +
             self.username +
             "&id_event=" +
             id_EVENT)
@@ -147,7 +147,7 @@ export default {
     },
     reportEvent(id_evento){
       axios
-      .post("https://oriun-api.herokuapp.com/Reportarevento", {id_EVENT: id_evento, user_NAME: this.username})
+      .post(this.$apiURL+"/Reportarevento", {id_EVENT: id_evento, user_NAME: this.username})
       .then(()=>{
         this.toaster.success("Has reportado un evento como inadecuado");
       })

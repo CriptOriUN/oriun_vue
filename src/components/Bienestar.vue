@@ -296,7 +296,7 @@ export default {
 
       axios
         .delete(
-          "https://oriun-api.herokuapp.com/noelements?id=" + value
+          this.$apiURL+"/noelements?id=" + value
         )
         .then((result) => {
           this.$delete(this.elementos, index);
@@ -318,7 +318,7 @@ export default {
       alert(index);
       axios
         .delete(
-          "https://oriun-api.herokuapp.com/nolsibu?name=" + value
+          this.$apiURL+"/nolsibu?name=" + value
         )
         .then((result) => {
           this.$delete(this.locaciones, index);
@@ -336,7 +336,7 @@ export default {
     this.username = this.$route.params.username;
     let self = this;
     axios
-      .get("https://oriun-api.herokuapp.com/user")
+      .get(this.$apiURL+"/user")
       .then((result) => {
         self.usuarios = result.data;
         self.isLoading = false;
@@ -346,7 +346,7 @@ export default {
       });
     axios
       .get(
-        "https://oriun-api.herokuapp.com/Singlelsibu?init=-1&size=-1"
+        this.$apiURL+"/Singlelsibu?init=-1&size=-1"
       )
       .then((result) => {
         self.locaciones = result.data;
@@ -358,7 +358,7 @@ export default {
 
     axios
       .get(
-        "https://oriun-api.herokuapp.com/Singlelmts?init=-1&size=-1"
+        this.$apiURL+"/Singlelmts?init=-1&size=-1"
       )
       .then((result) => {
         self.elementos = result.data;

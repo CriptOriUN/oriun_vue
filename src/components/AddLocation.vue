@@ -208,7 +208,7 @@ export default {
     let self = this;
     axios
       .get(
-        "https://oriun-api.herokuapp.com/Singlelsibu?init=-1&size=-1"
+        this.$apiURL+"/Singlelsibu?init=-1&size=-1"
       )
       .then((result) => {
         self.locaciones = result.data;
@@ -227,7 +227,7 @@ export default {
       var self = this;
       axios
         .post(
-          "https://oriun-api.herokuapp.com/glocationsibu",
+          this.$apiURL+"/glocationsibu",
           self.locationform
         )
         .then((result) => {
@@ -245,7 +245,7 @@ export default {
       var self = this;
       axios
         .put(
-          "https://oriun-api.herokuapp.com/updlocation",
+          this.$apiURL+"/updlocation",
           self.updatelocationform
         )
         .then((result) => {
@@ -291,7 +291,7 @@ export default {
       if (value != "") {
         axios
           .get(
-            "https://oriun-api.herokuapp.com/myLSbyId/?name=" + value
+            this.$apiURL+"/myLSbyId/?name=" + value
           )
           .then((result) => {
             this.lookother = true;

@@ -145,14 +145,14 @@ export default {
     changeDate() {
       if (this.optionDate == "Dia") {
         axios
-          .get("https://oriun-api.herokuapp.com/dateevents/?date=" + this.date)
+          .get(this.$apiURL+"/dateevents/?date=" + this.date)
           .then((response) => {
             this.locations = response.data;
           })
           .catch((e) => console.log(e));
       } else if (this.optionDate == "Semana") {
         axios
-          .get("https://oriun-api.herokuapp.com/weekevents/?date=" + this.date)
+          .get(this.$apiURL+"/weekevents/?date=" + this.date)
           .then((response) => {
             this.locations = response.data;
           })
@@ -181,7 +181,7 @@ export default {
       this.date = hoy;
       axios
         // .get("https://wise-brook-308119.ue.r.appspot.com/sports")
-        .get("https://oriun-api.herokuapp.com/dateevents/?date=" + hoy)
+        .get(this.$apiURL+"/dateevents/?date=" + hoy)
         .then((response) => {
           this.locationsDay = response.data;
         })
@@ -193,7 +193,7 @@ export default {
         if (this.locations[i][5] == loc) {
           axios
             .get(
-              "https://oriun-api.herokuapp.com/asistents/?id_event=" +
+              this.$apiURL+"/asistents/?id_event=" +
                 this.locations[i][0]
             )
             .then((response) => {

@@ -46,7 +46,7 @@ export default {
 
   created: function () {
     axios
-      .post("https://oriun-api.herokuapp.com/confirm-account", null, {
+      .post(this.$apiURL+"/confirm-account", null, {
         method: "post",
         params: {
           token: this.$route.query.token,

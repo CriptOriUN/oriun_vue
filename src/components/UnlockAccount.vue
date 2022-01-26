@@ -66,7 +66,7 @@ export default {
                 this.toaster.info("Tu cuenta NO está bloqueda");    
               }else{
                 axios
-                .post("https://oriun-api.herokuapp.com/SoliDesban", { user_NAME: this.form.username, solicitud: this.form.message })
+                .post(this.$apiURL+"/SoliDesban", { user_NAME: this.form.username, solicitud: this.form.message })
                 .then(() => {
                     this.toaster.success("Solicitud enviada correctamente");
                 })

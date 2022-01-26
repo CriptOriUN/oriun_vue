@@ -557,22 +557,22 @@ export default {
   },
   mounted: function () {
     axios
-      .get("https://oriun-api.herokuapp.com/events?init=0&size=-1")
+      .get(this.$apiURL+"/events?init=0&size=-1")
       .then((response) => (this.events = response.data));
     axios
-      .get("https://oriun-api.herokuapp.com/EventosReportados")
+      .get(this.$apiURL+"/EventosReportados")
       .then((response) => (this.reportedEvents = response.data, this.loadingReports = false));
     axios
-      .get("https://oriun-api.herokuapp.com/Solicitudsall")
+      .get(this.$apiURL+"/Solicitudsall")
       .then((response) => (this.unlockRequests = response.data, this.loadingRequests = false));
     axios
-      .get("https://oriun-api.herokuapp.com/eventsall/")
+      .get(this.$apiURL+"/eventsall/")
       .then(
         (response) => (
           (this.allevents = response.data), (this.loadingEvents = false)
         )
       );
-    axios.get("https://oriun-api.herokuapp.com/sports/").then((response) => {
+    axios.get(this.$apiURL+"/sports/").then((response) => {
       this.sportsData = response.data;
       this.loadingSports = false;
       this.sportsData.forEach((element) => {
@@ -586,7 +586,7 @@ export default {
     });
 
     axios
-      .get("https://oriun-api.herokuapp.com/otherscount/")
+      .get(this.$apiURL+"/otherscount/")
       .then((response) => {
           this.suggestedSports = response.data
           this.suggestedSports.forEach(element => {
@@ -610,7 +610,7 @@ export default {
       });
       if (ok) {
         try {
-          await axios.post("https://oriun-api.herokuapp.com/g/", {
+          await axios.post(this.$apiURL+"/g/", {
             name_SPORT: suggestedSport,
           });
 
@@ -643,7 +643,7 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "https://oriun-api.herokuapp.com/nosports?sport=" + String(sport.name_SPORT)
+            this.$apiURL+"/nosports?sport=" + String(sport.name_SPORT)
           );
           document.getElementById(sport.name_SPORT).remove();
           this.toaster.success("Deporte Eliminado");
@@ -669,10 +669,10 @@ export default {
       if (ok) {
         try {
           await axios.put(
-            "https://oriun-api.herokuapp.com/opuuser?user=" + String(user)
+            this.$apiURL+"/opuuser?user=" + String(user)
           );
           await axios.delete(
-            "https://oriun-api.herokuapp.com/OlvidarSoli?user=" + String(user)
+            this.$apiURL+"/OlvidarSoli?user=" + String(user)
           );
           document.getElementById(user+'_request').remove();
           this.toaster.success("Cuenta desbloqueada");
@@ -698,7 +698,7 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "https://oriun-api.herokuapp.com/OlvidarSoli?user=" + String(user)
+            this.$apiURL+"/OlvidarSoli?user=" + String(user)
           );
           document.getElementById(user+'_request').remove();
           this.toaster.success("Solicitud descartada");
@@ -724,7 +724,7 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "https://oriun-api.herokuapp.com/PerdonReporte?id_event=" + String(event.id_EVENT)
+            this.$apiURL+"/PerdonReporte?id_event=" + String(event.id_EVENT)
           );
           document.getElementById('report_'+event.id_EVENT).remove();
           this.toaster.success("Reporte descartado");
@@ -752,11 +752,11 @@ export default {
       if (ok) {
         try {
           await axios.put(
-            "https://oriun-api.herokuapp.com/banuser?user=" + String(event.user_NAME)
+            this.$apiURL+"/banuser?user=" + String(event.user_NAME)
           );
           try{
             await axios.delete(
-              "https://oriun-api.herokuapp.com/NoEvent?id_event=" + event.id_EVENT
+              this.$apiURL+"/NoEvent?id_event=" + event.id_EVENT
             );
             this.toaster.success("Evento eliminado");
           }catch(error){
@@ -787,7 +787,7 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            "https://oriun-api.herokuapp.com/NoEvent?id_event=" + event.id_EVENT
+            this.$apiURL+"/NoEvent?id_event=" + event.id_EVENT
           );
           try{
             document.getElementById(event.id_EVENT).remove();
@@ -900,7 +900,7 @@ export default {
     async newSportSubmit() {
       if (this.newSportInputValid) {
         try {
-          await axios.post("https://oriun-api.herokuapp.com/g/", {
+          await axios.post(this.$apiURL+"/g/", {
             name_SPORT: this.newSportInput,
           });
 

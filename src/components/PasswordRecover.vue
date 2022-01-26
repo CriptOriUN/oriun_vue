@@ -115,7 +115,7 @@ export default {
         this.toaster.failure("Los correos no coinciden");    
       }else{
         axios
-        .post("https://oriun-api.herokuapp.com/password-request?email="+this.form.email)
+        .post(this.$apiURL+"/password-request?email="+this.form.email)
         .then(() => {
             this.toaster.success("Se te ha enviado un correo para que recuperes tu contraseña");
         })
@@ -134,7 +134,7 @@ export default {
       }else{
         if(this.validregex){
           axios
-          .post("https://oriun-api.herokuapp.com/confirm-password?token="+this.token+"&password="+this.form.password)
+          .post(this.$apiURL+"/confirm-password?token="+this.token+"&password="+this.form.password)
           .then(() => {
               this.toaster.success("Contraseña recuperada con exito");
               setTimeout(() => {

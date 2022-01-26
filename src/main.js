@@ -22,6 +22,8 @@ Vue.use(ToggleSwitch)
 Vue.config.productionTip = false
 Vue.use(IconsPlugin)
 /* eslint-disable no-new */
+
+Vue.prototype.$apiURL = 'http://localhost:8081'
 new Vue({
   router,
   el: '#app',

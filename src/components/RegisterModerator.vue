@@ -102,7 +102,7 @@ export default {
       ) {
         axios
           .post(
-            "https://oriun-api.herokuapp.com/modreg?user=" +
+            this.$apiURL+"/modreg?user=" +
               self.registerform.user_name +
               "&password=" +
               self.registerform.password,

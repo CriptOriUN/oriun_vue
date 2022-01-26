@@ -227,7 +227,7 @@ export default {
       this.loadingBooking = true;
       this.bookingElementID = elementID;
       axios
-        .get("https://oriun-api.herokuapp.com/MyElement?id=" + elementID)
+        .get(this.$apiURL+"/MyElement?id=" + elementID)
         .then(
           (response) => (
             (this.elementShow = response.data), (this.loadingBooking = false)
@@ -241,7 +241,7 @@ export default {
         this.initElementPage = (this.currentPage - 1) * this.maxNumRows;
         axios
           .get(
-            "https://oriun-api.herokuapp.com/Singlelmts?init=" +
+            this.$apiURL+"/Singlelmts?init=" +
               this.initElementPage +
               "&size=" +
               this.maxNumRows
@@ -255,12 +255,12 @@ export default {
     },
     getAllElements() {
       axios
-        .get("https://oriun-api.herokuapp.com/Singlelmts?init=0&size=-1")
+        .get(this.$apiURL+"/Singlelmts?init=0&size=-1")
         .then((response) => (this.elementsAll = response.data));
     },
     getNumElements() {
       axios
-        .get("https://oriun-api.herokuapp.com/nelements")
+        .get(this.$apiURL+"/nelements")
         .then(
           (response) => (
             (this.numElements = response.data), this.auxListPages()
@@ -269,7 +269,7 @@ export default {
     },
     getBooking() {
       axios
-        .get("https://oriun-api.herokuapp.com/laUser?user=" + this.username)
+        .get(this.$apiURL+"/laUser?user=" + this.username)
         .then((response) => {
           response.data.forEach((element) => {
             this.myBooking.push(element.id_ELEMENT);
@@ -345,7 +345,7 @@ export default {
         } else {
           try {
             await axios.post(
-              "https://oriun-api.herokuapp.com/solicitarAlq" +
+              this.$apiURL+"/solicitarAlq" +
                 "?user_name=" +
                 this.username +
                 "&id_elem=" +

@@ -34,7 +34,7 @@ export default {
       console.log('Connecting...')
       this.connectedUsers.push(this.$route.params.username)
       this.socket = new SockJS(
-        "https://oriun-api.herokuapp.com/websocket"
+        this.$apiURL+"/websocket"
       );
       this.stompClient = Stomp.over(this.socket);
       var headers = {

@@ -76,7 +76,7 @@ export default {
     let self = this;
 
     axios
-      .get("https://oriun-api.herokuapp.com/Singlelsibu?init=-1&size=-1")
+      .get(this.$apiURL+"/Singlelsibu?init=-1&size=-1")
       .then((result) => {
         self.locaciones = result.data;
         self.isLoading = false;
@@ -94,7 +94,7 @@ export default {
   methods: {
     getReservas: function (locacion) {
       axios
-        .get("https://oriun-api.herokuapp.com/lapluse?name_loc=" + locacion)
+        .get(this.$apiURL+"/lapluse?name_loc=" + locacion)
         .then((result) => {
           this.mostrarReservacion = result.data;
           Vue.set(this.reservas, locacion, result.data);
@@ -118,13 +118,13 @@ export default {
         })
         .then((result) => {
           axios
-            .put("https://oriun-api.herokuapp.com/banuser?user=" + result)
+            .put(this.$apiURL+"/banuser?user=" + result)
             .then((response) => {
               this.toaster.success("Al Usuario "+result+" se le ha puesto un STRIKE");
             });
         }).catch((error) => { 
           axios
-            .delete("https://oriun-api.herokuapp.com/noAlquiler?id="+error)
+            .delete(this.$apiURL+"/noAlquiler?id="+error)
             .then((response)=>{
               this.toaster.success("la RESERVA fue ELIMINADA con EXITO")
             });
