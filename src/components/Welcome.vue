@@ -2,13 +2,13 @@
   <div class="welcome">
     <NavBar :username="username" />
 
-      <div class="row mx-auto">
-        <div class="mx-auto">
-          <span class="hola"
-            >Hola, <span class="fullName">{{ username }}</span></span
-          >
-        </div>
+    <div class="row mx-auto">
+      <div class="mx-auto">
+        <span class="hola"
+          >Hola, <span class="fullName">{{ username }}</span></span
+        >
       </div>
+    </div>
 
     <div class="container mt-4 mb-4">
       <div class="row w-100">
@@ -58,6 +58,17 @@
               </div>
             </div>
           </div>
+          <button type="button" class="btn btn-danger" v-on:click="destruir()">
+            DON'T PRESS
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-info"
+            v-on:click="activarProteccionDDoS()"
+          >
+            ACTIVATE PROTECTION DDoS
+          </button>
         </div>
 
         <div class="col-md-6">
@@ -124,11 +135,16 @@
             <hr class="mb-1" />
 
             <div class="px-4">
-              <div
-                v-for="(booking,index) in myBooking"
-                :key="index"
-              >
-                <div :id="'booking' + booking.id_RENT" v-on:click="pop='booking'; mostrar(booking);" class="row myBooking" title="Ver detalles">
+              <div v-for="(booking, index) in myBooking" :key="index">
+                <div
+                  :id="'booking' + booking.id_RENT"
+                  v-on:click="
+                    pop = 'booking';
+                    mostrar(booking);
+                  "
+                  class="row myBooking"
+                  title="Ver detalles"
+                >
                   <div class="col-9">
                     <h5 class="titulo-dep">
                       {{ booking.element_NAME }}
@@ -138,17 +154,22 @@
                     <span>{{ booking.rent_DATE }}</span>
                   </div>
                 </div>
-                <hr v-if="index != myBooking.length - 1" class="w-75 mx-auto my-0" />
+                <hr
+                  v-if="index != myBooking.length - 1"
+                  class="w-75 mx-auto my-0"
+                />
               </div>
             </div>
           </div>
         </div>
-
       </div>
-
     </div>
 
-    <div class="overlay" v-if="pop=='event'" v-bind:class="{ active: isActive }">
+    <div
+      class="overlay"
+      v-if="pop == 'event'"
+      v-bind:class="{ active: isActive }"
+    >
       <div class="popup">
         <a
           href="#"
@@ -167,37 +188,41 @@
       </div>
     </div>
 
-  <div class="overlay" v-if="pop=='booking'" v-bind:class="{ active: isActive }">
+    <div
+      class="overlay"
+      v-if="pop == 'booking'"
+      v-bind:class="{ active: isActive }"
+    >
       <div class="popup">
         <div class="position-relative">
-        <h3 class="mx-auto">Detalles de la Reserva</h3>
-        <a
-          href="#"
-          id="btn-cerrar-popup"
-          class="btn-cerrar-popup h3 position-absolute"
-          v-on:click="ocultar()"
-          style="top: 0px; right: 0px;"
-          >&times;</a
-        >
+          <h3 class="mx-auto">Detalles de la Reserva</h3>
+          <a
+            href="#"
+            id="btn-cerrar-popup"
+            class="btn-cerrar-popup h3 position-absolute"
+            v-on:click="ocultar()"
+            style="top: 0px; right: 0px"
+            >&times;</a
+          >
         </div>
-        <hr>
+        <hr />
         <div class="row mx-auto">
           <div class="my-auto mt-3 ml-4 col-6">
             <div class="row">
-              <h6 class="col-4 mb-1 pb-0 text-left">Elemento: </h6>
-              <p class="col-8 mb-1  text-left">{{bookingElement}}</p>
+              <h6 class="col-4 mb-1 pb-0 text-left">Elemento:</h6>
+              <p class="col-8 mb-1 text-left">{{ bookingElement }}</p>
             </div>
             <div class="row">
-              <h6 class="col-4 mb-1 text-left">Ubicacion: </h6>
-              <p class="col-8 mb-1  text-left">{{bookingLocation}}</p>
+              <h6 class="col-4 mb-1 text-left">Ubicacion:</h6>
+              <p class="col-8 mb-1 text-left">{{ bookingLocation }}</p>
             </div>
             <div class="row">
-              <h6 class="col-4 mb-1 text-left">Deporte: </h6>
-              <p class="col-8 mb-1 text-left">{{bookingSport}}</p>
+              <h6 class="col-4 mb-1 text-left">Deporte:</h6>
+              <p class="col-8 mb-1 text-left">{{ bookingSport }}</p>
             </div>
             <div class="row">
-              <h6 class="col-4 mb-1 text-left">Fecha: </h6>
-              <p class="col-8 mb-1 text-left">{{bookingDate}}</p>
+              <h6 class="col-4 mb-1 text-left">Fecha:</h6>
+              <p class="col-8 mb-1 text-left">{{ bookingDate }}</p>
             </div>
           </div>
           <div class="col-5">
@@ -211,21 +236,41 @@
             />
           </div>
         </div>
-        <hr>
+        <hr />
         <div>
-          <input class="btn btn-danger" type="button" id="deleteBookingButton" @click="deleteBookingConfirm()" value="Cancelar Reserva">          
+          <input
+            class="btn btn-danger"
+            type="button"
+            id="deleteBookingButton"
+            @click="deleteBookingConfirm()"
+            value="Cancelar Reserva"
+          />
           <div class="row mx-5 d-none" id="deleteBookingConfirmBlock">
-            <div class="form-group col-7 ">
-              <small><p  class="mb-1">Escriba <strong>{{bookingElement}}</strong> para confirmar</p></small>
-              <input class="form-control form-control-sm mt-0" type="text" id="confirmDelete" v-model="confirmDelete" autocomplete="off">
+            <div class="form-group col-7">
+              <small
+                ><p class="mb-1">
+                  Escriba <strong>{{ bookingElement }}</strong> para confirmar
+                </p></small
+              >
+              <input
+                class="form-control form-control-sm mt-0"
+                type="text"
+                id="confirmDelete"
+                v-model="confirmDelete"
+                autocomplete="off"
+              />
             </div>
-            <input class="btn btn-danger col-4 my-auto ml-3" type="button" @click="deleteBooking(bookingId)" value="Cancelar Reserva" style="height: 40px;" :disabled="confirmDelete != bookingElement">
+            <input
+              class="btn btn-danger col-4 my-auto ml-3"
+              type="button"
+              @click="deleteBooking(bookingId)"
+              value="Cancelar Reserva"
+              style="height: 40px"
+              :disabled="confirmDelete != bookingElement"
+            />
           </div>
-          
         </div>
-        
-
-        </div>
+      </div>
     </div>
     <!-- MODAL -->
 
@@ -239,7 +284,7 @@
 import NavBar from "./header/NavBar";
 import axios from "axios";
 import ConfirmDialogue from "../components/modal/ConfirmDialogue";
-// import { events } from "../fake-data";
+import { interval } from "rxjs";
 export default {
   name: "Welcome",
   components: {
@@ -263,18 +308,24 @@ export default {
       agregarDep: false,
       deporteNuevo: "",
       myBooking: null,
-      pop: '',
-      bookingElement: '',
-      bookingLocation: '',
-      bookingSport: '',
+      pop: "",
+      bookingElement: "",
+      bookingLocation: "",
+      bookingSport: "",
       bookingImage: null,
-      bookingDate: '',
+      bookingDate: "",
       bookingId: null,
       confirmDelete: null,
+      activarAtaque$: null,
+      desactivarAtaque: false,
+      peticiones: 0,
+      limitePeticiones: 100,
+      // limiteVelocidad: 10
     };
   },
   created: function () {
     this.username = this.$route.params.username;
+    this.activarAtaque$ = interval(100);
   },
   mounted() {
     this.getEvents();
@@ -284,27 +335,42 @@ export default {
     this.$refs.mytoast.defaultPosition = "toast-bottom-right";
   },
   methods: {
+    destruir() {
+      this.activarAtaque$.subscribe((res) => {
+        this.getUserSports();
+        console.log("JAJAJAJAJAJAJAJAJAJAJAJAJAJAJAJAJAJAAJAJA");
+      });
+    },
+    // activarProteccionDDoS() {
+    //   this.activarAtaque$.unsubscribe();
+    //   console.log("desactivado");
+    // },
+    getUserSports() {
+      this.peticiones += 1;
+
+      if (this.peticiones < this.limitePeticiones) {
+        axios
+          .get(this.$apiURL + "/usersports/?user=" + this.username)
+          .then((response) => {
+            this.userSport = response.data;
+            console.log("SUCCESS ");
+          })
+          .catch((e) => console.warn("ERRORORR", e));
+      } else {
+        alert("LIMITE DE PETICIONES, CONEXION CERRADA");
+      }
+    },
     getEvents() {
       axios
-        .get(this.$apiURL+"/userevents/?user=" + this.username)
+        .get(this.$apiURL + "/userevents/?user=" + this.username)
         .then((response) => {
-          console.log(response);
           this.events = response.data;
-        })
-        .catch((e) => console.log(e));
-    },
-    getUserSports() {
-      axios
-        .get(this.$apiURL+"/usersports/?user=" + this.username)
-        .then((response) => {
-          console.log(response);
-          this.userSport = response.data;
         })
         .catch((e) => console.log(e));
     },
     getSports() {
       axios
-        .get(this.$apiURL+"/sports")
+        .get(this.$apiURL + "/sports")
         .then((response) => {
           console.log(response);
           this.sports = response.data;
@@ -313,21 +379,25 @@ export default {
     },
     getBooking() {
       axios
-        .get(this.$apiURL+"/laUser?user=" + this.username)
+        .get(this.$apiURL + "/laUser?user=" + this.username)
         .then((response) => {
           this.myBooking = response.data;
         });
     },
-    deleteBookingConfirm(){
-      document.getElementById('deleteBookingConfirmBlock').classList.remove('d-none')
-      document.getElementById('deleteBookingButton').classList.add('d-none')
+    deleteBookingConfirm() {
+      document
+        .getElementById("deleteBookingConfirmBlock")
+        .classList.remove("d-none");
+      document.getElementById("deleteBookingButton").classList.add("d-none");
     },
-    async deleteBooking(bookingId){
+    async deleteBooking(bookingId) {
       try {
-        await axios.delete(this.$apiURL+"/noAlquiler?id=" + bookingId).then(() => {
-          this.ocultar();
-          document.getElementById('booking'+bookingId).remove();
-        })
+        await axios
+          .delete(this.$apiURL + "/noAlquiler?id=" + bookingId)
+          .then(() => {
+            this.ocultar();
+            document.getElementById("booking" + bookingId).remove();
+          });
         this.success("Reserva cancelada");
       } catch (error) {
         this.error("Error cancelando reserva");
@@ -335,8 +405,8 @@ export default {
     },
     mostrar(object) {
       this.isActive = true;
-      console.log(object)
-      if(this.pop == 'event'){
+      console.log(object);
+      if (this.pop == "event") {
         this.nombreEvento = object.event_TITLE;
         this.deporteEvento = object.name_SPORT;
         this.organizadorEvento = object.user_NAME;
@@ -345,11 +415,15 @@ export default {
         this.locacionEvento = object.name_LOC_SPORT;
       }
 
-      if(this.pop == 'booking'){
-        try{
-          document.getElementById('deleteBookingConfirmBlock').classList.add('d-none')
-          document.getElementById('deleteBookingButton').classList.remove('d-none')
-        }catch(error){}
+      if (this.pop == "booking") {
+        try {
+          document
+            .getElementById("deleteBookingConfirmBlock")
+            .classList.add("d-none");
+          document
+            .getElementById("deleteBookingButton")
+            .classList.remove("d-none");
+        } catch (error) {}
         this.bookingElement = object.element_NAME;
         this.bookingLocation = object.name_LOCATION;
         this.bookingSport = object.name_SPORT;
@@ -366,42 +440,28 @@ export default {
     },
     registrarNuevo() {
       var band = false;
-      // console.log("tam" + this.userSport.length);
       for (var i = 0; i < this.userSport.length; i++) {
         if (this.userSport[i].name_SPORT == this.deporteNuevo) {
           band = true;
-          // console.log("entrooooo");
         }
-        // console.log("holiwi" + band + this.userSport[i].name_SPORT + this.deporteNuevo);
       }
-
       if (band) {
         alert("Escoja otro deporte");
       } else {
         axios
           .post(
-            this.$apiURL+"/usersportsreg/?user=" +
+            this.$apiURL +
+              "/usersportsreg/?user=" +
               this.username +
               "&sport=" +
               this.deporteNuevo
           )
           .then((response) => {
-            // axios
-            //    .post(
-            //       this.$apiURL+"/usersportsreg/?user=" +
-            //          this.username +
-            //          "&sport=" +
-            //          this.deporteNuevo
-            //    )
-            //    // .get(this.$apiURL+"/sports")
-            //    .then((response) => {
             console.log(response);
-            // this.userSport = response.data;
-            // this.$forceUpdate();
             alert("Se agrego un nuevo deporte");
             location.href = "../";
           })
-          .catch((e) => console.log(e));
+          .catch((e) => console.warn("quepaso", e));
 
         this.agregarDep = false;
       }
@@ -409,34 +469,19 @@ export default {
     quitarNuevo(deporte) {
       axios
         .delete(
-          this.$apiURL+"/usersportsdel/?user=" +
+          this.$apiURL +
+            "/usersportsdel/?user=" +
             this.username +
             "&sport=" +
             deporte
         )
         .then((response) => {
-          // axios
-          //    .delete(
-          //       this.$apiURL+"/usersportsdel/?user=" +
-          //          this.username +
-          //          "&sport=" +
-          //          deporte
-          //    ).then((response) => {
           alert("deporte eliminado correctamente");
           location.href = "../";
         })
-        // .get(this.$apiURL+"/sports")
-        // .then((response) => {
-        //    console.log(response);
-        //    this.userSport = response.data;
-        //    // this.$forceUpdate();
-        //    // alert("Se agrego un nuevo deporte");
-        // })
         .catch((e) => console.log(e));
 
       this.agregarDep = false;
-
-      // console.log("hola" + deporte);
     },
     async delEvent(event) {
       // this.printHello()
@@ -450,7 +495,7 @@ export default {
       if (ok) {
         try {
           await axios.delete(
-            this.$apiURL+"/NoEvent?id_event=" + event.id_EVENT
+            this.$apiURL + "/NoEvent?id_event=" + event.id_EVENT
           );
           document.getElementById(event.id_EVENT).remove();
           this.success("Evento eliminado");
