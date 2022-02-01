@@ -62,13 +62,13 @@
             DON'T PRESS
           </button>
 
-          <button
+          <!-- <button
             type="button"
             class="btn btn-info"
             v-on:click="activarProteccionDDoS()"
           >
             ACTIVATE PROTECTION DDoS
-          </button>
+          </button> -->
         </div>
 
         <div class="col-md-6">
