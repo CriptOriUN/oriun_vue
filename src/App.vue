@@ -6,11 +6,12 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import Websocket from "./components/Websocket";
 export default {
   data: function () {
     return {
-      is_auth: localStorage.getItem("isAuth") || false,
+      is_auth: Vue.$cookies.get("isAuth") || false,
     };
   },
   components: {
@@ -20,7 +21,7 @@ export default {
     // esto nos lleva a user_auth si no esta autenticado, en caso contrario al usuario actual
     updateAuth: function () {
       var self = this;
-      self.is_auth = localStorage.getItem("isAuth") || false;
+      self.is_auth = Vue.$cookies.get("isAuth") || false;
 
       if (self.is_auth == false){
         if(!(self.$route.path == '/confirm-account') && !(self.$route.path == '/unlock-account') &&
@@ -29,8 +30,8 @@ export default {
         }        
       }else if(self.$route.path == '/password-change'){}
       else {
-        let username = localStorage.getItem("current_username");
-        let role = localStorage.getItem("my_role");
+        let username = Vue.$cookies.get("current_username");
+        let role = Vue.$cookies.get("my_role");
         if (role === "Usuario") {
           self.$router.push({ name: "User", params: { username: username } }).catch(()=>{});
         } else if (role === "Moderador") {
@@ -50,9 +51,9 @@ export default {
     },
     // nos lleva al metodo de update
     logIn: function (username, role) {
-      localStorage.setItem("current_username", username);
-      localStorage.setItem("my_role", role);
-      localStorage.setItem("isAuth", true);
+      Vue.$cookies.set("current_username", username);
+      Vue.$cookies.set("my_role", role);
+      Vue.$cookies.set("isAuth", true);
       this.updateAuth();
     },
   },

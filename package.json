@@ -16,6 +16,7 @@
     "express": "^4.17.1",
     "serve-static": "^1.14.1",
     "vue": "^2.5.2",
+    "vue-cookies": "^1.7.4",
     "vue-recaptcha-v3": "^1.9.0",
     "vue-router": "^3.5.1",
     "vue-social-chat": "^0.1.6",

@@ -163,6 +163,7 @@
 </template> 
 
 <script>
+import Vue from 'vue'
 export default {
   props: ["username"],
   data: function () {
@@ -173,14 +174,14 @@ export default {
   methods: {
     closeSession: function () {
       var self = this;
-      localStorage.removeItem("isAuth");
-      localStorage.removeItem("current_username");
-      localStorage.removeItem("my_role");
+      Vue.$cookies.remove("isAuth");
+      Vue.$cookies.remove("current_username");
+      Vue.$cookies.remove("my_role");
       self.$router.push({ name: "root" }).catch(() => {});
     },
   },
   created: function () {
-    this.role = localStorage.getItem("my_role");
+    this.role = Vue.$cookies.get("my_role");
   },
 };
 </script>
