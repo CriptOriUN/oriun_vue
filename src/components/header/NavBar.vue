@@ -30,14 +30,14 @@
           >
             <li class="nav-item mx-4">
               <router-link
-                :to="{ name: 'User', params: { username: this.username } }"
+                :to="{ name: 'User', params: { username: this.username  , role: this.role} }"
               >
                 <a href="# " class="nav-link btn-menu">Inicio</a>
               </router-link>
             </li>
             <li class="nav-item mx-4">
               <router-link
-                :to="{ name: 'Welcome', params: { username: this.username } }"
+                :to="{ name: 'Welcome', params: { username: this.username , role: this.role } }"
               >
                 <a href="# " class="nav-link btn-menu">Perfil</a>
               </router-link>
@@ -46,7 +46,7 @@
               <router-link
                 :to="{
                   name: 'CreateEvent',
-                  params: { username: this.username },
+                  params: { username: this.username  , role: this.role },
                 }"
               >
                 <a href="#" class="nav-link btn-menu">Crear Evento</a>
@@ -57,7 +57,7 @@
               <router-link
                 :to="{
                   name: 'DispEspacio',
-                  params: { username: this.username },
+                  params: { username: this.username  , role: this.role},
                 }"
               >
                 <a href="#" class="nav-link btn-menu"
@@ -68,14 +68,14 @@
 
             <li class="nav-item mx-4">
               <router-link
-                :to="{ name: 'Searcher', params: { username: this.username } }"
+                :to="{ name: 'Searcher', params: { username: this.username  , role: this.role} }"
               >
                 <a href="# " class="nav-link btn-menu">Buscador</a>
               </router-link>
             </li>
             <li class="nav-item mx-4">
               <router-link
-                :to="{ name: 'Elements', params: { username: this.username } }"
+                :to="{ name: 'Elements', params: { username: this.username  , role: this.role} }"
               >
                 <a href="# " class="nav-link btn-menu">Implementos</a>
               </router-link>
@@ -165,10 +165,10 @@
 <script>
 import Vue from 'vue'
 export default {
-  props: ["username", "role"],
+  props: {username: String, role:String},
   data: function () {
     return {
-      role: "",
+     
     };
   },
   methods: {

@@ -1,6 +1,6 @@
 <template>
   <div class="createevent">
-    <NavBar :username="username" />
+    <NavBar :username="username" :role=role />
 
     <div class="container d-flex justify-content-center">
       <div class="row my-3 pt-4">
@@ -242,6 +242,7 @@ export default {
   components: {
     NavBar,
   },
+  props: ["role"],
 
   data: function () {
     return {

@@ -1,6 +1,6 @@
 <template>
   <div class="elements">
-    <NavBar :username="username" />
+    <NavBar :username="username" :role=role />
     <div class="container d-flex justify-content-center">
       <div class="row my-3 pt-4">
         <h2 class="titulo_prin">Implementos deportivos</h2>
@@ -149,6 +149,7 @@ export default {
     ConfirmDialogue,
     Spinner,
   },
+  props: ["role"],
   data: function () {
     return {
       username: "",

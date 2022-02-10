@@ -1,6 +1,6 @@
 <template>
   <div class="createevent">
-    <NavBar :username="username" />
+    <NavBar :username="username" :role=role />
     <div class="container d-flex justify-content-center">
       <div class="row my-3">
         <h2>Buscador</h2>
@@ -94,6 +94,7 @@ export default {
     NavBar,
     Spinner,
   },
+  props: ["role"],
   data: function () {
     return {
       username: "",

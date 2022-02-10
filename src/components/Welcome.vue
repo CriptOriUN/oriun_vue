@@ -1,6 +1,6 @@
 <template>
   <div class="welcome">
-    <NavBar :username="username" />
+    <NavBar :username="username" :role=role />
 
       <div class="row mx-auto">
         <div class="mx-auto">
@@ -247,6 +247,7 @@ export default {
     ConfirmDialogue,
     "vue-toastr": window.VueToastr,
   },
+  props: ["role"],
   data: function () {
     return {
       username: "",
