@@ -1,6 +1,6 @@
 <template>
   <div class="dispespacio">
-    <NavBar :username="username" />
+    <NavBar :username="username" :role=role />
     <div class="container d-flex justify-content-center">
       <div class="row my-3">
         <h2>Disponibilidad de Espacio</h2>
@@ -96,6 +96,7 @@ export default {
   components: {
     NavBar,
   },
+  props: ["role"],
   data: function () {
     return {
       date: "",

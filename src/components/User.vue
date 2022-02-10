@@ -1,6 +1,6 @@
 <template>
   <div class="user">
-    <NavBar :username="username" :role="role"/>
+    <NavBar :username=username :role=role />
     <Websocket />
     <div class="row mx-auto">
       <div class="mx-auto">

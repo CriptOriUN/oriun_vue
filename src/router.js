@@ -34,12 +34,14 @@ const router = new vueRouter({
         {
             path: '/:username/createevent',
             name: "CreateEvent",
-            component: CreateEvent
+            component: CreateEvent,
+            props: true
         },
         {
             path: '/:username/welcome',
             name: "Welcome",
-            component: Welcome
+            component: Welcome, 
+            props: true
         },
         {
             path: '/:username/User',
@@ -77,12 +79,14 @@ const router = new vueRouter({
         {
             path: '/:username/searcher',
             name: "Searcher",
-            component: Searcher
+            component: Searcher,
+            props: true
         },
         {
             path: '/:username/elements',
             name: "Elements",
-            component: Elements
+            component: Elements,
+            props: true
         },
         {
             path: '/confirm-account',
@@ -92,7 +96,8 @@ const router = new vueRouter({
         {
             path: '/:username/DispEspacio',
             name: "DispEspacio",
-            component: DispEspacio
+            component: DispEspacio,
+            props: true
         },
         {
             path: '/unlock-account',
