@@ -80,8 +80,7 @@ export default {
   methods: {
     closeSession: function () {
       var self = this;
-      localStorage.removeItem("isAuth");
-      localStorage.removeItem("current_username");
+      self.$cookies.remove("isAuth")
       self.$router.push({ name: "root" }).catch(() => {});
     },
     selectActive() {

@@ -261,8 +261,7 @@ export default {
                 .then((result) => {
                   self.$emit(
                     "logeado",
-                    self.loginform.user_name,
-                    result.data.ROL_NAME
+                    result.data.TOKEN
                   );
                   this.loadingElements = false;
                 })

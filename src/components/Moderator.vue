@@ -1,6 +1,6 @@
 <template>
   <div class="moderador">
-    <NavBarModerator :username="username" />
+    <NavBarModerator :username="username" :role="role"/>
 
     <div class="container-fluid mt-4">
       <div class="row mx-auto">
@@ -515,6 +515,7 @@ export default {
     Spinner,
     MySocialChat,
   },
+  props: ["role"],
 
   data: function () {
     return {
@@ -554,6 +555,7 @@ export default {
   },
   created: function () {
     this.username = this.$route.params.username;
+    this.role = this.role
   },
   mounted: function () {
     axios

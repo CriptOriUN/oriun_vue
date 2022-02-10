@@ -1,6 +1,6 @@
 <template>
   <div class="bienestar">
-    <NavBar :username="username" />
+    <NavBar :username="username" :role="role"/>
     <div class="container mt-5">
       <div class="row mx-auto">
         <div class="mx-auto">
@@ -249,6 +249,7 @@ export default {
     Spinner,
     MySocialChat,
   },
+  props: ["role"],
   data: function () {
     return {
       usuarios: [],
@@ -334,6 +335,7 @@ export default {
   },
   created: function () {
     this.username = this.$route.params.username;
+    this.role = this.role;
     let self = this;
     axios
       .get(this.$apiURL+"/user")

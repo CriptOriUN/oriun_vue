@@ -165,7 +165,7 @@
 <script>
 import Vue from 'vue'
 export default {
-  props: ["username"],
+  props: ["username", "role"],
   data: function () {
     return {
       role: "",
@@ -174,14 +174,9 @@ export default {
   methods: {
     closeSession: function () {
       var self = this;
-      Vue.$cookies.remove("isAuth");
-      Vue.$cookies.remove("current_username");
-      Vue.$cookies.remove("my_role");
+      Vue.$cookies.remove("isAuth")
       self.$router.push({ name: "root" }).catch(() => {});
     },
-  },
-  created: function () {
-    this.role = Vue.$cookies.get("my_role");
   },
 };
 </script>

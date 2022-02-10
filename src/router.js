@@ -44,17 +44,20 @@ const router = new vueRouter({
         {
             path: '/:username/User',
             name: "User",
-            component: User
+            component: User, 
+            props: true
         },
         {
             path: '/:username/moderator',
             name: "Moderator",
-            component: Moderator
+            component: Moderator, 
+            props: true
         },
         {
             path: '/:username/bienestar',
             name: "Bienestar",
-            component: Bienestar
+            component: Bienestar, 
+            props: true
         },
         {
             path: '/:username/registermoderator',

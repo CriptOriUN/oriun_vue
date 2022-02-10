@@ -1,6 +1,6 @@
 <template>
   <div class="user">
-    <NavBar :username="username" />
+    <NavBar :username="username" :role="role"/>
     <Websocket />
     <div class="row mx-auto">
       <div class="mx-auto">
@@ -294,6 +294,7 @@ export default {
     NavBar,
     Websocket,
   },
+  props: ["role"],
   watch: {
     newNotification() {
       this.notifications.unshift(this.newNotification[0]);
@@ -335,6 +336,7 @@ export default {
   },
   created: function () {
     this.username = this.$route.params.username;
+    this.role = this.role
   },
   mounted() {
     this.getNextEvents();
