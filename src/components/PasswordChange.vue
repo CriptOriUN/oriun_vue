@@ -106,7 +106,7 @@ export default {
       }else{
         if(this.validregex){
           axios
-          .post("htthttps://oriun-api.herokuapp.com/confirm-password?token="+this.token+"&password="+this.form.password)
+          .post(this.$apiURL + "/confirm-password?token="+this.token+"&password="+this.form.password)
           .then(() => {
               this.toaster.success("Contraseña actualizada con exito");
               setTimeout(() => {

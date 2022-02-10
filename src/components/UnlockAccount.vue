@@ -46,7 +46,7 @@ export default {
   methods: {
       checkUser(){
           axios
-          .get('https://oriun-api.herokuapp.com/user')
+          .get(this.$apiURL + '/user')
           .then((response) => {
               for (let user of response.data){
                   if(user.user_NAME == this.form.username){

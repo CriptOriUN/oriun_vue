@@ -357,7 +357,7 @@ export default {
   methods: {
     getNextEvents() {
       axios
-        .get("htthttps://oriun-api.herokuapp.com/events?init="+this.initEventPage+"&size=10", self.username)
+        .get(this.$apiURL + "/events?init="+this.initEventPage+"&size=10", self.username)
         .then((response) => {
           this.nextEvents = response.data;
         })
@@ -365,7 +365,7 @@ export default {
     },
     getEvents() {
       axios
-        .get("htthttps://oriun-api.herokuapp.com/events?init="+this.initEventPage+"&size=10000", self.username)
+        .get(this.$apiURL + "/events?init="+this.initEventPage+"&size=10000", self.username)
         .then((response) => {
           this.events = response.data;
         })
@@ -373,7 +373,7 @@ export default {
     },
     getNotifications() {
       axios
-        .get("htthttps://oriun-api.herokuapp.com/usernotifications/?user=" + this.username)
+        .get(this.$apiURL + "/usernotifications/?user=" + this.username)
         .then((response) => {
           this.notifications = response.data;
         })
@@ -455,7 +455,7 @@ export default {
     },
     getMisEventos() {
       axios
-        .get("htthttps://oriun-api.herokuapp.com/userassistanceevents?user=" + this.username)
+        .get(this.$apiURL + "/userassistanceevents?user=" + this.username)
         .then((response) => {
           this.eventosAsistir = response.data;
         })
@@ -467,7 +467,7 @@ export default {
       if (window.confirm(mensaje)) {
         axios
           .delete(
-            "htthttps://oriun-api.herokuapp.com/LeaveEvent?id_user=" +
+            this.$apiURL + "/LeaveEvent?id_user=" +
               this.username +
               "&id_event=" +
               id
@@ -483,7 +483,7 @@ export default {
       let self = this;
       axios
         .post(
-          "htthttps://oriun-api.herokuapp.com/asistirevent?id_user=" +
+          this.$apiURL + "/asistirevent?id_user=" +
             self.username +
             "&id_event=" +
             self.id_asistencia
@@ -512,7 +512,7 @@ export default {
     },
     reportEvent(){
       axios
-      .post("htthttps://oriun-api.herokuapp.com/Reportarevento", {id_EVENT: this.id_asistencia, user_NAME: this.username})
+      .post(this.$apiURL + "/Reportarevento", {id_EVENT: this.id_asistencia, user_NAME: this.username})
       .then(()=>{
         this.toaster.success("Has reportado un evento como inadecuado");
       })
@@ -570,7 +570,7 @@ export default {
           this.toaster.failure("Los correos no coinciden");    
         }else{
           axios
-          .post("htthttps://oriun-api.herokuapp.com/password-change?email="+this.form.email)
+          .post(this.$apiURL + "/password-change?email="+this.form.email)
           .then(() => {
               this.toaster.success("Se te ha enviado un correo para que cambies tu contraseña");
               $("#emailModal .close").click();
